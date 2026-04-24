@@ -1,0 +1,79 @@
+.htt-tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.htt-tooltip-wrapper.w-100 {
+    display: block;
+    width: 100%;
+}
+
+.htt-tooltip {
+    /* Use fixed and move to body via JS to escape ALL parent clipping/transforms */
+    position: fixed;
+    z-index: 10000;
+    
+    /* 
+       DEFAULT: Dark Tooltip (Optimized for Light Mode) 
+       This ensures that if no theme attribute is detected, we show the Dark Tooltip.
+    */
+    background-color: #161b22; /* Matches primitive-slate-900 / var(--color-bg-inverse) in Light Mode */
+    color: #ffffff;
+    
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    /* Typography */
+    font-family: var(--font-ui), system-ui, -apple-system, sans-serif;
+    font-size: var(--caption-font-size, 0.75rem);
+    font-weight: var(--font-medium, 500);
+    line-height: 1.4;
+    
+    /* Intelligent Wrapping */
+    width: max-content;
+    max-width: 250px;
+    white-space: normal;
+    word-wrap: break-word;
+    text-align: center;
+
+    /* Visibility State */
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity var(--duration-fast, 150ms) ease-in-out;
+}
+
+/* 
+   DARK THEME OVERRIDE: Light Tooltip (White background, Dark text)
+   Triggered when the app or the tooltip itself has dark theme attributes.
+*/
+[data-theme="dark"] .htt-tooltip,
+[data-bs-theme="dark"] .htt-tooltip,
+.htt-tooltip[data-theme="dark"],
+.htt-tooltip[data-bs-theme="dark"] {
+    background-color: #ffffff !important;
+    color: #161b22 !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.htt-tooltip.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.htt-tooltip-arrow {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: inherit; /* Dynamically inherits the background color of the parent tooltip */
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.htt-tooltip-top { margin-top: -4px; }
+.htt-tooltip-bottom { margin-top: 4px; }
+.htt-tooltip-left { margin-left: -4px; }
+.htt-tooltip-right { margin-left: 4px; }

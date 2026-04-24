@@ -7,6 +7,9 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
+// HTT Services
+builder.Services.AddScoped<HTT.BlazorWasm.App.Contracts.IHTTThemeService, HTT.BlazorWasm.App.Services.HTTThemeService>();
+
 // HTTP Client — base address from environment
 builder.Services.AddScoped(sp =>
     new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });

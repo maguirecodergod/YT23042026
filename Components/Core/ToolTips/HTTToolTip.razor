@@ -1,0 +1,19 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="htt-tooltip-wrapper @Class" style="@Style" 
+     @ref="_wrapperRef"
+     @onmouseenter="Show" 
+     @onmouseleave="Hide"
+     @attributes="AdditionalAttributes">
+    @ChildContent
+
+    @if (!string.IsNullOrEmpty(Content) || !string.IsNullOrEmpty(Text))
+    {
+        <div class="htt-tooltip htt-tooltip-@GetPositionClass() @(_visible ? "visible" : "")" 
+             @ref="_tooltipRef">
+            @(string.IsNullOrEmpty(Content) ? Text : Content)
+            <div class="htt-tooltip-arrow" @ref="_arrowRef"></div>
+        </div>
+    }
+</div>

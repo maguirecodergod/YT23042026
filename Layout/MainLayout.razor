@@ -1,9 +1,10 @@
-@inherits LayoutComponentBase
+@inherits HTTLayoutComponentBase
+@implements IAsyncDisposable
 @inject NavigationManager Nav
 
 <div class="htt-shell">
     <!-- ═══ Sidebar ═══ -->
-    <aside class="htt-sidebar @(SidebarOpen ? "open" : "")" id="sidebar">
+    <aside class="htt-sidebar @(_sidebarState.ToString().ToLower()) @(_sidebarState == CCollapseType.Expanded ? "open" : "")" id="sidebar">
 
         <!-- Brand -->
         <a class="sidebar-brand" href="/">
@@ -76,53 +77,60 @@
                     <div class="user-name">Admin User</div>
                     <div class="user-role">Super Administrator</div>
                 </div>
-                <i class="bi bi-three-dots-vertical ms-auto" style="color: var(--htt-text-muted); font-size:0.875rem;"></i>
+                <i class="bi bi-three-dots-vertical ms-auto"
+                   style="color: var(--htt-text-muted); font-size:0.875rem;"></i>
             </a>
         </div>
 
     </aside>
 
     <!-- Mobile overlay -->
-    <div class="sidebar-overlay @(SidebarOpen ? "visible" : "")"
-         @onclick="CloseSidebar"
-         aria-hidden="true"></div>
+    <div class="sidebar-overlay @(_sidebarState != CCollapseType.Hidden ? "visible d-lg-none" : "")" @onclick="CloseSidebar" aria-hidden="true"></div>
 
     <!-- ═══ Main ═══ -->
     <div class="htt-main">
 
         <!-- Top Bar -->
         <header class="htt-topbar">
-            <!-- Hamburger (mobile) -->
-            <button class="topbar-btn d-lg-none" @onclick="ToggleSidebar"
-                    aria-label="Toggle navigation" aria-expanded="@SidebarOpen">
-                <i class="bi @(SidebarOpen ? "bi-x-lg" : "bi-list")"></i>
+            <!-- Hamburger Toggle -->
+            <button class="topbar-btn me-2" @onclick="ToggleSidebar" aria-label="Toggle navigation">
+                <i class="bi @(GetToggleIcon())"></i>
             </button>
 
-            <div class="topbar-title">@PageTitle</div>
+            <div class="topbar-title">@PageTitle <span class="badge bg-secondary ms-2" style="font-size: 0.5rem; vertical-align: middle;">@_sidebarState</span></div>
 
             <div class="topbar-search">
                 <i class="bi bi-search search-icon"></i>
-                <input type="search"
-                       placeholder="Search anything..."
-                       aria-label="Global search"
-                       @bind="_searchQuery"
+                <input type="search" placeholder="Search anything..." aria-label="Global search" @bind="_searchQuery"
                        @bind:event="oninput" />
             </div>
 
             <div class="topbar-actions">
-                <button class="topbar-btn" data-tooltip="Notifications" aria-label="Notifications">
-                    <i class="bi bi-bell-fill"></i>
-                    <span class="notif-dot"></span>
+                <button class="topbar-btn me-2" @onclick="Theme.ToggleThemeAsync" title="Toggle Theme">
+                    <i class="bi @(Theme.IsDark ? "bi-sun-fill" : "bi-moon-fill")"></i>
                 </button>
-                <button class="topbar-btn" data-tooltip="Messages" aria-label="Messages">
-                    <i class="bi bi-chat-dots-fill"></i>
-                </button>
-                <button class="topbar-btn" data-tooltip="Help" aria-label="Help">
-                    <i class="bi bi-question-circle-fill"></i>
-                </button>
-                <a href="/profile" class="topbar-btn" data-tooltip="Profile" aria-label="Profile">
-                    <i class="bi bi-person-circle"></i>
-                </a>
+
+                <HTTToolTip Position="CPositionType.Top" Text="Notifications">
+                    <button class="topbar-btn" aria-label="Notifications">
+                        <i class="bi bi-bell-fill"></i>
+                        <span class="notif-dot"></span>
+                    </button>
+                </HTTToolTip>
+                <HTTToolTip Position="CPositionType.Top" Text="Messages">
+                    <button class="topbar-btn" aria-label="Messages">
+                        <i class="bi bi-chat-dots-fill"></i>
+                    </button>
+                </HTTToolTip>
+                <HTTToolTip Position="CPositionType.Top" Text="Help">
+                    <button class="topbar-btn" aria-label="Help">
+                        <i class="bi bi-question-circle-fill"></i>
+                    </button>
+                </HTTToolTip>
+                <HTTToolTip Position="CPositionType.Top" Text="Profile">
+                    <a href="/profile" class="topbar-btn" aria-label="Profile">
+                        <i class="bi bi-person-circle"></i>
+                    </a>
+                </HTTToolTip>
             </div>
         </header>
 
@@ -135,29 +143,85 @@
 </div>
 
 @code {
-    private bool SidebarOpen { get; set; } = false;
+    private CCollapseType _sidebarState = CCollapseType.Expanded;
     private string _searchQuery = string.Empty;
     private string PageTitle => GetPageTitle();
+    private DotNetObjectReference<MainLayout>? _objRef;
 
-    private void ToggleSidebar() => SidebarOpen = !SidebarOpen;
-    private void CloseSidebar()  => SidebarOpen = false;
+    protected override async Task OnInitializedAsync()
+    {
+        await Theme.InitializeAsync();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("window.httLayout.initResizeListener", _objRef);
+            var width = await JS.InvokeAsync<double>("window.httLayout.getWindowWidth");
+            UpdateStateFromWidth(width);
+            StateHasChanged();
+        }
+    }
+
+    [JSInvokable]
+    public void OnWindowResize(double width)
+    {
+        UpdateStateFromWidth(width);
+        StateHasChanged();
+    }
+
+    private void UpdateStateFromWidth(double width)
+    {
+        if (width < 992) _sidebarState = CCollapseType.Hidden;
+        else if (width < 1280) _sidebarState = CCollapseType.Collapsed;
+        else _sidebarState = CCollapseType.Expanded;
+    }
+
+    private void ToggleSidebar()
+    {
+        _sidebarState = _sidebarState switch
+        {
+            CCollapseType.Expanded => CCollapseType.Collapsed,
+            CCollapseType.Collapsed => CCollapseType.Hidden,
+            CCollapseType.Hidden => CCollapseType.Expanded,
+            _ => CCollapseType.Expanded
+        };
+        StateHasChanged();
+    }
+
+    private string GetToggleIcon() => _sidebarState switch
+    {
+        CCollapseType.Expanded => "bi-chevron-left",
+        CCollapseType.Collapsed => "bi-list",
+        CCollapseType.Hidden => "bi-layout-sidebar-inset",
+        _ => "bi-list"
+    };
+
+    private void CloseSidebar() => _sidebarState = CCollapseType.Hidden;
 
     private string GetPageTitle()
     {
         var path = new Uri(Nav.Uri).AbsolutePath.TrimStart('/');
         return path switch
         {
-            ""             => "Dashboard",
-            "analytics"    => "Analytics",
-            "projects"     => "Projects",
-            "reports"      => "Reports",
-            "users"        => "Users",
-            "billing"      => "Billing",
+            "" => "Dashboard",
+            "analytics" => "Analytics",
+            "projects" => "Projects",
+            "reports" => "Reports",
+            "users" => "Users",
+            "billing" => "Billing",
             "integrations" => "Integrations",
-            "audit"        => "Audit Log",
-            "settings"     => "Settings",
-            "profile"      => "Profile",
-            _              => "HTT Enterprise"
+            "audit" => "Audit Log",
+            "settings" => "Settings",
+            "profile" => "Profile",
+            _ => "HTT Enterprise"
         };
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _objRef?.Dispose();
     }
 }
