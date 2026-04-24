@@ -1,0 +1,163 @@
+@inherits LayoutComponentBase
+@inject NavigationManager Nav
+
+<div class="htt-shell">
+    <!-- ═══ Sidebar ═══ -->
+    <aside class="htt-sidebar @(SidebarOpen ? "open" : "")" id="sidebar">
+
+        <!-- Brand -->
+        <a class="sidebar-brand" href="/">
+            <div class="sidebar-brand-icon">HTT</div>
+            <div class="sidebar-brand-text">HTT <span>Enterprise</span></div>
+        </a>
+
+        <!-- Navigation -->
+        <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
+
+            <span class="sidebar-section-label">Workspace</span>
+
+            <NavLink class="sidebar-item" href="/" Match="NavLinkMatch.All">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </NavLink>
+
+            <NavLink class="sidebar-item" href="/analytics">
+                <i class="bi bi-bar-chart-line-fill"></i>
+                <span>Analytics</span>
+            </NavLink>
+
+            <NavLink class="sidebar-item" href="/projects">
+                <i class="bi bi-kanban-fill"></i>
+                <span>Projects</span>
+                <span class="nav-badge">3</span>
+            </NavLink>
+
+            <NavLink class="sidebar-item" href="/reports">
+                <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                <span>Reports</span>
+            </NavLink>
+
+            <span class="sidebar-section-label">Management</span>
+
+            <NavLink class="sidebar-item" href="/users">
+                <i class="bi bi-people-fill"></i>
+                <span>Users</span>
+            </NavLink>
+
+            <NavLink class="sidebar-item" href="/billing">
+                <i class="bi bi-credit-card-fill"></i>
+                <span>Billing</span>
+            </NavLink>
+
+            <NavLink class="sidebar-item" href="/integrations">
+                <i class="bi bi-plug-fill"></i>
+                <span>Integrations</span>
+            </NavLink>
+
+            <span class="sidebar-section-label">System</span>
+
+            <NavLink class="sidebar-item" href="/audit">
+                <i class="bi bi-shield-check"></i>
+                <span>Audit Log</span>
+            </NavLink>
+
+            <NavLink class="sidebar-item" href="/settings">
+                <i class="bi bi-sliders2"></i>
+                <span>Settings</span>
+            </NavLink>
+
+        </nav>
+
+        <!-- User Footer -->
+        <div class="sidebar-footer">
+            <a class="sidebar-user" href="/profile">
+                <div class="user-avatar">AD</div>
+                <div class="user-info">
+                    <div class="user-name">Admin User</div>
+                    <div class="user-role">Super Administrator</div>
+                </div>
+                <i class="bi bi-three-dots-vertical ms-auto" style="color: var(--htt-text-muted); font-size:0.875rem;"></i>
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div class="sidebar-overlay @(SidebarOpen ? "visible" : "")"
+         @onclick="CloseSidebar"
+         aria-hidden="true"></div>
+
+    <!-- ═══ Main ═══ -->
+    <div class="htt-main">
+
+        <!-- Top Bar -->
+        <header class="htt-topbar">
+            <!-- Hamburger (mobile) -->
+            <button class="topbar-btn d-lg-none" @onclick="ToggleSidebar"
+                    aria-label="Toggle navigation" aria-expanded="@SidebarOpen">
+                <i class="bi @(SidebarOpen ? "bi-x-lg" : "bi-list")"></i>
+            </button>
+
+            <div class="topbar-title">@PageTitle</div>
+
+            <div class="topbar-search">
+                <i class="bi bi-search search-icon"></i>
+                <input type="search"
+                       placeholder="Search anything..."
+                       aria-label="Global search"
+                       @bind="_searchQuery"
+                       @bind:event="oninput" />
+            </div>
+
+            <div class="topbar-actions">
+                <button class="topbar-btn" data-tooltip="Notifications" aria-label="Notifications">
+                    <i class="bi bi-bell-fill"></i>
+                    <span class="notif-dot"></span>
+                </button>
+                <button class="topbar-btn" data-tooltip="Messages" aria-label="Messages">
+                    <i class="bi bi-chat-dots-fill"></i>
+                </button>
+                <button class="topbar-btn" data-tooltip="Help" aria-label="Help">
+                    <i class="bi bi-question-circle-fill"></i>
+                </button>
+                <a href="/profile" class="topbar-btn" data-tooltip="Profile" aria-label="Profile">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <main class="htt-content" role="main">
+            @Body
+        </main>
+
+    </div>
+</div>
+
+@code {
+    private bool SidebarOpen { get; set; } = false;
+    private string _searchQuery = string.Empty;
+    private string PageTitle => GetPageTitle();
+
+    private void ToggleSidebar() => SidebarOpen = !SidebarOpen;
+    private void CloseSidebar()  => SidebarOpen = false;
+
+    private string GetPageTitle()
+    {
+        var path = new Uri(Nav.Uri).AbsolutePath.TrimStart('/');
+        return path switch
+        {
+            ""             => "Dashboard",
+            "analytics"    => "Analytics",
+            "projects"     => "Projects",
+            "reports"      => "Reports",
+            "users"        => "Users",
+            "billing"      => "Billing",
+            "integrations" => "Integrations",
+            "audit"        => "Audit Log",
+            "settings"     => "Settings",
+            "profile"      => "Profile",
+            _              => "HTT Enterprise"
+        };
+    }
+}

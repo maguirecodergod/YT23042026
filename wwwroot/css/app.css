@@ -1,0 +1,3 @@
+/* app.css — Scoped Blazor component overrides + app-level CSS isolation */
+/* All global design tokens and layout are in theme.css */
+/* This file is reserved for app-level resets that Blazor needs */

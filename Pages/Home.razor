@@ -1,0 +1,188 @@
+@page "/"
+<PageTitle>Dashboard — HTT Enterprise</PageTitle>
+
+<div class="fade-in">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="htt-breadcrumb">
+            <i class="bi bi-grid-1x2-fill"></i>
+            <i class="bi bi-chevron-right separator"></i>
+            <span class="current">Dashboard</span>
+        </div>
+        <h1>Good morning, Admin <span class="text-gradient-gold">👋</span></h1>
+        <p>Here's what's happening across your enterprise platform today.</p>
+    </div>
+
+    <!-- KPI Stats Row -->
+    <div class="grid grid-4 gap-4 mb-4">
+        <div class="stat-card scale-in">
+            <div class="spread">
+                <div class="stat-icon-wrap stat-icon-gold">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+                <span class="stat-change up"><i class="bi bi-arrow-up-short"></i>12.4%</span>
+            </div>
+            <div class="stat-value">$2.4M</div>
+            <div class="stat-label">Total Revenue</div>
+            <div class="htt-progress mt-2"><div class="htt-progress-bar" style="width:72%"></div></div>
+        </div>
+
+        <div class="stat-card scale-in" style="animation-delay:0.05s">
+            <div class="spread">
+                <div class="stat-icon-wrap stat-icon-blue">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <span class="stat-change up"><i class="bi bi-arrow-up-short"></i>8.1%</span>
+            </div>
+            <div class="stat-value">14,832</div>
+            <div class="stat-label">Active Users</div>
+            <div class="htt-progress mt-2">
+                <div class="htt-progress-bar" style="width:58%; background: linear-gradient(90deg, var(--htt-blue), var(--htt-blue-light));"></div>
+            </div>
+        </div>
+
+        <div class="stat-card scale-in" style="animation-delay:0.10s">
+            <div class="spread">
+                <div class="stat-icon-wrap stat-icon-green">
+                    <i class="bi bi-kanban-fill"></i>
+                </div>
+                <span class="stat-change up"><i class="bi bi-arrow-up-short"></i>3.7%</span>
+            </div>
+            <div class="stat-value">248</div>
+            <div class="stat-label">Active Projects</div>
+            <div class="htt-progress mt-2">
+                <div class="htt-progress-bar" style="width:85%; background: linear-gradient(90deg, #3fb950, #56d364);"></div>
+            </div>
+        </div>
+
+        <div class="stat-card scale-in" style="animation-delay:0.15s">
+            <div class="spread">
+                <div class="stat-icon-wrap stat-icon-red">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                </div>
+                <span class="stat-change down"><i class="bi bi-arrow-down-short"></i>2.3%</span>
+            </div>
+            <div class="stat-value">17</div>
+            <div class="stat-label">Open Incidents</div>
+            <div class="htt-progress mt-2">
+                <div class="htt-progress-bar" style="width:17%; background: linear-gradient(90deg, #f85149, #ff7b72);"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Grid -->
+    <div class="grid gap-4" style="grid-template-columns: 1fr 360px;">
+
+        <!-- Recent Activity -->
+        <div class="htt-card">
+            <div class="htt-card-header">
+                <h2 class="htt-card-title"><i class="bi bi-clock-history me-2" style="color:var(--htt-gold)"></i>Recent Activity</h2>
+                <button class="btn btn-secondary btn-sm">View All</button>
+            </div>
+            <table class="htt-table">
+                <thead>
+                    <tr>
+                        <th>Event</th>
+                        <th>User</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in _activityItems)
+                    {
+                        <tr>
+                            <td>
+                                <div style="font-weight:500">@item.Event</div>
+                                <div style="font-size:0.75rem;color:var(--htt-text-muted)">@item.Description</div>
+                            </td>
+                            <td>
+                                <div class="cluster gap-2">
+                                    <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:0.625rem;font-weight:700;color:white;flex-shrink:0">
+                                        @item.User[..2].ToUpper()
+                                    </div>
+                                    <span style="font-size:0.875rem">@item.User</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="htt-badge @item.BadgeClass">@item.Status</span>
+                            </td>
+                            <td style="color:var(--htt-text-muted);font-size:0.8125rem">@item.Time</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Quick Actions + System Status -->
+        <div class="stack gap-4">
+
+            <!-- Quick Actions -->
+            <div class="htt-card htt-card-glow">
+                <div class="htt-card-header">
+                    <h2 class="htt-card-title"><i class="bi bi-lightning-charge-fill me-2" style="color:var(--htt-gold)"></i>Quick Actions</h2>
+                </div>
+                <div class="stack gap-2">
+                    <button class="btn btn-primary w-100">
+                        <i class="bi bi-plus-circle-fill"></i> New Project
+                    </button>
+                    <button class="btn btn-secondary w-100">
+                        <i class="bi bi-person-plus-fill"></i> Invite Member
+                    </button>
+                    <button class="btn btn-outline-gold w-100">
+                        <i class="bi bi-file-earmark-plus-fill"></i> Generate Report
+                    </button>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="htt-card">
+                <div class="htt-card-header">
+                    <h2 class="htt-card-title"><i class="bi bi-activity me-2" style="color:var(--htt-gold)"></i>System Health</h2>
+                    <span class="htt-badge htt-badge-green"><i class="bi bi-check-circle-fill"></i> Operational</span>
+                </div>
+                <div class="stack gap-3">
+                    @foreach (var svc in _services)
+                    {
+                        <div>
+                            <div class="spread mb-1">
+                                <span style="font-size:0.8125rem;font-weight:500">@svc.Name</span>
+                                <span style="font-size:0.75rem;color:@svc.Color;font-weight:600">@svc.Uptime</span>
+                            </div>
+                            <div class="htt-progress">
+                                <div class="htt-progress-bar"
+                                     style="width:@(svc.Pct)%; background:linear-gradient(90deg,@svc.Color,@svc.ColorLight)">
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+@code {
+    record ActivityItem(string Event, string Description, string User, string Status, string BadgeClass, string Time);
+    record ServiceItem(string Name, string Uptime, int Pct, string Color, string ColorLight);
+
+    private List<ActivityItem> _activityItems = new()
+    {
+        new("Deployment pushed",    "v2.14.0 → Production",   "John Smith",    "Success",  "htt-badge-green",   "2 min ago"),
+        new("User role updated",    "RBAC policy change",     "Sarah Lee",     "Pending",  "htt-badge-gold",    "18 min ago"),
+        new("Backup completed",     "DB snapshot saved",      "System",        "Done",     "htt-badge-blue",    "1 hr ago"),
+        new("Alert triggered",      "CPU spike on node-07",   "Monitor Bot",   "Warning",  "htt-badge-red",     "2 hr ago"),
+        new("API key rotated",      "Credentials updated",    "Admin User",    "Success",  "htt-badge-green",   "4 hr ago"),
+    };
+
+    private List<ServiceItem> _services = new()
+    {
+        new("API Gateway",   "99.98%", 100, "#3fb950", "#56d364"),
+        new("Auth Service",  "99.95%", 99,  "#3fb950", "#56d364"),
+        new("Database",      "99.87%", 99,  "#d29922", "#e3b341"),
+        new("CDN / Storage", "100%",   100, "#3fb950", "#56d364"),
+        new("Message Queue", "98.2%",  98,  "#3fb950", "#56d364"),
+    };
+}
