@@ -4,15 +4,17 @@
 <HTTContainer Padding="CSpacingType.LG" MaxWidth="1440px">
     <div class="fade-in">
         <!-- Page Header -->
-        <div class="page-header">
+        <HTTStack Spacing="CSpacingType.XS" Class="page-header mb-4">
             <div class="htt-breadcrumb">
                 <i class="bi bi-grid-1x2-fill"></i>
                 <i class="bi bi-chevron-right separator"></i>
                 <span class="current">Dashboard</span>
             </div>
-            <h1>Good morning, Admin <span class="text-gradient-gold">👋</span></h1>
+            <HTTHeading Type="CHeadingType.H1" ToolTip="Welcome back, we've missed you! ✨" ToolTipShape="CToolTipShapeType.Cute">
+                Good morning, Admin <span class="text-gradient-gold">👋</span>
+            </HTTHeading>
             <p>Here's what's happening across your enterprise platform today.</p>
-        </div>
+        </HTTStack>
 
         <!-- KPI Stats Row -->
         <div class="grid grid-4 gap-4 mb-4">
@@ -83,10 +85,11 @@
             <!-- Recent Activity -->
             <div class="htt-card">
                 <div class="htt-card-header">
-                    <h2 class="htt-card-title"><i class="bi bi-clock-history me-2" style="color:var(--htt-gold)"></i>Recent
-                        Activity</h2>
-                        <button class="btn btn-secondary btn-sm">View All</button>
-                    </div>
+                    <HTTHeading Type="CHeadingType.H2" Class="htt-card-title">
+                        <i class="bi bi-clock-history me-2" style="color:var(--htt-gold)"></i>Recent Activity
+                    </HTTHeading>
+                    <button class="btn btn-secondary btn-sm">View All</button>
+                </div>
                     <table class="htt-table">
                         <thead>
                             <tr>
@@ -123,65 +126,65 @@
                     </table>
                 </div>
 
-                <!-- Quick Actions + System Status -->
-                <div class="stack gap-4">
+            <!-- Quick Actions + System Status -->
+            <HTTStack Spacing="CSpacingType.MD">
 
-                    <!-- Quick Actions -->
-                    <div class="htt-card htt-card-glow">
-                        <div class="htt-card-header">
-                            <h2 class="htt-card-title"><i class="bi bi-lightning-charge-fill me-2"
-                                                              style="color:var(--htt-gold)"></i>Quick Actions</h2>
-                            </div>
-                            <div class="stack gap-2">
-                                <HTTToolTip Content="Create a new workspace project" Position="CPositionType.Top" Class="w-100">
-                                    <button class="btn btn-primary w-100">
-                                        <i class="bi bi-plus-circle-fill"></i> New Project
-                                    </button>
-                                </HTTToolTip>
-                                <HTTToolTip Content="Add a new member to this organization" Position="CPositionType.Top"
-                                            Class="w-100">
-                                    <button class="btn btn-secondary w-100">
-                                        <i class="bi bi-person-plus-fill"></i> Invite Member
-                                    </button>
-                                </HTTToolTip>
-                                <HTTToolTip Content="Generate a PDF report of recent activities" Position="CPositionType.Top"
-                                            Class="w-100">
-                                    <button class="btn btn-outline-gold w-100">
-                                        <i class="bi bi-file-earmark-plus-fill"></i> Generate Report
-                                    </button>
-                                </HTTToolTip>
-                            </div>
-                        </div>
-
-                        <!-- System Health -->
-                        <div class="htt-card">
-                            <div class="htt-card-header">
-                                <h2 class="htt-card-title"><i class="bi bi-activity me-2" style="color:var(--htt-gold)"></i>System
-                                    Health</h2>
-                                    <span class="htt-badge htt-badge-green"><i class="bi bi-check-circle-fill"></i> Operational</span>
-                                </div>
-                                <div class="stack gap-3">
-                                    @foreach (var svc in _services)
-                                    {
-                                        <div>
-                                            <div class="spread mb-1">
-                                                <span style="font-size:0.8125rem;font-weight:500">@svc.Name</span>
-                                                <span style="font-size:0.75rem;color:@svc.Color;font-weight:600">@svc.Uptime</span>
-                                            </div>
-                                            <div class="htt-progress">
-                                                <div class="htt-progress-bar"
-                                                     style="width:@(svc.Pct)%; background:linear-gradient(90deg,@svc.Color,@svc.ColorLight)">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-
-                        </div>
+                <!-- Quick Actions -->
+                <div class="htt-card htt-card-glow">
+                    <div class="htt-card-header">
+                        <HTTHeading Type="CHeadingType.H2" Class="htt-card-title">
+                            <i class="bi bi-lightning-charge-fill me-2" style="color:var(--htt-gold)"></i>Quick Actions
+                        </HTTHeading>
+                    </div>
+                        <HTTStack Spacing="CSpacingType.SM">
+                            <HTTToolTip Content="Create a new workspace project" Position="CPositionType.Top" Shape="CToolTipShapeType.Pill" Class="w-100">
+                                <button class="btn btn-primary w-100">
+                                    <i class="bi bi-plus-circle-fill"></i> New Project
+                                </button>
+                            </HTTToolTip>
+                            <HTTToolTip Content="Add a new member to this organization" Position="CPositionType.Top" Shape="CToolTipShapeType.Cute"
+                                        Class="w-100">
+                                <button class="btn btn-secondary w-100">
+                                    <i class="bi bi-person-plus-fill"></i> Invite Member
+                                </button>
+                            </HTTToolTip>
+                            <HTTToolTip Content="Generate a PDF report of recent activities" Position="CPositionType.Top" Shape="CToolTipShapeType.Square"
+                                        Class="w-100">
+                                <button class="btn btn-outline-gold w-100">
+                                    <i class="bi bi-file-earmark-plus-fill"></i> Generate Report
+                                </button>
+                            </HTTToolTip>
+                        </HTTStack>
                     </div>
 
+                    <!-- System Health -->
+                    <div class="htt-card">
+                        <div class="htt-card-header">
+                            <HTTHeading Type="CHeadingType.H2" Class="htt-card-title">
+                                <i class="bi bi-activity me-2" style="color:var(--htt-gold)"></i>System Health
+                            </HTTHeading>
+                            <span class="htt-badge htt-badge-green"><i class="bi bi-check-circle-fill"></i> Operational</span>
+                        </div>
+                            <HTTStack Spacing="CSpacingType.MD">
+                                @foreach (var svc in _services)
+                                {
+                                    <div>
+                                        <div class="spread mb-1">
+                                            <span style="font-size:0.8125rem;font-weight:500">@svc.Name</span>
+                                            <span style="font-size:0.75rem;color:@svc.Color;font-weight:600">@svc.Uptime</span>
+                                        </div>
+                                        <div class="htt-progress">
+                                            <div class="htt-progress-bar"
+                                                 style="width:@(svc.Pct)%; background:linear-gradient(90deg,@svc.Color,@svc.ColorLight)">
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </HTTStack>
+                        </div>
+                    </HTTStack>
                 </div>
+            </div>
 </HTTContainer>
 
 @code {

@@ -1,0 +1,29 @@
+@inherits HTTComponentBase
+@namespace HTT.BlazorWasm.App.Components
+
+<div class="htt-lang-selector @(_isOpen ? "open" : "")" tabindex="0" @onfocusout="HandleFocusOut">
+    <HTTToolTip Position="CPositionType.Top" Shape="CToolTipShapeType.Bubble" Text="@GetTooltipText()">
+        <button class="topbar-btn lang-btn" @onclick="ToggleDropdown" aria-haspopup="true" aria-expanded="@_isOpen">
+            <i class="@GetActiveIcon()"></i>
+        </button>
+    </HTTToolTip>
+
+    <div class="lang-dropdown">
+        <div class="lang-dropdown-header">
+            <span class="lang-dropdown-title">@L["Layout.Topbar.LanguageSelect"]</span>
+        </div>
+        <div class="lang-dropdown-body">
+            @foreach (var entry in L.SupportedCultureEntries)
+            {
+                <button class="lang-item @(IsActive(entry) ? "active" : "")" @onclick="() => SelectLanguageAsync(entry)">
+                    <i class="@entry.Icon"></i>
+                    <span class="lang-name">@L.GetString(entry.DisplayName)</span>
+                    @if (IsActive(entry))
+                    {
+                        <i class="bi bi-check2 check-icon"></i>
+                    }
+                </button>
+            }
+        </div>
+    </div>
+</div>

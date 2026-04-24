@@ -1,0 +1,39 @@
+{
+  "Layout": {
+    "Sidebar": {
+      "Sections": {
+        "Workspace": "Không gian làm việc",
+        "Management": "Quản lý",
+        "System": "Hệ thống"
+      },
+      "Items": {
+        "Dashboard": "Bảng điều khiển",
+        "Analytics": "Phân tích",
+        "Projects": "Dự án",
+        "Reports": "Báo cáo",
+        "Users": "Người dùng",
+        "Billing": "Thanh toán",
+        "Integrations": "Tích hợp",
+        "AuditLog": "Nhật ký hệ thống",
+        "Settings": "Cài đặt"
+      },
+      "User": {
+        "Name": "Quản trị viên",
+        "Role": "Siêu quản trị viên"
+      }
+    },
+    "Topbar": {
+      "SearchPlaceholder": "Tìm kiếm thông tin...",
+      "Theme": "Giao diện: {0}",
+      "Language": "Ngôn ngữ: {0}",
+      "LanguageSelect": "Chọn ngôn ngữ",
+      "Notifications": "Thông báo",
+      "Messages": "Tin nhắn",
+      "Help": "Trợ giúp",
+      "Profile": "Hồ sơ cá nhân"
+    },
+    "Title": {
+      "Default": "Nền tảng HTT"
+    }
+  }
+}

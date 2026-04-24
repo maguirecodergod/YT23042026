@@ -10,7 +10,7 @@
 
     @if (!string.IsNullOrEmpty(Content) || !string.IsNullOrEmpty(Text))
     {
-        <div class="htt-tooltip htt-tooltip-@GetPositionClass() @(_visible ? "visible" : "")" 
+        <div class="@ToolTipCssClass htt-tooltip-@GetPositionClass()" 
              @ref="_tooltipRef">
             @(string.IsNullOrEmpty(Content) ? Text : Content)
             <div class="htt-tooltip-arrow" @ref="_arrowRef"></div>

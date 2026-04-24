@@ -43,6 +43,7 @@ namespace HTT.BlazorWasm.App.Services
                 }
 
                 await ApplyThemeToDomAsync();
+                OnThemeChanged?.Invoke();
             }
             catch { /* Fallback to default */ }
         }

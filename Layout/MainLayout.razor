@@ -15,56 +15,56 @@
         <!-- Navigation -->
         <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
 
-            <span class="sidebar-section-label">Workspace</span>
+            <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.Workspace"]</span>
 
             <NavLink class="sidebar-item" href="/" Match="NavLinkMatch.All">
                 <i class="bi bi-grid-1x2-fill"></i>
-                <span>Dashboard</span>
+                <span>@L["Layout.Sidebar.Items.Dashboard"]</span>
             </NavLink>
 
             <NavLink class="sidebar-item" href="/analytics">
                 <i class="bi bi-bar-chart-line-fill"></i>
-                <span>Analytics</span>
+                <span>@L["Layout.Sidebar.Items.Analytics"]</span>
             </NavLink>
 
             <NavLink class="sidebar-item" href="/projects">
                 <i class="bi bi-kanban-fill"></i>
-                <span>Projects</span>
+                <span>@L["Layout.Sidebar.Items.Projects"]</span>
                 <span class="nav-badge">3</span>
             </NavLink>
 
             <NavLink class="sidebar-item" href="/reports">
                 <i class="bi bi-file-earmark-bar-graph-fill"></i>
-                <span>Reports</span>
+                <span>@L["Layout.Sidebar.Items.Reports"]</span>
             </NavLink>
 
-            <span class="sidebar-section-label">Management</span>
+            <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.Management"]</span>
 
             <NavLink class="sidebar-item" href="/users">
                 <i class="bi bi-people-fill"></i>
-                <span>Users</span>
+                <span>@L["Layout.Sidebar.Items.Users"]</span>
             </NavLink>
 
             <NavLink class="sidebar-item" href="/billing">
                 <i class="bi bi-credit-card-fill"></i>
-                <span>Billing</span>
+                <span>@L["Layout.Sidebar.Items.Billing"]</span>
             </NavLink>
 
             <NavLink class="sidebar-item" href="/integrations">
                 <i class="bi bi-plug-fill"></i>
-                <span>Integrations</span>
+                <span>@L["Layout.Sidebar.Items.Integrations"]</span>
             </NavLink>
 
-            <span class="sidebar-section-label">System</span>
+            <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.System"]</span>
 
             <NavLink class="sidebar-item" href="/audit">
                 <i class="bi bi-shield-check"></i>
-                <span>Audit Log</span>
+                <span>@L["Layout.Sidebar.Items.AuditLog"]</span>
             </NavLink>
 
             <NavLink class="sidebar-item" href="/settings">
                 <i class="bi bi-sliders2"></i>
-                <span>Settings</span>
+                <span>@L["Layout.Sidebar.Items.Settings"]</span>
             </NavLink>
 
         </nav>
@@ -74,8 +74,8 @@
             <a class="sidebar-user" href="/profile">
                 <div class="user-avatar">AD</div>
                 <div class="user-info">
-                    <div class="user-name">Admin User</div>
-                    <div class="user-role">Super Administrator</div>
+                    <div class="user-name">@L["Layout.Sidebar.User.Name"]</div>
+                    <div class="user-role">@L["Layout.Sidebar.User.Role"]</div>
                 </div>
                 <i class="bi bi-three-dots-vertical ms-auto"
                    style="color: var(--htt-text-muted); font-size:0.875rem;"></i>
@@ -101,34 +101,36 @@
 
             <div class="topbar-search">
                 <i class="bi bi-search search-icon"></i>
-                <input type="search" placeholder="Search anything..." aria-label="Global search" @bind="_searchQuery"
+                <input type="search" placeholder="@L["Layout.Topbar.SearchPlaceholder"]" aria-label="Global search" @bind="_searchQuery"
                        @bind:event="oninput" />
             </div>
 
             <div class="topbar-actions">
-                <HTTToolTip Position="CPositionType.Top" Text="@($"Theme: {Theme.CurrentTheme.GetDisplayName()}")">
+                <HTTToolTip Position="CPositionType.Top" Shape="CToolTipShapeType.Bubble" Text="@L.GetString("Layout.Topbar.Theme", Theme.CurrentTheme.GetLocalizedName(L))">
                     <button class="topbar-btn me-2" @onclick="Theme.ToggleThemeAsync" aria-label="Toggle Theme">
                         <i class="bi @(Theme.CurrentTheme.GetIcon())"></i>
                     </button>
                 </HTTToolTip>
 
-                <HTTToolTip Position="CPositionType.Top" Text="Notifications">
+                <HTTLanguageSelector />
+
+                <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Notifications"]">
                     <button class="topbar-btn" aria-label="Notifications">
                         <i class="bi bi-bell-fill"></i>
                         <span class="notif-dot"></span>
                     </button>
                 </HTTToolTip>
-                <HTTToolTip Position="CPositionType.Top" Text="Messages">
+                <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Messages"]">
                     <button class="topbar-btn" aria-label="Messages">
                         <i class="bi bi-chat-dots-fill"></i>
                     </button>
                 </HTTToolTip>
-                <HTTToolTip Position="CPositionType.Top" Text="Help">
+                <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Help"]">
                     <button class="topbar-btn" aria-label="Help">
                         <i class="bi bi-question-circle-fill"></i>
                     </button>
                 </HTTToolTip>
-                <HTTToolTip Position="CPositionType.Top" Text="Profile">
+                <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Profile"]">
                     <a href="/profile" class="topbar-btn" aria-label="Profile">
                         <i class="bi bi-person-circle"></i>
                     </a>
@@ -152,6 +154,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await L.InitializeAsync();
         await Theme.InitializeAsync();
     }
 
@@ -163,6 +166,10 @@
             await JS.InvokeVoidAsync("window.httLayout.initResizeListener", _objRef);
             var width = await JS.InvokeAsync<double>("window.httLayout.getWindowWidth");
             UpdateStateFromWidth(width);
+
+            // Start hot-reload polling for localization files (dev only)
+            await L.StartHotReloadAsync(3000);
+
             StateHasChanged();
         }
     }
@@ -208,22 +215,23 @@
         var path = new Uri(Nav.Uri).AbsolutePath.TrimStart('/');
         return path switch
         {
-            "" => "Dashboard",
-            "analytics" => "Analytics",
-            "projects" => "Projects",
-            "reports" => "Reports",
-            "users" => "Users",
-            "billing" => "Billing",
-            "integrations" => "Integrations",
-            "audit" => "Audit Log",
-            "settings" => "Settings",
-            "profile" => "Profile",
-            _ => "HTT Enterprise"
+            "" => L["Layout.Sidebar.Items.Dashboard"],
+            "analytics" => L["Layout.Sidebar.Items.Analytics"],
+            "projects" => L["Layout.Sidebar.Items.Projects"],
+            "reports" => L["Layout.Sidebar.Items.Reports"],
+            "users" => L["Layout.Sidebar.Items.Users"],
+            "billing" => L["Layout.Sidebar.Items.Billing"],
+            "integrations" => L["Layout.Sidebar.Items.Integrations"],
+            "audit" => L["Layout.Sidebar.Items.AuditLog"],
+            "settings" => L["Layout.Sidebar.Items.Settings"],
+            "profile" => L["Layout.Topbar.Profile"],
+            _ => L["Layout.Title.Default"]
         };
     }
 
     public async ValueTask DisposeAsync()
     {
+        L.StopHotReload();
         _objRef?.Dispose();
     }
 }

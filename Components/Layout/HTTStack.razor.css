@@ -1,0 +1,55 @@
+.htt-stack {
+    display: flex;
+    box-sizing: border-box;
+    
+    /* Layout properties via CSS variables */
+    flex-direction: var(--htt-stack-direction, column);
+    align-items: var(--htt-stack-align, stretch);
+    justify-content: var(--htt-stack-justify, flex-start);
+    flex-wrap: var(--htt-stack-wrap, nowrap);
+    gap: var(--htt-stack-spacing, var(--space-0));
+    
+    /* Transitions for smooth responsiveness */
+    transition: var(--transition-base);
+    
+    /* Default colors inherited from theme.css */
+    color: var(--color-text-primary);
+}
+
+/* XS Breakpoint Overrides */
+.htt-stack {
+    flex-direction: var(--htt-stack-direction-xs, var(--htt-stack-direction));
+    gap: var(--htt-stack-spacing-xs, var(--htt-stack-spacing));
+}
+
+/* SM Breakpoint: ≥ 576px */
+@media (min-width: 576px) {
+    .htt-stack {
+        flex-direction: var(--htt-stack-direction-sm, var(--htt-stack-direction-xs, var(--htt-stack-direction)));
+        gap: var(--htt-stack-spacing-sm, var(--htt-stack-spacing-xs, var(--htt-stack-spacing)));
+    }
+}
+
+/* MD Breakpoint: ≥ 768px */
+@media (min-width: 768px) {
+    .htt-stack {
+        flex-direction: var(--htt-stack-direction-md, var(--htt-stack-direction-sm, var(--htt-stack-direction-xs, var(--htt-stack-direction))));
+        gap: var(--htt-stack-spacing-md, var(--htt-stack-spacing-sm, var(--htt-stack-spacing-xs, var(--htt-stack-spacing))));
+    }
+}
+
+/* LG Breakpoint: ≥ 992px */
+@media (min-width: 992px) {
+    .htt-stack {
+        flex-direction: var(--htt-stack-direction-lg, var(--htt-stack-direction-md, var(--htt-stack-direction-sm, var(--htt-stack-direction-xs, var(--htt-stack-direction)))));
+        gap: var(--htt-stack-spacing-lg, var(--htt-stack-spacing-md, var(--htt-stack-spacing-sm, var(--htt-stack-spacing-xs, var(--htt-stack-spacing)))));
+    }
+}
+
+/* XL Breakpoint: ≥ 1200px */
+@media (min-width: 1200px) {
+    .htt-stack {
+        flex-direction: var(--htt-stack-direction-xl, var(--htt-stack-direction-lg, var(--htt-stack-direction-md, var(--htt-stack-direction-sm, var(--htt-stack-direction-xs, var(--htt-stack-direction))))));
+        gap: var(--htt-stack-spacing-xl, var(--htt-stack-spacing-lg, var(--htt-stack-spacing-md, var(--htt-stack-spacing-sm, var(--htt-stack-spacing-xs, var(--htt-stack-spacing))))));
+    }
+}

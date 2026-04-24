@@ -1,0 +1,39 @@
+{
+  "Layout": {
+    "Sidebar": {
+      "Sections": {
+        "Workspace": "Workspace",
+        "Management": "Management",
+        "System": "System"
+      },
+      "Items": {
+        "Dashboard": "Dashboard",
+        "Analytics": "Analytics",
+        "Projects": "Projects",
+        "Reports": "Reports",
+        "Users": "Users",
+        "Billing": "Billing",
+        "Integrations": "Integrations",
+        "AuditLog": "Audit Log",
+        "Settings": "Settings"
+      },
+      "User": {
+        "Name": "Admin User",
+        "Role": "Super Administrator"
+      }
+    },
+    "Topbar": {
+      "SearchPlaceholder": "Search anything...",
+      "Theme": "Theme: {0}",
+      "Language": "Language: {0}",
+      "LanguageSelect": "Select Language",
+      "Notifications": "Notifications",
+      "Messages": "Messages",
+      "Help": "Help",
+      "Profile": "Profile"
+    },
+    "Title": {
+      "Default": "HTT Enterprise"
+    }
+  }
+}

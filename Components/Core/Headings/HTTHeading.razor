@@ -1,16 +1,43 @@
-@* @namespace HTT.BlazorWasm.App.Components
-@inherits HTTComponentBase;
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
 
-@switch(Type)
+@if (!string.IsNullOrEmpty(ToolTip))
 {
-    case CHeadingType.H1:
-    {
+    <HTTToolTip Content="@ToolTip" Position="ToolTipPosition" Shape="ToolTipShape">
+        @HeadingContent
+    </HTTToolTip>
+}
+else
+{
+    @HeadingContent
+}
 
-        break;
-    }
-    case CHeadingType.H2:
+@code {
+    private RenderFragment HeadingContent => __builder =>
     {
-
-        break;
-    }
-} *@
+        switch (Type)
+        {
+            case CHeadingType.H1:
+                <h1 class="@CssClass" style="@Style">@ChildContent</h1>
+                break;
+            case CHeadingType.H2:
+                <h2 class="@CssClass" style="@Style">@ChildContent</h2>
+                break;
+            case CHeadingType.H3:
+                <h3 class="@CssClass" style="@Style">@ChildContent</h3>
+                break;
+            case CHeadingType.H4:
+                <h4 class="@CssClass" style="@Style">@ChildContent</h4>
+                break;
+            case CHeadingType.H5:
+                <h5 class="@CssClass" style="@Style">@ChildContent</h5>
+                break;
+            case CHeadingType.H6:
+                <h6 class="@CssClass" style="@Style">@ChildContent</h6>
+                break;
+            default:
+                <h1 class="@CssClass" style="@Style">@ChildContent</h1>
+                break;
+        }
+    };
+}

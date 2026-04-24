@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 namespace HTT.BlazorWasm.App.Components
 {
     public partial class HTTToolTip : HTTComponentBase
@@ -8,9 +6,21 @@ namespace HTT.BlazorWasm.App.Components
         [Parameter] public string Content { get; set; } = string.Empty;
         [Parameter] public string Text { get; set; } = string.Empty;
         [Parameter] public CPositionType Position { get; set; } = CPositionType.Top;
+        [Parameter] public CToolTipShapeType Shape { get; set; } = CToolTipShapeType.Rounded;
         [Parameter] public string Class { get; set; } = string.Empty;
         [Parameter] public string Style { get; set; } = string.Empty;
         [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalAttributes { get; set; } = new();
+
+        protected string ToolTipCssClass => BuildToolTipClass();
+
+        private string BuildToolTipClass()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append("htt-tooltip");
+            sb.Append($" htt-tooltip-{Shape.ToString().ToLower()}");
+            if (_visible) sb.Append(" visible");
+            return sb.ToString();
+        }
 
         protected bool _visible;
         protected string _activePosition = "top";
