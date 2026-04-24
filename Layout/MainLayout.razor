@@ -106,9 +106,11 @@
             </div>
 
             <div class="topbar-actions">
-                <button class="topbar-btn me-2" @onclick="Theme.ToggleThemeAsync" title="Toggle Theme">
-                    <i class="bi @(Theme.IsDark ? "bi-sun-fill" : "bi-moon-fill")"></i>
-                </button>
+                <HTTToolTip Position="CPositionType.Top" Text="@($"Theme: {Theme.CurrentTheme.GetDisplayName()}")">
+                    <button class="topbar-btn me-2" @onclick="Theme.ToggleThemeAsync" aria-label="Toggle Theme">
+                        <i class="bi @(Theme.CurrentTheme.GetIcon())"></i>
+                    </button>
+                </HTTToolTip>
 
                 <HTTToolTip Position="CPositionType.Top" Text="Notifications">
                     <button class="topbar-btn" aria-label="Notifications">

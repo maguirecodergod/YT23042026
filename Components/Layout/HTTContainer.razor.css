@@ -1,0 +1,66 @@
+.htt-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    
+    /* Spacing from parameters */
+    padding: var(--htt-padding, var(--space-4));
+    margin-top: var(--htt-margin, var(--space-0));
+    margin-bottom: var(--htt-margin, var(--space-0));
+    
+    /* Max Width from parameters */
+    max-width: var(--htt-max-width, 1200px);
+    
+    /* Colors from theme.css */
+    background-color: var(--htt-bg-color, var(--color-bg-default));
+    color: var(--htt-text-color, var(--color-text-primary));
+    
+    /* Transitions from theme.css */
+    transition: var(--transition-base);
+}
+
+.htt-container-fluid {
+    max-width: 100% !important;
+}
+
+/* Theme Support is now handled via data-theme attribute and theme.css */
+
+/* Responsive Breakpoints (as per prompt requirements) */
+
+/* SM: ≥ 576px */
+@media (min-width: 576px) {
+    .htt-container:not(.htt-container-fluid) {
+        max-width: var(--htt-max-width-sm, var(--htt-max-width));
+    }
+}
+
+/* MD: ≥ 768px */
+@media (min-width: 768px) {
+    .htt-container:not(.htt-container-fluid) {
+        max-width: var(--htt-max-width-md, var(--htt-max-width-sm, var(--htt-max-width)));
+    }
+}
+
+/* LG: ≥ 992px */
+@media (min-width: 992px) {
+    .htt-container:not(.htt-container-fluid) {
+        max-width: var(--htt-max-width-lg, var(--htt-max-width-md, var(--htt-max-width)));
+    }
+}
+
+/* XL: ≥ 1200px */
+@media (min-width: 1200px) {
+    .htt-container:not(.htt-container-fluid) {
+        max-width: var(--htt-max-width-xl, var(--htt-max-width-lg, var(--htt-max-width)));
+    }
+}
+
+/* Premium aesthetic using theme.css shadow tokens */
+.htt-container {
+    box-shadow: var(--shadow-sm);
+}
+
+.htt-container:hover {
+    box-shadow: var(--shadow-md);
+}

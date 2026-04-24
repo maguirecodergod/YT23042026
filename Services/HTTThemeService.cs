@@ -1,51 +1,97 @@
-namespace HTT.BlazorWasm.App.Services;
-
-internal sealed class HTTThemeService : IHTTThemeService
+namespace HTT.BlazorWasm.App.Services
 {
-    private readonly IJSRuntime _js;
-    private bool _isDark = true;
-
-    public HTTThemeService(IJSRuntime js) => _js = js;
-
-    public bool IsDark => _isDark;
-    public event Action? OnThemeChanged;
-
-    public async Task InitializeAsync()
+    internal sealed class HTTThemeService : IHTTThemeService, IDisposable
     {
-        try
+        private readonly IJSRuntime _js;
+        private CThemeType _currentTheme = CThemeType.System;
+        private bool _isSystemDark = false;
+        private DotNetObjectReference<HTTThemeService>? _dotNetRef;
+
+        public HTTThemeService(IJSRuntime js) => _js = js;
+
+        public CThemeType CurrentTheme => _currentTheme;
+
+        public bool IsDark => _currentTheme switch
         {
-            var saved = await _js.InvokeAsync<string>(identifier: "localStorage.getItem", args: new[] { "htt-theme" });
-            if (!string.IsNullOrEmpty(saved))
+            CThemeType.Dark => true,
+            CThemeType.Light => false,
+            _ => _isSystemDark
+        };
+
+        public event Action? OnThemeChanged;
+
+        public async Task InitializeAsync()
+        {
+            try
             {
-                _isDark = saved == "dark";
+                // 1. Get initial system preference
+                _isSystemDark = await _js.InvokeAsync<bool>("httTheme.getSystemPreference");
+
+                // 2. Setup listener for system theme changes
+                _dotNetRef = DotNetObjectReference.Create(this);
+                await _js.InvokeVoidAsync("httTheme.initThemeListener", _dotNetRef);
+
+                // 3. Load saved theme preference
+                var saved = await _js.InvokeAsync<string>("localStorage.getItem", "htt-theme");
+                if (Enum.TryParse<CThemeType>(saved, true, out var theme))
+                {
+                    _currentTheme = theme;
+                }
+                else
+                {
+                    _currentTheme = CThemeType.System;
+                }
+
+                await ApplyThemeToDomAsync();
             }
-            else
-            {
-                // Optional: Check browser preference
-                var prefersDark = await _js.InvokeAsync<bool>("eval", "window.matchMedia('(prefers-color-scheme: dark)').matches");
-                _isDark = prefersDark;
-            }
-            await ApplyThemeToDomAsync();
+            catch { /* Fallback to default */ }
         }
-        catch { /* Fallback to default */ }
-    }
 
-    public async Task SetThemeAsync(bool isDark)
-    {
-        if (_isDark == isDark) return;
-        _isDark = isDark;
-        await _js.InvokeVoidAsync("localStorage.setItem", "htt-theme", isDark ? "dark" : "light");
-        await ApplyThemeToDomAsync();
-        OnThemeChanged?.Invoke();
-    }
+        [JSInvokable]
+        public void OnSystemThemeChanged(bool isDark)
+        {
+            _isSystemDark = isDark;
+            if (_currentTheme == CThemeType.System)
+            {
+                OnThemeChanged?.Invoke();
+            }
+        }
 
-    public async Task ToggleThemeAsync() => await SetThemeAsync(!_isDark);
+        public async Task SetThemeAsync(CThemeType theme)
+        {
+            if (_currentTheme == theme) return;
 
-    private async Task ApplyThemeToDomAsync()
-    {
-        var theme = _isDark ? "dark" : "light";
-        // Update both to be safe
-        await _js.InvokeVoidAsync("eval", $"document.documentElement.setAttribute('data-theme', '{theme}')");
-        await _js.InvokeVoidAsync("eval", $"document.documentElement.setAttribute('data-bs-theme', '{theme}')");
+            _currentTheme = theme;
+            await _js.InvokeVoidAsync("localStorage.setItem", "htt-theme", theme.ToString().ToLower());
+
+            await ApplyThemeToDomAsync();
+            OnThemeChanged?.Invoke();
+        }
+
+        public async Task ToggleThemeAsync()
+        {
+            // Rotation: System -> Light -> Dark -> System
+            var nextTheme = _currentTheme switch
+            {
+                CThemeType.System => CThemeType.Light,
+                CThemeType.Light => CThemeType.Dark,
+                CThemeType.Dark => CThemeType.System,
+                _ => CThemeType.System
+            };
+            await SetThemeAsync(nextTheme);
+        }
+
+        private async Task ApplyThemeToDomAsync()
+        {
+            var value = _currentTheme == CThemeType.System ? "system" :
+                        (_currentTheme == CThemeType.Dark ? "dark" : "light");
+
+            await _js.InvokeVoidAsync("httTheme.applyTheme", value);
+        }
+
+        public void Dispose()
+        {
+            _dotNetRef?.Dispose();
+        }
     }
 }
