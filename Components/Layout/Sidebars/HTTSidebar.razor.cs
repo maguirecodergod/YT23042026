@@ -9,7 +9,7 @@ namespace HTT.BlazorWasm.App.Components
 
         #region Parameters
         [Parameter] public string? Id { get; set; }
-        [Parameter] public CSidebarPositionType Position { get; set; } = CSidebarPositionType.Left;
+        [Parameter] public CPositionType Position { get; set; } = CPositionType.Left;
 
         [Parameter] public bool Visible { get; set; } = true;
         [Parameter] public EventCallback<bool> VisibleChanged { get; set; }
@@ -148,7 +148,7 @@ namespace HTT.BlazorWasm.App.Components
         {
             var styles = new List<string>();
             
-            bool isVertical = Position == CSidebarPositionType.Left || Position == CSidebarPositionType.Right;
+            bool isVertical = Position == CPositionType.Left || Position == CPositionType.Right;
             string sizeVar = isVertical ? "--htt-sidebar-width" : "--htt-sidebar-height";
             
             styles.Add($"{sizeVar}: {_currentSize}");
