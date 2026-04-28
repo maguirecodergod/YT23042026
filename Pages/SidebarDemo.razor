@@ -1,0 +1,127 @@
+@page "/sidebar-demo"
+@inherits HTTComponentBase
+
+
+<HTTSidebarContainer>
+    @* Left Sidebar - Standard Navigation *@
+    <HTTSidebar Position="CSidebarPositionType.Left" 
+                Size="280px" 
+                Resizable="true" 
+                Collapsible="true"
+                PersistenceId="main-nav">
+        <Header>
+            <div class="flex items-center gap-2">
+                <span class="font-bold">HTT Framework</span>
+            </div>
+        </Header>
+        <Body>
+            <nav class="flex flex-col gap-1">
+                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer">Dashboard</div>
+                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer">Projects</div>
+                <div class="p-2 hover:bg-slate-800 rounded cursor-pointer">Settings</div>
+            </nav>
+        </Body>
+        <Footer>
+            <div class="text-xs text-slate-500">v1.0.0-alpha</div>
+        </Footer>
+    </HTTSidebar>
+
+    @* Main Content *@
+    <main class="htt-sidebar-main p-8 bg-slate-950">
+        <h1 class="text-3xl font-bold mb-6">Sidebar System Demo</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="p-6 bg-slate-900 rounded-xl border border-slate-800">
+                <h2 class="text-xl font-semibold mb-4">Sidebar Controls</h2>
+                <div class="flex flex-wrap gap-4">
+                    <button class="px-4 py-2 bg-blue-600 rounded" @onclick="() => _rightVisible = !_rightVisible">
+                        Toggle Inspector (Right Overlay)
+                    </button>
+                    <button class="px-4 py-2 bg-purple-600 rounded" @onclick="() => _bottomVisible = !_bottomVisible">
+                        Toggle Console (Bottom Push)
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-6 bg-slate-900 rounded-xl border border-slate-800">
+                <h2 class="text-xl font-semibold mb-4">Features Included</h2>
+                <ul class="list-disc list-inside space-y-2 text-slate-400">
+                    <li>Multi-position (Left, Right, Top, Bottom)</li>
+                    <li>Smooth Resizing (JS Optimized)</li>
+                    <li>Persistence (Local Storage)</li>
+                    <li>Collapsible Mini-mode</li>
+                    <li>Overlay vs Push modes</li>
+                    <li>Keyboard (ESC) support</li>
+                </ul>
+            </div>
+        </div>
+
+        @* Long content to test scrolling *@
+        <div class="mt-12 space-y-4">
+            @foreach (var i in Enumerable.Range(1, 20))
+            {
+                <div class="h-32 bg-slate-900/50 rounded-lg border border-slate-800/50"></div>
+            }
+        </div>
+    </main>
+
+    @* Right Sidebar - Overlay Inspector *@
+    <HTTSidebar Position="CSidebarPositionType.Right" 
+                Size="320px" 
+                Overlay="true" 
+                @bind-Visible="_rightVisible"
+                Resizable="true">
+        <Header>Properties</Header>
+        <Body>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs uppercase text-slate-500 mb-1">Name</label>
+                    <div class="p-2 bg-slate-800 rounded border border-slate-700">sidebar-main</div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase text-slate-500 mb-1">Opacity</label>
+                    <div class="p-2 bg-slate-800 rounded border border-slate-700">100%</div>
+                </div>
+            </div>
+        </Body>
+    </HTTSidebar>
+
+    @* Bottom Sidebar - Push Console *@
+    <HTTSidebar Position="CSidebarPositionType.Bottom" 
+                Size="200px" 
+                @bind-Visible="_bottomVisible"
+                Resizable="true">
+        <Header>@L["Layout.Sidebar.Sections.System"] Console</Header>
+        <Body>
+            <div class="font-mono text-sm text-green-400 space-y-1">
+                <div>[@DateTime.Now.ToShortTimeString()] Sidebar component initialized.</div>
+                <div>[@DateTime.Now.ToShortTimeString()] Theme: @(Theme.IsDark ? "Dark" : "Light") Mode active.</div>
+                <div>[@DateTime.Now.ToShortTimeString()] Permissions: Checked</div>
+            </div>
+        </Body>
+    </HTTSidebar>
+
+    @* Permission Restricted Sidebar - Only visible if user has "Admin.Settings" *@
+    <HTTSidebar Position="CSidebarPositionType.Right" 
+                Size="350px" 
+                RequiredPermission="Admin.Settings"
+                Visible="true"
+                Overlay="true">
+        <Header>
+            <div class="flex items-center gap-2">
+                <i class="bi bi-shield-lock-fill text-brand"></i>
+                <span>Secure Settings</span>
+            </div>
+        </Header>
+        <Body>
+            <div class="p-4 bg-brand/10 border border-brand/20 rounded-lg">
+                <p class="text-sm text-brand">This panel is only visible to users with <code>Admin.Settings</code> permission.</p>
+            </div>
+        </Body>
+    </HTTSidebar>
+</HTTSidebarContainer>
+
+@code {
+    private bool _rightVisible = false;
+    private bool _bottomVisible = true;
+}

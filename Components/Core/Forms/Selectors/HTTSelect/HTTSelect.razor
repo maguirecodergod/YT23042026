@@ -1,0 +1,158 @@
+@namespace HTT.BlazorWasm.App.Components
+@typeparam TItem
+@typeparam TValue
+@inherits HTTComponentBase
+
+<div class="@BuildCssClass()" 
+     style="@Style" 
+     @ref="_selectContainer"
+     @onkeydown="HandleKeyDown"
+     tabindex="0">
+
+    <div class="htt-select__trigger" @onclick="ToggleDropdown">
+        <div class="htt-select__selection">
+            @if (_selectedItems.Any())
+            {
+                if (Multiple)
+                {
+                    <div class="htt-select__tags">
+                        @foreach (var item in _selectedItems)
+                        {
+                            <div class="htt-select__tag" @key="item">
+                                @if (SelectedTemplate != null)
+                                {
+                                    @SelectedTemplate(item)
+                                }
+                                else
+                                {
+                                    <span>@TextSelector(item)</span>
+                                }
+                                <i class="bi bi-x htt-select__tag-remove" @onclick:stopPropagation @onclick="() => RemoveItem(item)"></i>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="htt-select__value">
+                        @if (SelectedTemplate != null)
+                        {
+                            @SelectedTemplate(_selectedItems.First())
+                        }
+                        else
+                        {
+                            @TextSelector(_selectedItems.First())
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <span class="htt-select__placeholder">@Placeholder</span>
+            }
+        </div>
+
+        <div class="htt-select__suffix">
+            @if (AllowClear && _selectedItems.Any() && !Disabled)
+            {
+                <i class="bi bi-x-circle-fill htt-select__clear" @onclick:stopPropagation @onclick="ClearSelection"></i>
+            }
+            @if (ShowArrow)
+            {
+                <i class="bi bi-chevron-down htt-select__arrow @(_isOpen ? "is-rotated" : "")"></i>
+            }
+        </div>
+    </div>
+
+    @if (_isOpen)
+    {
+        <div class="htt-select__dropdown" @ref="_dropdownElement">
+            @if (Searchable)
+            {
+                <div class="htt-select__search-wrapper">
+                    <i class="bi bi-search htt-select__search-icon"></i>
+                    <input @ref="_searchInput"
+                           type="text"
+                           class="htt-select__search-input"
+                           placeholder="Search..."
+                           value="@_searchText"
+                           @oninput="HandleSearchInput"
+                           @onclick:stopPropagation />
+                </div>
+            }
+
+            <div class="htt-select__list">
+                @if (_isLoading)
+                {
+                    <div class="htt-select__loading">
+                        @if (LoadingTemplate != null)
+                        {
+                            @LoadingTemplate
+                        }
+                        else
+                        {
+                            <div class="htt-spinner"></div>
+                            <span>Loading items...</span>
+                        }
+                    </div>
+                }
+                else if (!_filteredItems.Any())
+                {
+                    <div class="htt-select__empty">
+                        @if (EmptyTemplate != null)
+                        {
+                            @EmptyTemplate
+                        }
+                        else
+                        {
+                            <i class="bi bi-inbox"></i>
+                            <span>No data found</span>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="htt-select__options">
+                        @for (int i = 0; i < _filteredItems.Count; i++)
+                        {
+                            var index = i;
+                            var item = _filteredItems[i];
+                            var isSelected = _selectedItems.Contains(item);
+                            var isActive = _activeIndex == index;
+                            var isDisabled = DisabledSelector?.Invoke(item) ?? false;
+
+                            <div class="htt-select__option @(isSelected ? "is-selected" : "") @(isActive ? "is-active" : "") @(isDisabled ? "is-disabled" : "")"
+                                 @key="item"
+                                 @onclick="() => SelectItem(item)"
+                                 @onclick:stopPropagation>
+                                
+                                @if (Multiple)
+                                {
+                                    <div class="htt-select__checkbox">
+                                        <i class="bi @(isSelected ? "bi-check-square-fill" : "bi-square")"></i>
+                                    </div>
+                                }
+
+                                <div class="htt-select__option-content">
+                                    @if (ItemTemplate != null)
+                                    {
+                                        @ItemTemplate(item)
+                                    }
+                                    else
+                                    {
+                                        @TextSelector(item)
+                                    }
+                                </div>
+
+                                @if (!Multiple && isSelected)
+                                {
+                                    <i class="bi bi-check2 htt-select__selected-icon"></i>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

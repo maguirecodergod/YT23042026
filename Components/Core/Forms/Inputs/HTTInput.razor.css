@@ -1,0 +1,303 @@
+.htt-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    transition: var(--transition-base);
+    /* overflow: hidden; Removed to allow dropdowns/tooltips to overflow */
+}
+
+/* --- Focus & Hover States --- */
+.htt-input-wrapper:hover:not(.htt-input-wrapper--disabled):not(.htt-input-wrapper--readonly) {
+    border-color: var(--color-border-hover);
+}
+
+.htt-input-wrapper:focus-within {
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px var(--color-brand-muted-bg);
+}
+
+/* --- Range Pickers --- */
+.htt-input-range {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: var(--color-bg-primary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    transition: var(--transition-base);
+    /* overflow: hidden; Removed to allow dropdowns/tooltips to overflow */
+}
+
+.htt-input-range:hover {
+    border-color: var(--color-border-hover);
+}
+
+.htt-input-range:focus-within {
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px var(--color-brand-muted-bg);
+}
+
+.htt-input-range__separator {
+    color: var(--color-text-tertiary);
+    padding: 0 var(--space-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg-subtle);
+    height: 100%;
+    border-left: 1px solid var(--color-border-default);
+    border-right: 1px solid var(--color-border-default);
+    font-size: 1.2rem;
+}
+
+.htt-input-range__start,
+.htt-input-range__end {
+    flex: 1;
+    min-width: 0;
+    padding: 0 var(--space-3);
+    height: 40px;
+    /* MD by default */
+    text-align: center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.htt-input-range .htt-input__icon~.htt-input-range__start {
+    padding-left: calc(var(--space-3) + 28px);
+    text-align: left;
+}
+
+/* Chrome/Safari Calendar Icon Polish */
+.htt-input-range__start::-webkit-calendar-picker-indicator,
+.htt-input-range__end::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity var(--duration-base);
+}
+
+.htt-input-range__start::-webkit-calendar-picker-indicator:hover,
+.htt-input-range__end::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* --- Disabled & Readonly --- */
+.htt-input-wrapper--disabled,
+.htt-input-range--disabled {
+    background-color: var(--color-bg-subtle);
+    border-color: var(--color-border-subtle);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.htt-input-wrapper--readonly,
+.htt-input-range--readonly {
+    background-color: var(--color-bg-subtle);
+}
+
+/* --- Icon Integration --- */
+.htt-input__icon {
+    position: absolute;
+    left: var(--space-3);
+    color: var(--color-text-tertiary);
+    font-size: 1.1rem;
+    pointer-events: none;
+    transition: color var(--duration-base) ease;
+    z-index: var(--z-raised);
+}
+
+.htt-input-wrapper:focus-within .htt-input__icon,
+.htt-input-range:focus-within .htt-input__icon {
+    color: var(--color-brand);
+}
+
+/* --- Clear Button --- */
+.htt-input__clear {
+    position: absolute;
+    right: var(--space-3);
+    color: var(--color-text-tertiary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: color var(--duration-base) ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.htt-input__clear:hover {
+    color: var(--color-danger-text);
+}
+
+/* --- The Actual Input Control --- */
+.htt-input__control {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: var(--font-family-base);
+    outline: none;
+}
+
+.htt-input__control::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+.htt-input__control:disabled {
+    cursor: not-allowed;
+}
+
+/* --- File Input Specific --- */
+.htt-input__control--file {
+    padding: var(--space-2) !important;
+}
+
+.htt-input__control--file::file-selector-button {
+    background-color: var(--color-brand-muted-bg);
+    border: 1px solid var(--color-brand-muted-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-brand);
+    padding: var(--space-1) var(--space-3);
+    margin-right: var(--space-3);
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.htt-input__control--file::file-selector-button:hover {
+    background-color: var(--color-brand);
+    color: var(--color-white);
+}
+
+/* --- Checkbox & Radio Buttons --- */
+.htt-input-checkbox-radio {
+    display: inline-flex;
+    align-items: center;
+}
+
+.htt-input-checkbox-radio__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    font-size: var(--text-base);
+    color: var(--color-text-primary);
+}
+
+.htt-input-checkbox-radio__control {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    accent-color: var(--color-brand);
+}
+
+/* --- Sizes --- */
+.htt-input-wrapper--xs {
+    height: 28px;
+    border-radius: var(--radius-sm);
+}
+
+.htt-input-wrapper--xs .htt-input__control {
+    padding: 0 var(--space-2);
+    font-size: var(--text-xs);
+}
+
+.htt-input-wrapper--xs.htt-input-wrapper--has-icon .htt-input__control {
+    padding-left: calc(var(--space-2) + 20px);
+}
+
+.htt-input-wrapper--xs.htt-input-wrapper--has-clear .htt-input__control {
+    padding-right: calc(var(--space-2) + 20px);
+}
+
+.htt-input-wrapper--sm {
+    height: 32px;
+}
+
+.htt-input-wrapper--sm .htt-input__control {
+    padding: 0 var(--space-3);
+    font-size: var(--text-sm);
+}
+
+.htt-input-wrapper--sm.htt-input-wrapper--has-icon .htt-input__control {
+    padding-left: calc(var(--space-3) + 24px);
+}
+
+.htt-input-wrapper--sm.htt-input-wrapper--has-clear .htt-input__control {
+    padding-right: calc(var(--space-3) + 24px);
+}
+
+.htt-input-wrapper--md {
+    height: 40px;
+}
+
+.htt-input-wrapper--md .htt-input__control {
+    padding: 0 var(--space-3);
+    font-size: var(--text-base);
+}
+
+.htt-input-wrapper--md.htt-input-wrapper--has-icon .htt-input__control {
+    padding-left: calc(var(--space-3) + 28px);
+}
+
+.htt-input-wrapper--md.htt-input-wrapper--has-clear .htt-input__control {
+    padding-right: calc(var(--space-3) + 28px);
+}
+
+.htt-input-wrapper--lg {
+    height: 48px;
+    border-radius: var(--radius-lg);
+}
+
+.htt-input-wrapper--lg .htt-input__control {
+    padding: 0 var(--space-4);
+    font-size: var(--text-lg);
+}
+
+.htt-input-wrapper--lg.htt-input-wrapper--has-icon .htt-input__control {
+    padding-left: calc(var(--space-4) + 32px);
+}
+
+.htt-input-wrapper--lg.htt-input-wrapper--has-clear .htt-input__control {
+    padding-right: calc(var(--space-4) + 32px);
+}
+
+.htt-input-wrapper--xl {
+    height: 56px;
+    border-radius: var(--radius-lg);
+}
+
+.htt-input-wrapper--xl .htt-input__control {
+    padding: 0 var(--space-5);
+    font-size: var(--text-xl);
+}
+
+.htt-input-wrapper--xl.htt-input-wrapper--has-icon .htt-input__control {
+    padding-left: calc(var(--space-5) + 36px);
+}
+
+.htt-input-wrapper--xl.htt-input-wrapper--has-clear .htt-input__control {
+    padding-right: calc(var(--space-5) + 36px);
+}
+
+/* --- Error Fallback --- */
+.htt-form-field--error .htt-input-wrapper,
+.htt-form-field--error .htt-input-range {
+    border-color: var(--color-danger-border);
+}
+
+.htt-form-field--error .htt-input-wrapper:focus-within,
+.htt-form-field--error .htt-input-range:focus-within {
+    box-shadow: 0 0 0 3px var(--color-danger-muted-bg);
+}
+
+.htt-input__unsupported {
+    color: var(--color-text-tertiary);
+    font-style: italic;
+    font-size: var(--text-sm);
+    padding: var(--space-2);
+}

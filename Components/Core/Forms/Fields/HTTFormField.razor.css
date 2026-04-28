@@ -1,0 +1,84 @@
+.htt-form-field {
+    display: flex;
+    margin-bottom: var(--space-4);
+    width: 100%;
+}
+
+/* --- Orientations --- */
+.htt-form-field--column {
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.htt-form-field--row {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: var(--space-4);
+}
+
+.htt-form-field--row .htt-form-field__label-container {
+    flex: 0 0 200px; /* Default label width for row layout */
+    padding-top: var(--space-2); /* Align with input content */
+}
+
+.htt-form-field--row .htt-form-field__control-container {
+    flex: 1;
+}
+
+/* --- Containers --- */
+.htt-form-field__control-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    min-width: 0;
+}
+
+.htt-form-field__control {
+    position: relative;
+    width: 100%;
+}
+
+/* --- Validation & Help --- */
+.htt-form-field__error {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    font-size: var(--text-sm);
+    color: var(--color-danger-text);
+    animation: htt-field-shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    margin-top: var(--space-0-5);
+}
+
+.htt-form-field__help-text {
+    font-size: var(--text-sm);
+    color: var(--color-text-tertiary);
+    margin-top: var(--space-0-5);
+}
+
+/* --- Sizes --- */
+.htt-form-field--xs { --field-gap: var(--space-0-5); }
+.htt-form-field--sm { --field-gap: var(--space-1); }
+.htt-form-field--md { --field-gap: var(--space-1-5); }
+.htt-form-field--lg { --field-gap: var(--space-2); }
+.htt-form-field--xl { --field-gap: var(--space-2-5); }
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+    .htt-form-field--row {
+        flex-direction: column;
+        gap: var(--space-1);
+    }
+    
+    .htt-form-field--row .htt-form-field__label-container {
+        flex: none;
+        padding-top: 0;
+    }
+}
+
+/* --- Animations --- */
+@keyframes htt-field-shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}

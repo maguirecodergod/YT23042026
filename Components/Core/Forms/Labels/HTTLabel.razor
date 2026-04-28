@@ -1,0 +1,50 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+@if (!string.IsNullOrEmpty(ToolTip))
+{
+    <HTTToolTip Content="@ToolTip" Position="ToolTipPosition" Shape="ToolTipShape">
+        @LabelContent
+    </HTTToolTip>
+}
+else
+{
+    @LabelContent
+}
+
+@code {
+    private RenderFragment LabelContent => __builder =>
+    {
+        <label class="@CssClass" style="@Style" for="@For" @attributes="AdditionalAttributes">
+            <span class="htt-label__content">
+                @if (!string.IsNullOrEmpty(Icon))
+                {
+                    <i class="htt-label__icon @Icon" aria-hidden="true"></i>
+                }
+
+                @if (ChildContent != null)
+                {
+                    @ChildContent
+                }
+                else
+                {
+                    @Text
+                }
+
+                @if (Required)
+                {
+                    <span class="htt-label__required-indicator" aria-hidden="true">*</span>
+                }
+            </span>
+
+            @if (!string.IsNullOrEmpty(Info))
+            {
+                <HTTToolTip Content="@Info" Position="CPositionType.Top">
+                    <span class="htt-label__info-trigger">
+                        <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+                    </span>
+                </HTTToolTip>
+            }
+        </label>
+    };
+}

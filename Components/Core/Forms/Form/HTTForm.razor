@@ -1,0 +1,15 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<EditForm Model="Model" 
+          OnValidSubmit="OnValidSubmit" 
+          OnInvalidSubmit="OnInvalidSubmit" 
+          class="@CssClass" 
+          style="@Style" 
+          @attributes="AdditionalAttributes">
+    <DataAnnotationsValidator />
+    
+    <div class="htt-form__content">
+        @ChildContent
+    </div>
+</EditForm>

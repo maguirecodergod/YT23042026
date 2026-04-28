@@ -1,0 +1,172 @@
+.htt-modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: var(--z-modal);
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    pointer-events: none;
+}
+
+.htt-modal-wrapper.is-visible {
+    display: flex;
+    pointer-events: all;
+}
+
+.htt-modal-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-backdrop);
+    backdrop-filter: blur(4px);
+    z-index: -1;
+    animation: htt-modal-fade-in var(--duration-base) var(--ease-out);
+}
+
+.htt-modal-container {
+    padding: var(--space-10) var(--space-4);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    min-height: 100%;
+    pointer-events: none;
+}
+
+.htt-modal-wrapper.is-centered .htt-modal-container {
+    align-items: center;
+}
+
+.htt-modal-content {
+    position: relative;
+    background: var(--color-bg-overlay);
+    border: var(--border-1) solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-2xl);
+    width: 100%;
+    max-width: calc(100vw - var(--space-8));
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+    animation: htt-modal-zoom-in var(--duration-base) var(--ease-spring);
+}
+
+/* Header */
+.htt-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-4) var(--space-6);
+    border-bottom: var(--border-1) solid var(--color-border-subtle);
+}
+
+.htt-modal-title {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-bold);
+    color: var(--color-text-primary);
+    font-family: var(--font-display);
+}
+
+.htt-modal-close {
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: var(--icon-lg);
+    cursor: pointer;
+    padding: var(--space-1);
+    border-radius: var(--radius-sm);
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.htt-modal-close:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-text-primary);
+}
+
+/* Body */
+.htt-modal-body {
+    position: relative;
+    padding: var(--space-6);
+    flex: 1;
+    color: var(--color-text-secondary);
+    line-height: var(--leading-relaxed);
+}
+
+/* Footer */
+.htt-modal-footer {
+    padding: var(--space-4) var(--space-6);
+    border-top: var(--border-1) solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    background: color-mix(in srgb, var(--color-bg-inset) 30%, transparent);
+    border-bottom-left-radius: var(--radius-lg);
+    border-bottom-right-radius: var(--radius-lg);
+}
+
+/* Fullscreen */
+.htt-modal-wrapper.is-fullscreen .htt-modal-container {
+    padding: 0;
+}
+
+.htt-modal-wrapper.is-fullscreen .htt-modal-content {
+    height: 100vh;
+    max-width: 100vw;
+    border-radius: 0;
+    border: none;
+}
+
+/* Loading */
+.htt-modal-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: color-mix(in srgb, var(--color-bg-overlay) 70%, transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+
+/* Animations */
+@keyframes htt-modal-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes htt-modal-zoom-in {
+    from { opacity: 0; transform: scale(0.95) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Spinner (Reusable from Select) */
+.htt-spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--color-border-subtle);
+    border-top-color: var(--color-brand);
+    border-radius: 50%;
+    animation: htt-spin 0.6s linear infinite;
+}
+
+/* Loading Guard Compliance */
+[data-htt-loading] .htt-modal-content,
+[data-htt-loading] .htt-modal-mask {
+    animation: none !important;
+}
+
+@keyframes htt-spin {
+    to { transform: rotate(360deg); }
+}

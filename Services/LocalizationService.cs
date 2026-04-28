@@ -73,6 +73,9 @@ namespace HTT.BlazorWasm.App.Services
         private static readonly Lazy<IReadOnlyList<CultureEntry>> _supportedCultures = new(() =>
             EnumExtensions.GetSupportedCultures<CCountryCode>());
 
+        private static readonly Lazy<IReadOnlyList<CultureEntry>> _allCultures = new(() =>
+            EnumExtensions.GetAllCultures<CCountryCode>());
+
         // ═══════════════════════════════════════════════════════════
         //  Constructor
         // ═══════════════════════════════════════════════════════════
@@ -92,6 +95,8 @@ namespace HTT.BlazorWasm.App.Services
         public CultureInfo CurrentCulture => _currentCulture;
 
         public IReadOnlyList<CultureEntry> SupportedCultureEntries => _supportedCultures.Value;
+
+        public IReadOnlyList<CultureEntry> AllCultureEntries => _allCultures.Value;
 
         public bool IsLoaded => _isLoaded;
 
@@ -578,6 +583,8 @@ namespace HTT.BlazorWasm.App.Services
         {
             CultureInfo.DefaultThreadCurrentCulture = culture;
             CultureInfo.DefaultThreadCurrentUICulture = culture;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = culture;
         }
 
         private void NotifyChanged() => OnLanguageChanged?.Invoke();

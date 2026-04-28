@@ -1,0 +1,42 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    @if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Description))
+    {
+        <div class="htt-form-group__header" @onclick="ToggleCollapse">
+            <div class="htt-form-group__title-wrapper">
+                @if (!string.IsNullOrEmpty(Icon))
+                {
+                    <i class="htt-form-group__icon @Icon" aria-hidden="true"></i>
+                }
+                
+                <div class="htt-form-group__text-wrapper">
+                    @if (!string.IsNullOrEmpty(Title))
+                    {
+                        <h3 class="htt-form-group__title">@Title</h3>
+                    }
+                    @if (!string.IsNullOrEmpty(Description))
+                    {
+                        <p class="htt-form-group__description">@Description</p>
+                    }
+                </div>
+            </div>
+
+            @if (Collapsible)
+            {
+                <div class="htt-form-group__collapse-toggle">
+                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                </div>
+            }
+        </div>
+    }
+
+    <div class="htt-form-group__body">
+        <div class="htt-form-group__content">
+            <div class="htt-form-group__content-inner">
+                @ChildContent
+            </div>
+        </div>
+    </div>
+</div>

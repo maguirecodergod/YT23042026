@@ -1,0 +1,10 @@
+@namespace HTT.BlazorWasm.App.Components
+@implements IDisposable
+@inject IHTTModalService ModalService
+
+<div class="htt-modal-provider">
+    @foreach (var modal in ModalService.ActiveModals)
+    {
+        <HTTModalInstance @key="modal.Id" ModalReference="modal" />
+    }
+</div>

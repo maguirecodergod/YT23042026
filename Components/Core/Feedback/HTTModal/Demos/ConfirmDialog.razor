@@ -1,0 +1,27 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+@using HTT.BlazorWasm.App.Contracts
+@inject IHTTModalService ModalService
+
+<HTTStack Spacing="CSpacingType.MD" Class="confirm-dialog">
+    <p class="mb-0">@Message</p>
+    
+    <HTTStack Direction="CDirectionType.Row" 
+              Justify="CJustifyType.End" 
+              Spacing="CSpacingType.SM" 
+              Class="mt-4">
+        <HTTButton Text="@L["Common.Dialog.Cancel"]" 
+                   Variant="CButtonVariant.Ghost" 
+                   OnClick="Cancel" />
+        <HTTButton Text="@L["Common.Dialog.Confirm"]" 
+                   Variant="CButtonVariant.Primary" 
+                   OnClick="Confirm" />
+    </HTTStack>
+</HTTStack>
+
+@code {
+    [Parameter] public string Message { get; set; } = "Are you sure you want to proceed?";
+
+    private void Cancel() => ModalService.Close(ModalResult.Cancel());
+    private void Confirm() => ModalService.Close(ModalResult.Ok());
+}

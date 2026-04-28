@@ -1,0 +1,24 @@
+.htt-sidebar-layout-root {
+    display: grid;
+    grid-template-areas: 
+        "top top top"
+        "left main right"
+        "bottom bottom bottom";
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--color-bg-canvas);
+}
+
+/* Ensure the main content takes the 'main' area */
+/* This requires the user to wrap their main content in a div with .htt-sidebar-main */
+::deep .htt-sidebar-main {
+    grid-area: main;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}

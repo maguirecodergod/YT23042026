@@ -1,0 +1,169 @@
+@page "/picker"
+@using HTT.BlazorWasm.App.Contracts
+
+<PageTitle>Picker Components Showcase — HTT Enterprise</PageTitle>
+
+<HTTContainer Padding="CSpacingType.LG" MaxWidth="1024px">
+    <div class="fade-in">
+        <HTTStack Spacing="CSpacingType.MD" Class="mb-5">
+            <HTTHeading Type="CHeadingType.H1">
+                Picker <span class="text-gradient-gold">Showcase</span>
+            </HTTHeading>
+            <p style="color:var(--color-text-tertiary)">
+                Demonstrating all variants of the HTTDatePicker: Date, Time, DateTime, and Ranges.
+            </p>
+        </HTTStack>
+
+        <div class="grid grid-1 grid-md-2 gap-6">
+            <!-- 1. Date Picker -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Date Picker</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Birth Date" HelpText="CInputType.DateOnly">
+                        <HTTInput @bind-Value="_dateOnly" Type="CInputType.DateOnly" Icon="bi-calendar-event"
+                                  ShowClearButton="true" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">Value: @_dateOnly</div>
+                </div>
+            </div>
+
+            <!-- 2. Time Picker -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Time Picker</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Meeting Time" HelpText="CInputType.TimeOnly">
+                        <HTTInput @bind-Value="_timeOnly" Type="CInputType.TimeOnly" Icon="bi-clock"
+                                  ShowClearButton="true" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">Value: @_timeOnly</div>
+                </div>
+            </div>
+
+            <!-- 3. DateTime Picker -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">DateTime Picker</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Appointment" HelpText="CInputType.DateTime">
+                        <HTTInput @bind-Value="_dateTime" Type="CInputType.DateTime" Icon="bi-calendar-check"
+                                  ShowClearButton="true" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">Value: @_dateTime</div>
+                </div>
+            </div>
+
+            <!-- 4. Date Range Picker -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Date Range Picker</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Vacation Period" HelpText="CInputType.DateRange">
+                        <HTTInput @bind-Value="_dateRange" Type="CInputType.DateRange" Icon="bi-calendar-range"
+                                  ShowClearButton="true" Placement="right" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">Value: @_dateRange</div>
+                </div>
+            </div>
+
+            <!-- 5. Time Range Picker -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Time Range Picker</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Working Hours" HelpText="CInputType.TimeRange">
+                        <HTTInput @bind-Value="_timeRange" Type="CInputType.TimeRange" Icon="bi-clock-history"
+                                  ShowClearButton="true" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">Value: @_timeRange</div>
+                </div>
+            </div>
+
+            <!-- 6. DateTime Range Picker -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">DateTime Range Picker</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Event Duration" HelpText="CInputType.DateTimeRange">
+                        <HTTInput @bind-Value="_dateTimeRange" Type="CInputType.DateTimeRange" Icon="bi-calendar-plus"
+                                  ShowClearButton="true" Placement="right" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">Value: @_dateTimeRange</div>
+                </div>
+            </div>
+
+            <!-- 7. Disabled Dates Example -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Disabled Dates (Expression)</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Workday Selection" HelpText="Weekends and May 1st are disabled">
+                        <HTTInput @bind-Value="_workDate" Type="CInputType.DateOnly" Icon="bi-calendar-x"
+                                  IsDateDisabled="IsWeekendOrHoliday" ShowClearButton="true" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">Value: @_workDate</div>
+                </div>
+            </div>
+
+            <!-- 8. Separate Property Binding (Enterprise DTO Style) -->
+            <div class="htt-card">
+                <div class="htt-card-header" style="padding: var(--space-4);">
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">DTO Property Binding</HTTHeading>
+                </div>
+                <div style="padding: var(--space-4);">
+                    <HTTFormField Label="Project Timeline" HelpText="Binding to separate Start/End properties">
+                        <HTTInput TValue="string" Type="CInputType.DateTimeRange" Icon="bi-briefcase"
+                                  @bind-RangeStart="_dto.StartDate" @bind-RangeEnd="_dto.EndDate"
+                                  ShowClearButton="true" Placement="right" />
+                    </HTTFormField>
+                    <div class="mt-3 text-sm text-secondary">
+                        <strong>DTO:</strong> Start: @_dto.StartDate | End: @_dto.EndDate
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</HTTContainer>
+
+@code {
+    private DateTime _dateOnly = DateTime.Today;
+    private DateTime _timeOnly = DateTime.Now;
+    private DateTime _dateTime = DateTime.Now;
+    private string _dateRange = $"{DateTime.Today:yyyy-MM-dd}|{DateTime.Today.AddDays(7):yyyy-MM-dd}";
+    private string _timeRange = "09:00|17:00";
+    private string _dateTimeRange = $"{DateTime.Now:yyyy-MM-dd HH:mm}|{DateTime.Now.AddHours(2):yyyy-MM-dd HH:mm}";
+    private DateTime _workDate = DateTime.Today;
+
+    private SampleDTO _dto = new SampleDTO
+    {
+        StartDate = DateTimeOffset.Now,
+        EndDate = DateTimeOffset.Now.AddDays(3)
+    };
+
+    public class SampleDTO
+    {
+        public DateTimeOffset? StartDate { get; set; }
+        public DateTimeOffset? EndDate { get; set; }
+    }
+
+    private bool IsWeekendOrHoliday(DateTime date)
+    {
+        // Disable weekends (Saturday and Sunday)
+        if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+            return true;
+
+        // Disable specific holiday (e.g., May 1st)
+        if (date.Month == 5 && date.Day == 1)
+            return true;
+
+        return false;
+    }
+}

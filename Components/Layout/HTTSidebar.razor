@@ -1,0 +1,67 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+@if (_hasPermission && (Visible || Overlay))
+{
+    @if (Overlay && Visible)
+    {
+        <div class="htt-sidebar-backdrop @(Visible ? "is-visible" : "")" 
+             @onclick="CloseOverlay"
+             aria-hidden="true"></div>
+    }
+
+    <aside id="@Id"
+           @ref="_sidebarElement"
+           class="@CssClass"
+           style="@CssStyle"
+           role="complementary"
+           aria-hidden="@(!Visible)"
+           aria-expanded="@(!Collapsed)">
+
+        @if (Resizable)
+        {
+            <div class="htt-sidebar-resizer" @onmousedown="() => _isResizing = true">
+                <div class="htt-sidebar-resizer-handle"></div>
+            </div>
+        }
+
+        <div class="htt-sidebar-wrapper">
+            @if (Header != null)
+            {
+                <header class="htt-sidebar-header">
+                    <div class="htt-sidebar-header-content">
+                        @Header
+                    </div>
+                    @if (Collapsible)
+                    {
+                        <HTTButton Variant="CButtonVariant.Ghost" 
+                                   Size="CButtonSize.Small" 
+                                   OnClick="ToggleCollapse" 
+                                   Icon="@(Collapsed ? "bi-chevron-right" : "bi-chevron-left")" 
+                                   IconOnly="true"
+                                   Class="htt-sidebar-toggle"
+                                   aria-label="@L["Components.Sidebar.Toggle"]" />
+                    }
+                </header>
+            }
+
+            <div class="htt-sidebar-body custom-scrollbar">
+                @if (Body != null)
+                {
+                    @Body
+                }
+                else
+                {
+                    @ChildContent
+                }
+            </div>
+
+            @if (Footer != null)
+            {
+                <footer class="htt-sidebar-footer">
+                    @Footer
+                </footer>
+            }
+        </div>
+    </aside>
+}

@@ -1,0 +1,28 @@
+@namespace HTT.BlazorWasm.App.Components
+
+<HTTModal Visible="true"
+          Title="@ModalReference.Options.Title"
+          Closable="@ModalReference.Options.Closable"
+          MaskClosable="@ModalReference.Options.MaskClosable"
+          Centered="@ModalReference.Options.Centered"
+          Fullscreen="@ModalReference.Options.Fullscreen"
+          Width="@ModalReference.Options.Width"
+          Loading="@ModalReference.Options.Loading"
+          Footer="@ModalReference.Options.Footer"
+          Class="@ModalReference.Options.Class"
+          Style="@ModalReference.Options.Style"
+          VisibleChanged="@(v => { if(!v) Close(); })">
+    <Body>
+        <DynamicComponent Type="@ModalReference.ComponentType" Parameters="@ModalReference.Options.Parameters" />
+    </Body>
+</HTTModal>
+
+@code {
+    [Parameter] public ModalReference ModalReference { get; set; } = default!;
+    [Inject] private IHTTModalService ModalService { get; set; } = default!;
+
+    private void Close()
+    {
+        ModalService.Close(ModalReference.Id, ModalResult.Cancel());
+    }
+}

@@ -1,0 +1,93 @@
+@typeparam TValue
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+@if (IsCheckboxOrRadio)
+{
+    <div class="@CssClass" style="@Style">
+        <label class="htt-input-checkbox-radio__label">
+            <input type="@HtmlType"
+                   checked="@GetCheckboxCheckedValue()"
+                   @onchange="HandleCheckboxChange"
+                   disabled="@Disabled"
+                   readonly="@ReadOnly"
+                   class="htt-input-checkbox-radio__control"
+                   @attributes="AdditionalAttributes" />
+            @if (!string.IsNullOrEmpty(Placeholder))
+            {
+                <span class="htt-input-checkbox-radio__text">@Placeholder</span>
+            }
+        </label>
+    </div>
+}
+else if (IsDateOrTimePickerType)
+{
+    <HTTDatePicker @bind-Value="Value" Type="Type" Placeholder="@Placeholder" Icon="@Icon" 
+                   Disabled="@Disabled" ReadOnly="@ReadOnly" ShowClearButton="@ShowClearButton" 
+                   Placement="@Placement" IsDateDisabled="@IsDateDisabled"
+                   @bind-RangeStart="RangeStart" @bind-RangeEnd="RangeEnd" />
+}
+else if (IsRangeType)
+{
+    <div class="@CssClass htt-input-range" style="@Style">
+        @if (!string.IsNullOrEmpty(Icon))
+        {
+            <i class="htt-input__icon @Icon" aria-hidden="true"></i>
+        }
+        
+        <input type="@GetRangeHtmlType()"
+               class="htt-input__control htt-input-range__start"
+               placeholder="@L["Common.Picker.Start"]"
+               disabled="@Disabled"
+               readonly="@ReadOnly"
+               @onchange="HandleRangeStartChange" />
+               
+        <span class="htt-input-range__separator">
+            <i class="bi bi-arrow-right-short" aria-hidden="true"></i>
+        </span>
+        
+        <input type="@GetRangeHtmlType()"
+               class="htt-input__control htt-input-range__end"
+               placeholder="@L["Common.Picker.End"]"
+               disabled="@Disabled"
+               readonly="@ReadOnly"
+               @onchange="HandleRangeEndChange" />
+    </div>
+}
+else if (IsFile)
+{
+    <div class="@CssClass htt-input-wrapper--file" style="@Style">
+        <input type="file"
+               @onchange="HandleFileChange"
+               disabled="@Disabled"
+               readonly="@ReadOnly"
+               class="htt-input__control htt-input__control--file"
+               @attributes="AdditionalAttributes" />
+    </div>
+}
+else
+{
+    <div class="@CssClass" style="@Style">
+        @if (!string.IsNullOrEmpty(Icon))
+        {
+            <i class="htt-input__icon @Icon" aria-hidden="true"></i>
+        }
+        
+        <input type="@HtmlType"
+               value="@FormattedValue"
+               @onchange="HandleTextChange"
+               @oninput="HandleTextInput"
+               placeholder="@Placeholder"
+               disabled="@Disabled"
+               readonly="@ReadOnly"
+               class="htt-input__control"
+               @attributes="AdditionalAttributes" />
+               
+        @if (ShowClearButton && !string.IsNullOrEmpty(FormattedValue) && !Disabled && !ReadOnly)
+        {
+            <div class="htt-input__clear" @onclick="ClearInput" @onclick:stopPropagation>
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+        }
+    </div>
+}

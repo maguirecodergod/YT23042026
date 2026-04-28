@@ -1,4 +1,5 @@
 @page "/"
+@inherits HTTComponentBase
 <PageTitle>Dashboard — HTT Enterprise</PageTitle>
 
 <HTTContainer Padding="CSpacingType.LG" MaxWidth="1440px">
@@ -148,10 +149,10 @@
                                     <i class="bi bi-person-plus-fill"></i> Invite Member
                                 </button>
                             </HTTToolTip>
-                            <HTTToolTip Content="Generate a PDF report of recent activities" Position="CPositionType.Top" Shape="CToolTipShapeType.Square"
+                            <HTTToolTip Content="Test the new enterprise modal system" Position="CPositionType.Top" Shape="CToolTipShapeType.Bubble"
                                         Class="w-100">
-                                <button class="btn btn-outline-gold w-100">
-                                    <i class="bi bi-file-earmark-plus-fill"></i> Generate Report
+                                <button class="btn btn-outline-primary w-100" @onclick="OpenTestModal">
+                                    <i class="bi bi-window-stack"></i> Test Modal
                                 </button>
                             </HTTToolTip>
                         </HTTStack>
@@ -188,6 +189,8 @@
 </HTTContainer>
 
 @code {
+    [Inject] private IHTTModalService ModalService { get; set; } = default!;
+
     record ActivityItem(string Event, string Description, string User, string Status, string BadgeClass, string Time);
     record ServiceItem(string Name, string Uptime, int Pct, string Color, string ColorLight);
 
@@ -208,4 +211,23 @@
         new("CDN / Storage", "100%", 100, "#3fb950", "#56d364"),
         new("Message Queue", "98.2%", 98, "#3fb950", "#56d364"),
     };
+
+    private async Task OpenTestModal()
+    {
+        var result = await ModalService.ShowAsync<HTT.BlazorWasm.App.Components.ConfirmDialog>(new ModalOptions
+        {
+            Title = L["Common.Dialog.DeleteTitle"],
+            Parameters = new Dictionary<string, object>
+            {
+                { "Message", L["Common.Dialog.DeleteMessage"].ToString() }
+            },
+            Width = "450px"
+        });
+
+        if (result.Confirmed)
+        {
+            // Do something
+            Console.WriteLine("Confirmed!");
+        }
+    }
 }

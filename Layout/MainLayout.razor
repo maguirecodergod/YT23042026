@@ -2,9 +2,11 @@
 @implements IAsyncDisposable
 @inject NavigationManager Nav
 
-<div class="htt-shell">
+<div class="htt-shell @Theme.ThemeClass">
     <!-- ═══ Sidebar ═══ -->
-    <aside class="htt-sidebar @(_sidebarState.ToString().ToLower()) @(_sidebarState == CCollapseType.Expanded ? "open" : "")" id="sidebar">
+    <aside
+        class="htt-sidebar @(_sidebarState.ToString().ToLower()) @(_sidebarState == CCollapseType.Expanded ? "open" : "")"
+        id="sidebar">
 
         <!-- Brand -->
         <a class="sidebar-brand" href="/">
@@ -85,7 +87,8 @@
     </aside>
 
     <!-- Mobile overlay -->
-    <div class="sidebar-overlay @(_sidebarState != CCollapseType.Hidden ? "visible d-lg-none" : "")" @onclick="CloseSidebar" aria-hidden="true"></div>
+    <div class="sidebar-overlay @(_sidebarState != CCollapseType.Hidden ? "visible d-lg-none" : "")"
+         @onclick="CloseSidebar" aria-hidden="true"></div>
 
     <!-- ═══ Main ═══ -->
     <div class="htt-main">
@@ -93,56 +96,63 @@
         <!-- Top Bar -->
         <header class="htt-topbar">
             <!-- Hamburger Toggle -->
-            <button class="topbar-btn me-2" @onclick="ToggleSidebar" aria-label="Toggle navigation">
-                <i class="bi @(GetToggleIcon())"></i>
-            </button>
+            <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn me-2"
+                       OnClick="ToggleSidebar" IconOnly="true" Icon="@($"bi {GetToggleIcon()}")"
+                       aria-label="Toggle navigation" />
 
-            <div class="topbar-title">@PageTitle <span class="badge bg-secondary ms-2" style="font-size: 0.5rem; vertical-align: middle;">@_sidebarState</span></div>
+            <div class="topbar-title">
+                @PageTitle
+                <span class="badge bg-secondary ms-2"
+                      style="font-size: 0.5rem; vertical-align: middle;">@_sidebarState</span>
+            </div>
 
             <div class="topbar-search">
-                <i class="bi bi-search search-icon"></i>
-                <input type="search" placeholder="@L["Layout.Topbar.SearchPlaceholder"]" aria-label="Global search" @bind="_searchQuery"
-                       @bind:event="oninput" />
+                <HTTInput TValue="string" Type="CInputType.Search" Placeholder="@L["Layout.Topbar.SearchPlaceholder"]"
+                          @bind-Value="_searchQuery" Size="CSpacingType.SM" Icon="bi bi-search" aria-label="Global search" />
             </div>
 
             <div class="topbar-actions">
-                <HTTToolTip Position="CPositionType.Top" Shape="CToolTipShapeType.Bubble" Text="@L.GetString("Layout.Topbar.Theme", Theme.CurrentTheme.GetLocalizedName(L))">
-                    <button class="topbar-btn me-2" @onclick="Theme.ToggleThemeAsync" aria-label="Toggle Theme">
-                        <i class="bi @(Theme.CurrentTheme.GetIcon())"></i>
-                    </button>
+                <HTTToolTip Position="CPositionType.Top" Shape="CToolTipShapeType.Bubble"
+                            Text="@L.GetString("Layout.Topbar.Theme", Theme.CurrentTheme.GetLocalizedName(L))">
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn me-2"
+                               OnClick="Theme.ToggleThemeAsync" IconOnly="true" Icon="@($"bi {Theme.CurrentTheme.GetIcon()}")"
+                               aria-label="Toggle Theme" />
                 </HTTToolTip>
 
                 <HTTLanguageSelector />
 
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Notifications"]">
-                    <button class="topbar-btn" aria-label="Notifications">
-                        <i class="bi bi-bell-fill"></i>
-                        <span class="notif-dot"></span>
-                    </button>
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                               Icon="bi bi-bell-fill" IconOnly="true" aria-label="Notifications">
+                        <span class="topbar-notif-dot"></span>
+                    </HTTButton>
                 </HTTToolTip>
+
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Messages"]">
-                    <button class="topbar-btn" aria-label="Messages">
-                        <i class="bi bi-chat-dots-fill"></i>
-                    </button>
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                               IconOnly="true" Icon="bi bi-chat-dots-fill" aria-label="Messages" />
                 </HTTToolTip>
+
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Help"]">
-                    <button class="topbar-btn" aria-label="Help">
-                        <i class="bi bi-question-circle-fill"></i>
-                    </button>
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                               IconOnly="true" Icon="bi bi-question-circle-fill" aria-label="Help" />
                 </HTTToolTip>
+
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Profile"]">
-                    <a href="/profile" class="topbar-btn" aria-label="Profile">
-                        <i class="bi bi-person-circle"></i>
-                    </a>
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                               IconOnly="true" Icon="bi bi-person-circle" OnClick="@(() => Nav.NavigateTo("/profile"))"
+                               aria-label="Profile" />
                 </HTTToolTip>
             </div>
         </header>
+
 
         <!-- Page Content -->
         <main class="htt-content" role="main">
             @Body
         </main>
 
+        <HTTModalProvider />
     </div>
 </div>
 
@@ -155,7 +165,8 @@
     protected override async Task OnInitializedAsync()
     {
         await L.InitializeAsync();
-        await Theme.InitializeAsync();
+        // Theme.InitializeAsync() is called in Program.cs before RunAsync()
+        // so ThemeClass is already correct on the very first render — zero FOUC.
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)

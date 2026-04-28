@@ -1,4 +1,9 @@
 {
+    "Components": {
+        "Sidebar": {
+            "Toggle": "Thu gọn/Mở rộng"
+        }
+    },
     "Common": {
         "Country": {
             "AF": "Afghanistan",
@@ -245,6 +250,52 @@
             "System": "Hệ thống",
             "Light": "Sáng",
             "Dark": "Tối"
+        },
+        "Picker": {
+            "Start": "Bắt đầu",
+            "End": "Kết thúc",
+            "SelectDate": "Chọn ngày...",
+            "StartTime": "Giờ bắt đầu",
+            "EndTime": "Giờ kết thúc",
+            "Time": "Giờ",
+            "Cancel": "Hủy",
+            "Confirm": "Xác nhận",
+            "Apply": "Áp dụng",
+            "Weekday": {
+                "Su": "CN",
+                "Mo": "T2",
+                "Tu": "T3",
+                "We": "T4",
+                "Th": "T5",
+                "Fr": "T6",
+                "Sa": "T7"
+            },
+            "AM": "SA",
+            "PM": "CH",
+            "Months": {
+                "1": "Tháng 1", "2": "Tháng 2", "3": "Tháng 3", "4": "Tháng 4", "5": "Tháng 5", "6": "Tháng 6",
+                "7": "Tháng 7", "8": "Tháng 8", "9": "Tháng 9", "10": "Tháng 10", "11": "Tháng 11", "12": "Tháng 12"
+            },
+            "MonthsAbbr": {
+                "1": "Thg 1", "2": "Thg 2", "3": "Thg 3", "4": "Thg 4", "5": "Thg 5", "6": "Thg 6",
+                "7": "Thg 7", "8": "Thg 8", "9": "Thg 9", "10": "Thg 10", "11": "Thg 11", "12": "Thg 12"
+            }
+        },
+        "Dialog": {
+            "ConfirmTitle": "Xác nhận",
+            "DeleteTitle": "Xác nhận xóa",
+            "DeleteMessage": "Hành động này không thể hoàn tác. Bạn có chắc chắn muốn tiếp tục?",
+            "Confirm": "Xác nhận",
+            "Cancel": "Hủy"
+        },
+        "Grid": {
+            "Total": "Tổng",
+            "Items": "bản ghi",
+            "Show": "Hiển thị",
+            "FirstPage": "Trang đầu",
+            "LastPage": "Trang cuối",
+            "Previous": "Trang trước",
+            "Next": "Trang sau"
         }
     }
 }

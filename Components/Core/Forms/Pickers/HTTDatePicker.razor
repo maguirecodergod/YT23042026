@@ -1,0 +1,218 @@
+@typeparam TValue
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="htt-datepicker @CssClass" @ref="_pickerRef">
+    <!-- Trigger Input -->
+    <div class="htt-datepicker__trigger @(Disabled ? "is-disabled" : "") @(ReadOnly ? "is-readonly" : "")"
+         @onclick="ToggleDropdown">
+        <i class="@Icon htt-datepicker__icon"></i>
+        <div class="htt-datepicker__value">
+            @if (string.IsNullOrEmpty(GetDisplayValue()))
+            {
+                <span class="htt-datepicker__placeholder">@(string.IsNullOrEmpty(Placeholder) ? L["Common.Picker.SelectDate"] :
+                                                                                                                    Placeholder)</span>
+                }
+            else
+                {
+                    <span class="htt-datepicker__text">@GetDisplayValue()</span>
+                }
+            </div>
+            @if (ShowClearButton && !string.IsNullOrEmpty(GetDisplayValue()) && !Disabled && !ReadOnly)
+            {
+                <i class="bi-x htt-datepicker__clear" @onclick="ClearSelection" @onclick:stopPropagation></i>
+            }
+        </div>
+
+        <!-- Dropdown Panel -->
+        @if (_isOpen)
+        {
+            <div
+                class="htt-datepicker__dropdown @(IsDate ? "has-date" : "no-date") @(IsTime ? "has-time" : "no-time") @(Placement == "right" ? "is-right" : "")">
+                <div class="htt-datepicker__body">
+                    <!-- Left: Calendar -->
+                    @if (IsDate)
+                    {
+                        <div class="htt-datepicker__calendar">
+                            <!-- Header -->
+                            <div class="htt-datepicker__header">
+                                @if (_currentView == PickerView.Days)
+                                {
+                                    <button type="button" class="htt-datepicker__nav-btn" @onclick="PreviousMonth">
+                                        <i class="bi-chevron-left"></i>
+                                    </button>
+                                    <div class="htt-datepicker__month-year">
+                                        <button type="button" class="htt-datepicker__label-btn"
+                                                @onclick="ShowMonthView">@L[$"Common.Picker.Months.{_currentMonth.Month}"]</button>
+                                        <button type="button" class="htt-datepicker__label-btn"
+                                                @onclick="ShowYearView">@_currentMonth.Year</button>
+                                    </div>
+                                    <button type="button" class="htt-datepicker__nav-btn" @onclick="NextMonth">
+                                        <i class="bi-chevron-right"></i>
+                                    </button>
+                                }
+                                else if (_currentView == PickerView.Months)
+                                {
+                                    <button type="button" class="htt-datepicker__nav-btn"
+                                            @onclick="() => _currentMonth = _currentMonth.AddYears(-1)">
+                                        <i class="bi-chevron-left"></i>
+                                    </button>
+                                    <div class="htt-datepicker__month-year">
+                                        <button type="button" class="htt-datepicker__label-btn"
+                                                @onclick="ShowYearView">@_currentMonth.Year</button>
+                                    </div>
+                                    <button type="button" class="htt-datepicker__nav-btn"
+                                            @onclick="() => _currentMonth = _currentMonth.AddYears(1)">
+                                        <i class="bi-chevron-right"></i>
+                                    </button>
+                                }
+                                else if (_currentView == PickerView.Years)
+                                {
+                                    <button type="button" class="htt-datepicker__nav-btn" @onclick="PreviousYearPage">
+                                        <i class="bi-chevron-left"></i>
+                                    </button>
+                                    <div class="htt-datepicker__month-year">
+                                        @_yearPageStart - @(_yearPageStart + 11)
+                                    </div>
+                                    <button type="button" class="htt-datepicker__nav-btn" @onclick="NextYearPage">
+                                        <i class="bi-chevron-right"></i>
+                                    </button>
+                                }
+                            </div>
+
+                            @if (_currentView == PickerView.Days)
+                            {
+                                <!-- Weekdays -->
+                                <div class="htt-datepicker__weekdays">
+                                    <span>@L["Common.Picker.Weekday.Su"]</span><span>@L["Common.Picker.Weekday.Mo"]</span><span>@L["Common.Picker.Weekday.Tu"]</span><span>@L["Common.Picker.Weekday.We"]</span><span>@L["Common.Picker.Weekday.Th"]</span><span>@L["Common.Picker.Weekday.Fr"]</span><span>@L["Common.Picker.Weekday.Sa"]</span>
+                                </div>
+
+                                <!-- Days Grid -->
+                                <div class="htt-datepicker__days">
+                                    @foreach (var day in GetDaysInMonth())
+                                    {
+                                        var isSelected = IsSelected(day.Date);
+                                        var isInRange = IsInRange(day.Date);
+                                        var isRangeStart = IsRangeStart(day.Date);
+                                        var isRangeEnd = IsRangeEnd(day.Date);
+
+                                        <div
+                                            class="htt-datepicker__day-wrapper @(isInRange ? "is-in-range" : "") @(isRangeStart ? "is-range-start" : "") @(isRangeEnd ? "is-range-end" : "")">
+                                            @{
+                                                var isDisabled = IsDateDisabled?.Invoke(day.Date) ?? false;
+                                            }
+                                            <button type="button"
+                                                    class="htt-datepicker__day @(day.IsCurrentMonth ? "" : "is-outside") @(IsSelected(day.Date) ? "is-selected" : "") @(DateTime.Today == day.Date ? "is-today" : "") @(isDisabled ? "is-disabled" : "")"
+                                                    disabled="@isDisabled" @onclick="() => SelectDate(day.Date)"
+                                                    @onmouseover="() => HandleMouseOver(day.Date)">
+                                                @day.Date.Day
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            else if (_currentView == PickerView.Months)
+                            {
+                                <div class="htt-datepicker__month-grid">
+                                    @for (int m = 1; m <= 12; m++)
+                                    {
+                                        var month = m;
+                                        <button type="button"
+                                                class="htt-datepicker__month-item @(month == _currentMonth.Month ? "is-active" : "")"
+                                                @onclick="() => SelectMonth(month)">
+                                            @L[$"Common.Picker.MonthsAbbr.{month}"]
+                                        </button>
+                                    }
+                                </div>
+                            }
+                            else if (_currentView == PickerView.Years)
+                            {
+                                <div class="htt-datepicker__year-grid">
+                                    @for (int y = _yearPageStart; y < _yearPageStart + 12; y++)
+                                    {
+                                        var year = y;
+                                        <button type="button"
+                                                class="htt-datepicker__year-item @(year == _currentMonth.Year ? "is-active" : "")"
+                                                @onclick="() => SelectYear(year)">
+                                            @year
+                                        </button>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    <!-- Right: Time Selection (if applicable) -->
+                    @if (IsTime)
+                    {
+                        <div class="htt-datepicker__time">
+                            <div class="htt-time-section">
+                                <label>@(IsRange ? L["Common.Picker.StartTime"] : L["Common.Picker.Time"])</label>
+                                <div class="htt-time-inputs">
+                                    <div class="htt-time-select-group">
+                                        <div class="htt-time-unit">
+                                            <HTTSelect TItem="int" TValue="int" Items="HTTTimeConstants.Hours" 
+                                                       @bind-Value="_startHour" Searchable="false" 
+                                                       AllowClear="false" ShowArrow="false" Placeholder="" />
+                                        </div>
+                                        <span class="htt-time-separator">:</span>
+                                        <div class="htt-time-unit">
+                                            <HTTSelect TItem="int" TValue="int" Items="HTTTimeConstants.Minutes" 
+                                                       @bind-Value="_startMinute" TextSelector='m => m.ToString("D2")' 
+                                                       Searchable="false" AllowClear="false" ShowArrow="false" Placeholder="" />
+                                        </div>
+                                        <div class="htt-time-unit ampm">
+                                            <HTTSelect TItem="HTTTimeConstants.AmPmOption" TValue="bool" Items="HTTTimeConstants.AmPmOptions" 
+                                                       TextSelector='a => L["Common.Picker." + a.Label]' ValueSelector="a => a.Value" 
+                                                       @bind-Value="_startIsPM" Searchable="false" 
+                                                       AllowClear="false" ShowArrow="false" Placeholder="" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (IsRange)
+                            {
+                                <div class="htt-time-section mt-3">
+                                    <label>@L["Common.Picker.EndTime"]</label>
+                                    <div class="htt-time-inputs">
+                                        <div class="htt-time-select-group">
+                                            <div class="htt-time-unit">
+                                                <HTTSelect TItem="int" TValue="int" Items="HTTTimeConstants.Hours" 
+                                                           @bind-Value="_endHour" Searchable="false" 
+                                                           AllowClear="false" ShowArrow="false" Placeholder="" />
+                                            </div>
+                                            <span class="htt-time-separator">:</span>
+                                            <div class="htt-time-unit">
+                                                <HTTSelect TItem="int" TValue="int" Items="HTTTimeConstants.Minutes" 
+                                                           @bind-Value="_endMinute" TextSelector='m => m.ToString("D2")' 
+                                                           Searchable="false" AllowClear="false" ShowArrow="false" Placeholder="" />
+                                            </div>
+                                            <div class="htt-time-unit ampm">
+                                                <HTTSelect TItem="HTTTimeConstants.AmPmOption" TValue="bool" Items="HTTTimeConstants.AmPmOptions" 
+                                                           TextSelector='a => L["Common.Picker." + a.Label]' ValueSelector="a => a.Value" 
+                                                           @bind-Value="_endIsPM" Searchable="false" 
+                                                           AllowClear="false" ShowArrow="false" Placeholder="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Footer for Range/Time apply -->
+                @if (IsRange || IsTime)
+                {
+                    <div class="htt-datepicker__footer">
+                        <button type="button" class="htt-btn htt-btn--ghost" @onclick="CloseDropdown">@L["Common.Picker.Cancel"]</button>
+                        <button type="button" class="htt-btn htt-btn--primary" @onclick="ApplyRange">@L["Common.Picker.Apply"]</button>
+                    </div>
+                }
+            </div>
+
+            <!-- Backdrop to close on click outside -->
+            <div class="htt-datepicker__backdrop" @onclick="CloseDropdown"></div>
+        }
+    </div>

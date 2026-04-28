@@ -1,4 +1,9 @@
 {
+    "Components": {
+        "Sidebar": {
+            "Toggle": "Toggle Sidebar"
+        }
+    },
     "Common": {
         "Country": {
             "AF": "Afghanistan",
@@ -245,6 +250,52 @@
             "System": "System",
             "Light": "Light",
             "Dark": "Dark"
+        },
+        "Picker": {
+            "Start": "Start",
+            "End": "End",
+            "SelectDate": "Select date...",
+            "StartTime": "Start Time",
+            "EndTime": "End Time",
+            "Time": "Time",
+            "Cancel": "Cancel",
+            "Confirm": "Confirm",
+            "Apply": "Apply",
+            "Weekday": {
+                "Su": "Su",
+                "Mo": "Mo",
+                "Tu": "Tu",
+                "We": "We",
+                "Th": "Th",
+                "Fr": "Fr",
+                "Sa": "Sa"
+            },
+            "AM": "AM",
+            "PM": "PM",
+            "Months": {
+                "1": "January", "2": "February", "3": "March", "4": "April", "5": "May", "6": "June",
+                "7": "July", "8": "August", "9": "September", "10": "October", "11": "November", "12": "December"
+            },
+            "MonthsAbbr": {
+                "1": "Jan", "2": "Feb", "3": "Mar", "4": "Apr", "5": "May", "6": "Jun",
+                "7": "Jul", "8": "Aug", "9": "Sep", "10": "Oct", "11": "Nov", "12": "Dec"
+            }
+        },
+        "Dialog": {
+            "ConfirmTitle": "Confirmation",
+            "DeleteTitle": "Confirm Deletion",
+            "DeleteMessage": "This action is irreversible. Are you sure you want to proceed?",
+            "Confirm": "Confirm",
+            "Cancel": "Cancel"
+        },
+        "Grid": {
+            "Total": "Total",
+            "Items": "items",
+            "Show": "Show",
+            "FirstPage": "First Page",
+            "LastPage": "Last Page",
+            "Previous": "Previous",
+            "Next": "Next"
         }
     }
 }

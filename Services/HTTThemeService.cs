@@ -1,5 +1,18 @@
 namespace HTT.BlazorWasm.App.Services
 {
+    /// <summary>
+    /// Theme service using the CSS-class pattern.
+    /// 
+    /// Architecture (learned from LHA reference project):
+    ///   - Theme state is resolved from localStorage in Program.cs 
+    ///     BEFORE host.RunAsync() — so the very first Blazor render
+    ///     already has the correct ThemeClass.
+    ///   - Theme is applied as a CSS class ("theme-dark" / "theme-light")
+    ///     on the root wrapper div in MainLayout, NOT via data-* attributes
+    ///     on the html element.
+    ///   - No JS interop is needed for theme application — zero FOUC by design.
+    ///   - The only JS used is localStorage read (via IJSRuntime) during init.
+    /// </summary>
     internal sealed class HTTThemeService : IHTTThemeService, IDisposable
     {
         private readonly IJSRuntime _js;
@@ -18,34 +31,32 @@ namespace HTT.BlazorWasm.App.Services
             _ => _isSystemDark
         };
 
+        public string ThemeClass => IsDark ? "theme-dark" : "theme-light";
+
         public event Action? OnThemeChanged;
 
         public async Task InitializeAsync()
         {
             try
             {
-                // 1. Get initial system preference
+                // 1. Detect OS preference
                 _isSystemDark = await _js.InvokeAsync<bool>("httTheme.getSystemPreference");
 
-                // 2. Setup listener for system theme changes
+                // 2. Listen for OS-level theme changes
                 _dotNetRef = DotNetObjectReference.Create(this);
                 await _js.InvokeVoidAsync("httTheme.initThemeListener", _dotNetRef);
 
-                // 3. Load saved theme preference
+                // 3. Load saved theme from localStorage
                 var saved = await _js.InvokeAsync<string>("localStorage.getItem", "htt-theme");
-                if (Enum.TryParse<CThemeType>(saved, true, out var theme))
-                {
-                    _currentTheme = theme;
-                }
-                else
-                {
-                    _currentTheme = CThemeType.System;
-                }
+                _currentTheme = Enum.TryParse<CThemeType>(saved, true, out var parsed)
+                    ? parsed
+                    : CThemeType.System;
 
-                await ApplyThemeToDomAsync();
+                // No DOM manipulation needed — ThemeClass is read by Blazor components
+                // during their first render, which happens AFTER this method completes.
                 OnThemeChanged?.Invoke();
             }
-            catch { /* Fallback to default */ }
+            catch { /* Fallback to default — ThemeClass will return based on _isSystemDark */ }
         }
 
         [JSInvokable]
@@ -65,13 +76,11 @@ namespace HTT.BlazorWasm.App.Services
             _currentTheme = theme;
             await _js.InvokeVoidAsync("localStorage.setItem", "htt-theme", theme.ToString().ToLower());
 
-            await ApplyThemeToDomAsync();
             OnThemeChanged?.Invoke();
         }
 
         public async Task ToggleThemeAsync()
         {
-            // Rotation: System -> Light -> Dark -> System
             var nextTheme = _currentTheme switch
             {
                 CThemeType.System => CThemeType.Light,
@@ -80,14 +89,6 @@ namespace HTT.BlazorWasm.App.Services
                 _ => CThemeType.System
             };
             await SetThemeAsync(nextTheme);
-        }
-
-        private async Task ApplyThemeToDomAsync()
-        {
-            var value = _currentTheme == CThemeType.System ? "system" :
-                        (_currentTheme == CThemeType.Dark ? "dark" : "light");
-
-            await _js.InvokeVoidAsync("httTheme.applyTheme", value);
         }
 
         public void Dispose()

@@ -1,0 +1,27 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+@if (!string.IsNullOrEmpty(ToolTip))
+{
+    <HTTToolTip Content="@ToolTip" Position="ToolTipPosition" Shape="ToolTipShape" Class="@(Block ? "w-100" : "")">
+        @ButtonContent
+    </HTTToolTip>
+}
+else
+{
+    @ButtonContent
+}
+
+@code {
+    private RenderFragment ButtonContent => __builder =>
+    {
+        <button type="@Type.ToString().ToLower()" class="@CssClass" style="@Style" disabled="@IsButtonDisabled"
+                @onclick="HandleClick" @onclick:stopPropagation role="button" aria-busy="@IsLoading"
+                aria-disabled="@IsButtonDisabled" @attributes="AdditionalAttributes">
+
+            <div class="htt-btn-content">@if (IsLoading){<span class="htt-btn-loader"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"></circle><path d="M12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.03906 16.4531" stroke="currentColor" stroke-width="4" stroke-linecap="round"></path></svg></span>}@if (!string.IsNullOrEmpty(Icon)){<i class="@Icon htt-btn-icon @(IsLoading ? "htt-btn-icon--hidden" : "")"></i>}@if (IsIconOnly){@ChildContent}else if (ChildContent != null || !string.IsNullOrEmpty(Text)){<span class="htt-btn-text @(IsLoading ? "htt-btn-text--dimmed" : "")">@if (ChildContent != null){@ChildContent}else{@Text}</span>}</div>
+
+            <span class="htt-btn-ripple"></span>
+        </button>
+    };
+}

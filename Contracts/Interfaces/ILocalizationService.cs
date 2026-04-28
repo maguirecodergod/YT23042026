@@ -29,6 +29,12 @@ namespace HTT.BlazorWasm.App.Contracts
         /// </summary>
         IReadOnlyList<CultureEntry> SupportedCultureEntries { get; }
 
+        /// <summary>
+        /// All countries auto-discovered from CCountryCode entries.
+        /// Some may have empty CultureCode if they are not yet localized.
+        /// </summary>
+        IReadOnlyList<CultureEntry> AllCultureEntries { get; }
+
         /// <summary>Whether the localization data has been loaded for the current culture.</summary>
         bool IsLoaded { get; }
 

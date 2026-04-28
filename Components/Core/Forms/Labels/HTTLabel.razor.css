@@ -1,0 +1,97 @@
+.htt-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1-5);
+    margin-bottom: var(--space-1-5);
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-weight: var(--font-medium);
+    line-height: var(--leading-tight);
+    user-select: none;
+    transition: var(--transition-fast);
+    cursor: default;
+}
+
+.htt-label:hover {
+    color: var(--color-text-primary);
+}
+
+.htt-label[for] {
+    cursor: pointer;
+}
+
+/* --- Content Wrapper --- */
+.htt-label__content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+/* --- Icons --- */
+.htt-label__icon {
+    font-size: 1.1em;
+    color: var(--color-brand);
+    opacity: 0.85;
+}
+
+/* --- Required Indicator --- */
+.htt-label__required-indicator {
+    color: var(--color-danger);
+    font-size: 1.1em;
+    margin-left: var(--space-0-5);
+    font-weight: var(--font-bold);
+    vertical-align: middle;
+}
+
+/* --- Info Trigger --- */
+.htt-label__info-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-tertiary);
+    font-size: var(--text-xs);
+    cursor: help;
+    padding: var(--space-0-5);
+    border-radius: var(--radius-full);
+    transition: var(--transition-fast);
+    margin-left: var(--space-0-5);
+}
+
+.htt-label__info-trigger:hover {
+    color: var(--color-info);
+    background-color: var(--color-info-bg);
+    transform: scale(1.1);
+}
+
+/* --- Size Variants --- */
+.htt-label--xs {
+    font-size: var(--text-xs);
+}
+
+.htt-label--sm {
+    font-size: var(--text-sm);
+}
+
+.htt-label--md {
+    font-size: var(--text-base);
+}
+
+.htt-label--lg {
+    font-size: var(--text-md);
+}
+
+.htt-label--xl {
+    font-size: var(--text-lg);
+    font-weight: var(--font-semibold);
+}
+
+/* --- Animation --- */
+@keyframes htt-label-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.htt-label--required:hover .htt-label__required-indicator {
+    animation: htt-label-pulse 0.6s ease-in-out infinite;
+}

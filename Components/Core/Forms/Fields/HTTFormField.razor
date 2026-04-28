@@ -1,0 +1,36 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <div class="htt-form-field__label-container">
+            <HTTLabel Text="@Label" 
+                      For="@LabelFor" 
+                      Required="@Required" 
+                      Icon="@LabelIcon" 
+                      Info="@LabelInfo" 
+                      Size="@Size" />
+        </div>
+    }
+
+    <div class="htt-form-field__control-container">
+        <div class="htt-form-field__control">
+            @ChildContent
+        </div>
+
+        @if (!string.IsNullOrEmpty(Error))
+        {
+            <div class="htt-form-field__error" role="alert">
+                <i class="bi bi-exclamation-circle-fill" aria-hidden="true"></i>
+                <span>@Error</span>
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(HelpText))
+        {
+            <div class="htt-form-field__help-text">
+                @HelpText
+            </div>
+        }
+    </div>
+</div>

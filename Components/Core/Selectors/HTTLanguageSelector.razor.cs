@@ -1,49 +1,27 @@
-using HTT.BlazorWasm.App.Helpers;
-
 namespace HTT.BlazorWasm.App.Components
 {
     public partial class HTTLanguageSelector : HTTComponentBase
     {
-        private bool _isOpen;
-
-        private void ToggleDropdown()
+        private string GetCurrentCountryCode()
         {
-            _isOpen = !_isOpen;
-        }
-
-        private async Task HandleFocusOut(FocusEventArgs e)
-        {
-            // Small delay so that the click event on the button item can execute
-            // before the dropdown gets hidden and removed from DOM.
-            await Task.Delay(150);
-            _isOpen = false;
-        }
-
-        private string GetActiveIcon()
-        {
-            var active = L.SupportedCultureEntries.FirstOrDefault(x => x.CultureCode == L.CurrentCulture.Name);
-            return active?.Icon ?? "bi bi-translate"; 
+            var entry = L.AllCultureEntries.FirstOrDefault(x => x.CultureCode == L.CurrentCulture.Name);
+            return entry?.CountryCode.ToString() ?? string.Empty;
         }
 
         private string GetTooltipText()
         {
-            var active = L.SupportedCultureEntries.FirstOrDefault(x => x.CultureCode == L.CurrentCulture.Name);
+            var active = L.AllCultureEntries.FirstOrDefault(x => x.CultureCode == L.CurrentCulture.Name);
             var langName = active != null ? L.GetString(active.DisplayName) : L.CurrentCulture.Name;
             return L.GetString("Layout.Topbar.Language", langName);
         }
 
-        private bool IsActive(CultureEntry entry)
+        private async Task OnLanguageChanged(string countryCodeStr)
         {
-            return entry.CultureCode == L.CurrentCulture.Name;
-        }
-
-        private async Task SelectLanguageAsync(CultureEntry entry)
-        {
-            if (!IsActive(entry))
+            var entry = L.AllCultureEntries.FirstOrDefault(x => x.CountryCode.ToString() == countryCodeStr);
+            if (entry != null && !string.IsNullOrEmpty(entry.CultureCode) && entry.CultureCode != L.CurrentCulture.Name)
             {
                 await L.SetCultureAsync(entry.CultureCode);
             }
-            _isOpen = false;
         }
     }
 }

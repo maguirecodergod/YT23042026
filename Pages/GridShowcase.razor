@@ -1,0 +1,126 @@
+@page "/grid"
+@using HTT.BlazorWasm.App.Components.Core.DataGrid
+@using System.Threading.Tasks
+
+<div class="page-container" style="padding: var(--space-8);">
+    <h1 style="margin-bottom: var(--space-6); color: var(--color-text-primary);">HTTGrid Showcase</h1>
+
+    <div style="margin-bottom: var(--space-8);">
+        <h2 style="margin-bottom: var(--space-4); color: var(--color-text-secondary); font-size: var(--text-xl);">
+            Server-Side Data Loading (Virtualization Enabled)</h2>
+
+            @* <HTTGrid TItem="User" LoadData="LoadUsers" Virtualize="true" ItemSize="52" Selectable="true"
+        MultiSelect="true">
+                <HTTColumn TItem="User" Field="u => u.Id" Title="ID" Width="80px" />
+                <HTTColumn TItem="User" Field="u => u.Name" Title="Full Name" Sortable="true" />
+                <HTTColumn TItem="User" Field="u => u.Email" Title="Email Address" />
+                <HTTColumn TItem="User" Field="u => u.Role" Title="Role" Width="150px">
+                    <CellTemplate>
+                        <span
+                            style="padding: 2px 8px; border-radius: 12px; background: var(--color-brand-muted-bg); color:
+        var(--color-brand-muted-text); font-size: var(--text-xs); font-weight: bold;">
+                            @context.Role
+                        </span>
+                    </CellTemplate>
+                </HTTColumn>
+                <HTTColumn TItem="User" Field="u => u.Status" Title="Status" Width="120px">
+                    <CellTemplate>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div
+                                style="width: 8px; height: 8px; border-radius: 50%; background: @(context.Status == "Active" ?
+        "var(--color-success)" : "var(--color-danger)")">
+                            </div>
+                            @context.Status
+                        </div>
+                    </CellTemplate>
+                </HTTColumn>
+            </HTTGrid> *@
+        </div>
+
+        <div>
+            <h2 style="margin-bottom: var(--space-4); color: var(--color-text-secondary); font-size: var(--text-xl);">
+                Gallery (Card) Mode</h2>
+                <HTTGrid TItem="User" Items="_localUsers" DisplayMode="HTTGridDisplayMode.Card" CardMinWidth="250">
+                    <CardTemplate>
+                        <div style="display: flex; flex-direction: column; gap: var(--space-3);">
+                            <div
+                                style="width: 48px; height: 48px; border-radius: var(--radius-full); background: var(--gradient-brand); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: var(--text-lg);">
+                                @context.Name?.Substring(0, 1)
+                            </div>
+                            <div>
+                                <div style="font-weight: bold; font-size: var(--text-lg);">@context.Name</div>
+                                <div style="color: var(--color-text-tertiary); font-size: var(--text-sm);">@context.Email</div>
+                            </div>
+                            <div style="margin-top: var(--space-2); display: flex; gap: var(--space-2);">
+                                <span
+                                style="padding: 2px 8px; border-radius: var(--radius-full); background: var(--color-brand-muted-bg); color: var(--color-brand-muted-text); font-size: var(--text-xs);">@context.Role</span>
+                                <span
+                                style="padding: 2px 8px; border-radius: var(--radius-full); background: var(--color-success-bg); color: var(--color-success-text); font-size: var(--text-xs);">@context.Status</span>
+                            </div>
+                        </div>
+                    </CardTemplate>
+                </HTTGrid>
+            </div>
+
+            <div style="margin-top: var(--space-8);">
+                <h2 style="margin-bottom: var(--space-4); color: var(--color-text-secondary); font-size: var(--text-xl);">Local
+                    Data Binding (Table)</h2>
+                    <HTTGrid TItem="User" Items="_localUsers" Virtualize="false">
+                        <HTTColumn TItem="User" Field="u => u.Name" Title="Name" />
+                        <HTTColumn TItem="User" Field="u => u.Email" Title="Email" />
+                    </HTTGrid>
+                </div>
+            </div>
+
+@code {
+    public class User
+    {
+        public int Id { get; set; }
+        public string? Name { get; set; }
+        public string? Email { get; set; }
+        public string? Role { get; set; }
+        public string? Status { get; set; }
+    }
+
+    private List<User> _localUsers = new()
+    {
+        new User { Id = 1, Name = "Alice Johnson", Email = "alice@example.com", Role = "Admin", Status = "Active" },
+        new User { Id = 2, Name = "Bob Smith", Email = "bob@example.com", Role = "User", Status = "Inactive" },
+    };
+
+    private async Task<HTTGridResult<User>> LoadUsers(HTTGridQuery query)
+    {
+        // Simulate API delay
+        await Task.Delay(800);
+
+        var allUsers = Enumerable.Range(1, 1000).Select(i => new User
+        {
+            Id = i,
+            Name = $"User {i}",
+            Email = $"user{i}@example.com",
+            Role = i % 5 == 0 ? "Admin" : "Editor",
+            Status = i % 3 == 0 ? "Inactive" : "Active"
+        });
+
+        // Simple sorting simulation
+        if (query.Sorts.Any())
+        {
+            var sort = query.Sorts.First();
+            if (sort.Field == "Name")
+            {
+                allUsers = sort.Direction == SortDirection.Ascending
+                    ? allUsers.OrderBy(u => u.Name)
+                    : allUsers.OrderByDescending(u => u.Name);
+            }
+        }
+
+        var total = allUsers.Count();
+        var items = allUsers.Skip(query.PageIndex * query.PageSize).Take(query.PageSize).ToList();
+
+        return new HTTGridResult<User>
+        {
+            Items = items,
+            TotalCount = total
+        };
+    }
+}

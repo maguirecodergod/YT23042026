@@ -1,0 +1,365 @@
+@page "/form-test"
+@using System.ComponentModel.DataAnnotations
+@using HTT.BlazorWasm.App.Contracts
+
+<PageTitle>Form Components Demo — HTT Enterprise</PageTitle>
+
+<HTTContainer Padding="CSpacingType.LG" MaxWidth="1024px">
+    <div class="fade-in">
+        <HTTStack Spacing="CSpacingType.MD" Class="mb-4">
+            <HTTHeading Type="CHeadingType.H1">
+                Form Components <span class="text-gradient-gold">Showcase</span>
+            </HTTHeading>
+            <p style="color:var(--color-text-tertiary)">
+                Comprehensive test page for all enterprise form controls: Form, Groups, Fields, Labels, and generic
+                Inputs.
+            </p>
+        </HTTStack>
+
+        <div class="htt-card">
+            <div class="htt-card-header"
+                 style="border-bottom: 1px solid var(--color-border-subtle); padding: var(--space-4) var(--space-6);">
+                <HTTHeading Type="CHeadingType.H2" Class="htt-card-title m-0">
+                    <i class="bi bi-ui-checks-grid me-2" style="color:var(--color-brand)"></i> User Registration Form
+                </HTTHeading>
+            </div>
+
+            <div style="padding: var(--space-6);">
+                <HTTForm Model="_model" OnValidSubmit="HandleValidSubmit" OnInvalidSubmit="HandleInvalidSubmit">
+
+                    <!-- Group 1: Basic Information -->
+                    <HTTFormGroup Title="Basic Information" Description="Primary user identification details."
+                                  Icon="bi-person-badge" Collapsible="true">
+
+                        <!-- Row Layout Example -->
+                        <div class="grid grid-2 gap-4">
+                            <HTTFormField Label="Username" Required="true" LabelIcon="bi-person"
+                                          HelpText="Used for login and public profile.">
+                                <HTTInput @bind-Value="_model.Username" Type="CInputType.Text"
+                                          Placeholder="Enter your username..." ShowClearButton="true" />
+                            </HTTFormField>
+
+                            <HTTFormField Label="Email Address" Required="true" LabelIcon="bi-envelope">
+                                <HTTInput @bind-Value="_model.Email" Type="CInputType.Email"
+                                          Placeholder="name@enterprise.com" ShowClearButton="true" />
+                            </HTTFormField>
+                        </div>
+
+                        <HTTFormField Label="Password" Required="true" LabelIcon="bi-key">
+                            <HTTInput @bind-Value="_model.Password" Type="CInputType.Password"
+                                      Placeholder="Minimum 8 characters" />
+                        </HTTFormField>
+
+                    </HTTFormGroup>
+
+                    <!-- Group 2: Extended Details (Testing advanced CInputTypes) -->
+                    <HTTFormGroup Title="Extended Details" Description="Testing Date, Time, Number and Ranges."
+                                  Icon="bi-calendar-date" Collapsible="true">
+
+                        <div class="grid grid-3 gap-4">
+                            <HTTFormField Label="Age" LabelInfo="Must be 18 or older">
+                                <HTTInput @bind-Value="_model.Age" Type="CInputType.Number" />
+                            </HTTFormField>
+
+                            <HTTFormField Label="Date of Birth">
+                                <HTTInput @bind-Value="_model.BirthDate" Type="CInputType.DateOnly" />
+                            </HTTFormField>
+
+                            <HTTFormField Label="Preferred Time">
+                                <HTTInput @bind-Value="_model.MeetingTime" Type="CInputType.TimeOnly" />
+                            </HTTFormField>
+                        </div>
+
+                        <!-- Testing the Range Fallback UI -->
+                        <HTTFormField Label="Availability Range" HelpText="Select your available start and end dates.">
+                            <HTTInput @bind-Value="_model.AvailabilityRange" Type="CInputType.DateRange"
+                                      Icon="bi-calendar-range" />
+                        </HTTFormField>
+
+                        <HTTFormField Label="Profile Picture" HelpText="Upload a professional photo (Max 2MB).">
+                            <HTTInput TValue="string" Type="CInputType.File" />
+                        </HTTFormField>
+
+                        <!-- New Select Section -->
+                        <div class="grid grid-2 gap-4">
+                            <HTTFormField Label="Country" LabelFor="country-select" Required="true"
+                                          LabelIcon="bi-globe">
+                                <HTTSelect TItem="Country" TValue="int" Items="_countries" TextSelector="c => c.Name"
+                                           ValueSelector="c => c.Id" @bind-Value="_model.CountryId" Searchable="true"
+                                           Placeholder="Select your country..." />
+                            </HTTFormField>
+
+                            <HTTFormField Label="Skills" HelpText="Select multiple skills you possess.">
+                                <HTTSelect TItem="string" TValue="List<string>" Items="_availableSkills"
+                                           @bind-Value="_model.Skills" Multiple="true" Placeholder="Select skills..." />
+                            </HTTFormField>
+                        </div>
+
+                    </HTTFormGroup>
+
+
+                    <!-- Group 3: Advanced HTTSelect Showcase -->
+                    <HTTFormGroup Title="Advanced Select Modes"
+                                  Description="Demonstrating Async loading, Remote search, and Templates." Icon="bi-stars">
+
+                        <div class="grid grid-2 gap-4">
+                            <!-- Mode: Async Loading -->
+                            <HTTFormField Label="Account Role"
+                                          HelpText="Items are loaded asynchronously on component initialization.">
+                                <HTTSelect TItem="string" TValue="string" LoadData="LoadRolesAsync"
+                                           @bind-Value="_model.Role" Placeholder="Select role..." />
+                            </HTTFormField>
+
+                            <!-- Mode: Remote Search -->
+                            <HTTFormField Label="Product Search" HelpText="Searches remote data with 300ms debounce.">
+                                <HTTSelect TItem="Product" TValue="int" SearchFunc="SearchProductsAsync"
+                                           TextSelector="p => p.Name" ValueSelector="p => p.Id" @bind-Value="_model.ProductId"
+                                           Searchable="true" Placeholder="Type to search products..." />
+                            </HTTFormField>
+                        </div>
+
+                        <!-- Mode: Custom Templates -->
+                        <HTTFormField Label="Visual Theme Selector" Class="mt-4"
+                                      HelpText="Demonstrating ItemTemplate and SelectedTemplate.">
+                            <HTTSelect TItem="ThemeOption" TValue="string" Items="_themeOptions"
+                                       TextSelector="t => t.Name" ValueSelector="t => t.Name" @bind-Value="_model.Theme"
+                                       Placeholder="Select theme...">
+                                <ItemTemplate Context="theme">
+                                    <div style="display:flex; align-items:center; gap:12px;">
+                                        <div
+                                            style="width:16px; height:16px; border-radius:50%; background:@theme.Color;">
+                                        </div>
+                                        <div style="display:flex; flex-direction:column;">
+                                            <span
+                                            style="font-weight:var(--font-medium); color:var(--color-text-primary)">@theme.Name</span>
+                                            <span
+                                            style="font-size:var(--text-xs); color:var(--color-text-tertiary)">@theme.Description</span>
+                                        </div>
+                                    </div>
+                                </ItemTemplate>
+                                <SelectedTemplate Context="theme">
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <div
+                                            style="width:12px; height:12px; border-radius:50%; background:@theme.Color;">
+                                        </div>
+                                        <span>@theme.Name Theme</span>
+                                    </div>
+                                </SelectedTemplate>
+                            </HTTSelect>
+                        </HTTFormField>
+
+                    </HTTFormGroup>
+
+                    <!-- Group 4: Multi-Select Deep Dive -->
+                    <HTTFormGroup Title="Multi-Select Showcase"
+                                  Description="Advanced scenarios for selecting multiple items." Icon="bi-collection">
+
+                        <!-- Multi-select with Complex Objects -->
+                        <HTTFormField Label="Featured Products"
+                                      HelpText="Select multiple products to feature on your profile.">
+                            <HTTSelect TItem="Product" TValue="List<int>" Items="_allProducts"
+                                       TextSelector="p => p.Name" ValueSelector="p => p.Id"
+                                       @bind-Value="_model.FeaturedProductIds" Multiple="true" Searchable="true"
+                                       Placeholder="Search and select products...">
+                                <ItemTemplate Context="product">
+                                    <div
+                                        style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                                        <span>@product.Name</span>
+                                        <span class="badge bg-secondary" style="font-size:0.7rem">ID: @product.Id</span>
+                                    </div>
+                                </ItemTemplate>
+                            </HTTSelect>
+                        </HTTFormField>
+
+                        <!-- Multi-select with Custom Selected Tags -->
+                        <HTTFormField Label="Project Tags" Class="mt-4"
+                                      HelpText="Select tags with custom visual styles.">
+                            <HTTSelect TItem="string" TValue="List<string>" Items="_availableSkills"
+                                       @bind-Value="_model.ProjectTags" Multiple="true" Placeholder="Choose tags...">
+                                <SelectedTemplate Context="tag">
+                                    <div style="display:flex; align-items:center; gap:4px; color:var(--color-brand)">
+                                        <i class="bi bi-tag-fill"></i>
+                                        <span>@tag</span>
+                                    </div>
+                                </SelectedTemplate>
+                            </HTTSelect>
+                        </HTTFormField>
+
+                    </HTTFormGroup>
+
+                    <!-- Group 5: Preferences (Testing Booleans) -->
+                    <HTTFormGroup Title="Preferences & Consent" Icon="bi-shield-check" Bordered="false">
+
+                        <HTTFormField>
+                            <HTTInput @bind-Value="_model.SubscribeNewsletter" Type="CInputType.Checkbox"
+                                      Placeholder="Subscribe to enterprise newsletter" />
+                        </HTTFormField>
+
+                        <HTTFormField Required="true">
+                            <HTTInput @bind-Value="_model.AcceptTerms" Type="CInputType.Checkbox"
+                                      Placeholder="I accept the Terms and Conditions" />
+                        </HTTFormField>
+
+                    </HTTFormGroup>
+
+                    <!-- Submit Actions -->
+                    <div
+                        style="display: flex; gap: var(--space-3); padding-top: var(--space-4); border-top: 1px solid var(--color-border-subtle);">
+                        <button type="submit" class="btn btn-primary" style="padding: 10px 24px;">
+                            <i class="bi bi-check2-circle"></i> Create Account
+                        </button>
+                        <button type="button" class="btn btn-secondary" @onclick="ResetForm">
+                            <i class="bi bi-arrow-counterclockwise"></i> Reset
+                        </button>
+                    </div>
+
+                </HTTForm>
+            </div>
+        </div>
+
+        @if (_submittedSuccessfully)
+        {
+            <div class="htt-card mt-4"
+                 style="background-color: rgba(63, 185, 80, 0.1); border-color: #3fb950; padding: var(--space-4);">
+                <HTTHeading Type="CHeadingType.H3" Class="m-0" Style="color: #3fb950;">
+                    <i class="bi bi-check-circle-fill me-2"></i> Form Submitted Successfully!
+                </HTTHeading>
+            </div>
+        }
+
+    </div>
+</HTTContainer>
+
+@code {
+    private TestRegistrationModel _model = new();
+    private bool _submittedSuccessfully = false;
+
+    private List<Country> _countries = new()
+    {
+        new Country { Id = 1, Name = "Vietnam" },
+        new Country { Id = 2, Name = "United States" },
+        new Country { Id = 3, Name = "United Kingdom" },
+        new Country { Id = 4, Name = "Japan" },
+        new Country { Id = 5, Name = "Singapore" }
+    };
+
+    private List<string> _availableSkills = new()
+    {
+        "C#", "Blazor", "ASP.NET Core", "SQL Server", "Docker", "Kubernetes", "Azure", "AWS"
+    };
+
+    private List<Product> _allProducts = new()
+    {
+        new Product { Id = 101, Name = "Alpha Console" },
+        new Product { Id = 102, Name = "Beta Station" },
+        new Product { Id = 103, Name = "Gamma Link" },
+        new Product { Id = 104, Name = "Delta Hub" },
+        new Product { Id = 105, Name = "Epsilon Core" }
+    };
+
+    private List<ThemeOption> _themeOptions = new()
+    {
+        new ThemeOption { Name = "Gold", Color = "var(--primitive-gold-500)", Description = "The signature enterprise look" },
+        new ThemeOption { Name = "Slate", Color = "var(--primitive-slate-500)", Description = "Professional and neutral" },
+        new ThemeOption { Name = "Ocean", Color = "var(--primitive-blue-500)", Description = "Calm and focused" },
+        new ThemeOption { Name = "Emerald", Color = "var(--primitive-green-500)", Description = "Modern and vibrant" }
+    };
+
+    private async Task<IEnumerable<string>> LoadRolesAsync()
+    {
+        await Task.Delay(1000); // Simulate network latency
+        return new List<string> { "Administrator", "Manager", "Developer", "Designer", "Support" };
+    }
+
+    private async Task<IEnumerable<Product>> SearchProductsAsync(string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText)) return Enumerable.Empty<Product>();
+
+        await Task.Delay(500); // Simulate network latency
+        var allProducts = new List<Product>
+        {
+            new Product { Id = 1, Name = "Enterprise Cloud Suite" },
+            new Product { Id = 2, Name = "Professional Analytics Dashboard" },
+            new Product { Id = 3, Name = "Secure Data Gateway" },
+            new Product { Id = 4, Name = "AI Insight Engine" },
+            new Product { Id = 5, Name = "Legacy Connector Bridge" }
+        };
+
+        return allProducts.Where(p => p.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private void HandleValidSubmit()
+    {
+        _submittedSuccessfully = true;
+    }
+
+    private void HandleInvalidSubmit()
+    {
+        _submittedSuccessfully = false;
+    }
+
+    private void ResetForm()
+    {
+        _model = new();
+        _submittedSuccessfully = false;
+    }
+
+    public class Country
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+
+    public class Product
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+    }
+
+    public class ThemeOption
+    {
+        public string Name { get; set; } = string.Empty;
+        public string Color { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+    }
+
+    public class TestRegistrationModel
+    {
+        [Required(ErrorMessage = "Username is required.")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "Username must be between 3 and 50 characters.")]
+        public string? Username { get; set; }
+
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Please enter a valid email address.")]
+        public string? Email { get; set; }
+
+        [Required(ErrorMessage = "Password is required.")]
+        public string? Password { get; set; }
+
+        [Range(18, 120, ErrorMessage = "You must be at least 18 years old.")]
+        public int Age { get; set; } = 25;
+
+        public DateOnly BirthDate { get; set; } = DateOnly.FromDateTime(DateTime.Today.AddYears(-25));
+
+        public TimeOnly MeetingTime { get; set; } = new TimeOnly(10, 0);
+
+        public string? AvailabilityRange { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a country.")]
+        public int CountryId { get; set; }
+
+        public List<string> Skills { get; set; } = new();
+
+        public List<int> FeaturedProductIds { get; set; } = new();
+        public List<string> ProjectTags { get; set; } = new();
+
+        public string? Role { get; set; }
+        public int ProductId { get; set; }
+        public string Theme { get; set; } = "Gold";
+
+        public bool SubscribeNewsletter { get; set; } = true;
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "You must accept the terms and conditions.")]
+        public bool AcceptTerms { get; set; }
+    }
+}

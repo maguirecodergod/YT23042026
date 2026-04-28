@@ -1,0 +1,252 @@
+.htt-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-ui);
+    font-weight: var(--btn-font-weight);
+    font-size: var(--btn-font-size);
+    border-radius: var(--btn-radius);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: var(--btn-transition);
+    user-select: none;
+    white-space: nowrap;
+    outline: none;
+    overflow: hidden;
+    vertical-align: middle;
+    gap: var(--space-2);
+}
+
+.htt-btn-content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: inherit;
+    z-index: 1;
+}
+
+/* --- Sizes --- */
+.htt-btn--small {
+    height: var(--btn-height-sm);
+    padding: 0 var(--btn-padding-x-sm);
+    font-size: var(--text-sm);
+}
+
+.htt-btn--medium {
+    height: var(--btn-height-md);
+    padding: 0 var(--btn-padding-x-md);
+}
+
+.htt-btn--large {
+    height: var(--btn-height-lg);
+    padding: 0 var(--btn-padding-x-lg);
+    font-size: var(--text-lg);
+}
+
+.htt-btn--block {
+    display: flex;
+    width: 100%;
+}
+
+/* --- Variants --- */
+
+/* Primary */
+.htt-btn--primary {
+    background: var(--color-brand);
+    color: var(--color-brand-on);
+    box-shadow: var(--shadow-sm);
+}
+
+.htt-btn--primary:hover:not(:disabled) {
+    background: var(--color-brand-hover);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.htt-btn--primary:active:not(:disabled) {
+    background: var(--color-brand-active);
+    transform: translateY(0);
+}
+
+/* Secondary */
+.htt-btn--secondary {
+    background: var(--color-bg-subtle);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-default);
+}
+
+.htt-btn--secondary:hover:not(:disabled) {
+    background: var(--color-bg-hover);
+    border-color: var(--color-border-strong);
+}
+
+/* Ghost */
+.htt-btn--ghost {
+    background: transparent;
+    color: var(--color-text-primary);
+}
+
+.htt-btn--ghost:hover:not(:disabled) {
+    background: var(--color-bg-hover);
+}
+
+/* Outline */
+.htt-btn--outline {
+    background: transparent;
+    color: var(--color-brand);
+    border-color: var(--color-brand);
+}
+
+.htt-btn--outline:hover:not(:disabled) {
+    background: var(--color-brand-muted-bg);
+}
+
+/* Link */
+.htt-btn--link {
+    background: transparent;
+    color: var(--color-text-link);
+    padding: 0;
+    height: auto;
+    border: none;
+}
+
+.htt-btn--link:hover:not(:disabled) {
+    color: var(--color-text-link-hover);
+    text-decoration: underline;
+}
+
+/* --- Danger Mode --- */
+.htt-btn--danger.htt-btn--primary {
+    background: var(--color-danger);
+    color: var(--color-white);
+}
+
+.htt-btn--danger.htt-btn--primary:hover:not(:disabled) {
+    background: var(--color-danger-hover);
+}
+
+.htt-btn--danger.htt-btn--outline {
+    color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.htt-btn--danger.htt-btn--outline:hover:not(:disabled) {
+    background: var(--color-danger-bg);
+}
+
+.htt-btn--danger.htt-btn--ghost {
+    color: var(--color-danger);
+}
+
+.htt-btn--danger.htt-btn--ghost:hover:not(:disabled) {
+    background: var(--color-danger-bg);
+}
+
+/* --- States --- */
+.htt-btn--disabled,
+.htt-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.htt-btn--loading {
+    cursor: wait;
+}
+
+/* Focus Ring */
+.htt-btn:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-brand-muted-bg), var(--shadow-sm);
+    border-color: var(--color-brand);
+}
+
+/* --- Icon Only --- */
+.htt-btn--icon-only {
+    padding: 0 !important;
+    justify-content: center;
+    gap: 0;
+}
+
+.htt-btn--icon-only.htt-btn--small {
+    width: var(--btn-height-sm);
+    min-width: var(--btn-height-sm);
+}
+
+.htt-btn--icon-only.htt-btn--medium {
+    width: var(--btn-height-md);
+    min-width: var(--btn-height-md);
+}
+
+.htt-btn--icon-only.htt-btn--large {
+    width: var(--btn-height-lg);
+    min-width: var(--btn-height-lg);
+}
+
+.htt-btn--icon-only .htt-btn-icon {
+    font-size: 1.2rem;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure bootstrap icons are centered */
+.htt-btn-icon.bi::before {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/* --- Components --- */
+.htt-btn-loader {
+    width: 1.2em;
+    height: 1.2em;
+    animation: htt-spin 0.8s linear infinite;
+}
+
+.htt-btn-loader svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.htt-btn-icon--hidden {
+    display: none;
+}
+
+.htt-btn-text--dimmed {
+    opacity: 0.7;
+}
+
+/* Ripple / Active Feedback */
+.htt-btn::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background: currentColor;
+    border-radius: inherit;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out);
+    pointer-events: none;
+}
+
+.htt-btn:active:not(:disabled)::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0.15;
+    transition: 0s;
+}
+
+@keyframes htt-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}

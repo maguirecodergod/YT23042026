@@ -1,0 +1,55 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+@if (_shouldRender)
+{
+    <div class="@BuildWrapperClass()" style="@Style" id="@_modalId" role="dialog" aria-modal="true" aria-labelledby="@($"{_modalId}-title")">
+        @if (ShowMask)
+        {
+            <div class="htt-modal-mask" @onclick="HandleMaskClick"></div>
+        }
+        
+        <div class="htt-modal-container">
+            <div class="htt-modal-content" style="@BuildContentStyle()">
+                @if (!string.IsNullOrEmpty(Title) || Closable)
+                {
+                    <div class="htt-modal-header">
+                        <div class="htt-modal-title" id="@($"{_modalId}-title")">
+                            @Title
+                        </div>
+                        @if (Closable)
+                        {
+                            <button type="button" class="htt-modal-close" @onclick="CloseAsync" aria-label="Close">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                        }
+                    </div>
+                }
+
+                <div class="htt-modal-body">
+                    @if (Loading)
+                    {
+                        <div class="htt-modal-loading-overlay">
+                            <div class="htt-spinner"></div>
+                        </div>
+                    }
+                    @if (Body != null)
+                    {
+                        @Body
+                    }
+                    else
+                    {
+                        @ChildContent
+                    }
+                </div>
+
+                @if (Footer != null)
+                {
+                    <div class="htt-modal-footer">
+                        @Footer
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

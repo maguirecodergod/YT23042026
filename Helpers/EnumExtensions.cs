@@ -118,6 +118,28 @@ namespace HTT.BlazorWasm.App.Helpers
                 .ToList()
                 .AsReadOnly();
         }
+
+        /// <summary>
+        /// Discovers all entries from an enum type as culture entries, regardless of CultureCode.
+        /// Useful for "Full Country" selection UI that might fallback to default languages.
+        /// </summary>
+        public static IReadOnlyList<CultureEntry> GetAllCultures<T>() where T : struct, Enum
+        {
+            return Enum.GetValues<T>()
+                .Select(value =>
+                {
+                    var metadata = (value as Enum).GetMetadata();
+                    return new CultureEntry(
+                        CultureCode: metadata?.CultureCode ?? string.Empty,
+                        Icon: metadata?.Icon ?? string.Empty,
+                        DisplayName: metadata?.Name ?? value.ToString(),
+                        Description: metadata?.Description ?? string.Empty,
+                        CountryCode: value
+                    );
+                })
+                .ToList()
+                .AsReadOnly();
+        }
     }
 
     /// <summary>
