@@ -132,8 +132,18 @@ namespace HTT.BlazorWasm.App.Components
             var sb = new StringBuilder("htt-sidebar");
             sb.Append($" htt-sidebar-{Position.ToString().ToLower()}");
             
-            if (Visible) sb.Append(" is-visible");
-            if (Collapsed) sb.Append(" is-collapsed");
+            // Standard state classes for theme.css animation engine
+            if (Visible)
+            {
+                sb.Append(" is-visible open");
+                if (Collapsed) sb.Append(" collapsed is-collapsed");
+                else sb.Append(" expanded");
+            }
+            else
+            {
+                sb.Append(" hidden");
+            }
+
             if (Overlay) sb.Append(" is-overlay");
             if (Fixed) sb.Append(" is-fixed");
             if (Resizable) sb.Append(" is-resizable");

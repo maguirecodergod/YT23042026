@@ -1,4 +1,4 @@
-namespace HTT.BlazorWasm.App.Components.Core.DataGrid
+namespace HTT.BlazorWasm.App.Components
 {
     public class HTTGridResult<TItem>
     {

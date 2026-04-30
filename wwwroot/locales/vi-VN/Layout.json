@@ -17,6 +17,11 @@
         "AuditLog": "Nhật ký hệ thống",
         "Settings": "Cài đặt"
       },
+      "Toggle": {
+        "Collapse": "Thu gọn",
+        "Expand": "Mở rộng",
+        "Hide": "Ẩn"
+      },
       "User": {
         "Name": "Quản trị viên",
         "Role": "Siêu quản trị viên"

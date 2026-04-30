@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
-namespace HTT.BlazorWasm.App.Components.Core.DataGrid
+namespace HTT.BlazorWasm.App.Components
 {
     public enum HTTGridDisplayMode
     {
@@ -21,6 +21,7 @@ namespace HTT.BlazorWasm.App.Components.Core.DataGrid
         [Parameter] public bool MultiSelect { get; set; }
         [Parameter] public bool Selectable { get; set; } = true;
         [Parameter] public bool Virtualize { get; set; } = true;
+        [Parameter] public bool ShowPagination { get; set; } = true;
         [Parameter] public float ItemSize { get; set; } = 48f;
         [Parameter] public EventCallback<TItem> OnRowClick { get; set; }
         [Parameter] public string Id { get; set; } = Guid.NewGuid().ToString("N");

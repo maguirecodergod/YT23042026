@@ -5,6 +5,8 @@ namespace HTT.BlazorWasm.App.Components
         [Inject] protected IJSRuntime JS { get; set; } = default!;
         [Inject] protected IHTTThemeService Theme { get; set; } = default!;
         [Inject] protected ILocalizationService L { get; set; } = default!;
+        [Inject] protected NavigationManager Nav { get; set; } = default!;
+        [Inject] protected ILogger<HTTLayoutComponentBase> Logger { get; set; } = default!;
 
         protected override void OnInitialized()
         {

@@ -1,94 +1,92 @@
 @inherits HTTLayoutComponentBase
 @implements IAsyncDisposable
-@inject NavigationManager Nav
 
 <div class="htt-shell @Theme.ThemeClass">
     <!-- ═══ Sidebar ═══ -->
-    <aside
-        class="htt-sidebar @(_sidebarState.ToString().ToLower()) @(_sidebarState == CCollapseType.Expanded ? "open" : "")"
-        id="sidebar">
-
-        <!-- Brand -->
-        <a class="sidebar-brand" href="/">
-            <div class="sidebar-brand-icon">HTT</div>
-            <div class="sidebar-brand-text">HTT <span>Enterprise</span></div>
-        </a>
-
-        <!-- Navigation -->
-        <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
-
-            <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.Workspace"]</span>
-
-            <NavLink class="sidebar-item" href="/" Match="NavLinkMatch.All">
-                <i class="bi bi-grid-1x2-fill"></i>
-                <span>@L["Layout.Sidebar.Items.Dashboard"]</span>
-            </NavLink>
-
-            <NavLink class="sidebar-item" href="/analytics">
-                <i class="bi bi-bar-chart-line-fill"></i>
-                <span>@L["Layout.Sidebar.Items.Analytics"]</span>
-            </NavLink>
-
-            <NavLink class="sidebar-item" href="/projects">
-                <i class="bi bi-kanban-fill"></i>
-                <span>@L["Layout.Sidebar.Items.Projects"]</span>
-                <span class="nav-badge">3</span>
-            </NavLink>
-
-            <NavLink class="sidebar-item" href="/reports">
-                <i class="bi bi-file-earmark-bar-graph-fill"></i>
-                <span>@L["Layout.Sidebar.Items.Reports"]</span>
-            </NavLink>
-
-            <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.Management"]</span>
-
-            <NavLink class="sidebar-item" href="/users">
-                <i class="bi bi-people-fill"></i>
-                <span>@L["Layout.Sidebar.Items.Users"]</span>
-            </NavLink>
-
-            <NavLink class="sidebar-item" href="/billing">
-                <i class="bi bi-credit-card-fill"></i>
-                <span>@L["Layout.Sidebar.Items.Billing"]</span>
-            </NavLink>
-
-            <NavLink class="sidebar-item" href="/integrations">
-                <i class="bi bi-plug-fill"></i>
-                <span>@L["Layout.Sidebar.Items.Integrations"]</span>
-            </NavLink>
-
-            <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.System"]</span>
-
-            <NavLink class="sidebar-item" href="/audit">
-                <i class="bi bi-shield-check"></i>
-                <span>@L["Layout.Sidebar.Items.AuditLog"]</span>
-            </NavLink>
-
-            <NavLink class="sidebar-item" href="/settings">
-                <i class="bi bi-sliders2"></i>
-                <span>@L["Layout.Sidebar.Items.Settings"]</span>
-            </NavLink>
-
-        </nav>
-
-        <!-- User Footer -->
-        <div class="sidebar-footer">
-            <a class="sidebar-user" href="/profile">
-                <div class="user-avatar">AD</div>
-                <div class="user-info">
-                    <div class="user-name">@L["Layout.Sidebar.User.Name"]</div>
-                    <div class="user-role">@L["Layout.Sidebar.User.Role"]</div>
-                </div>
-                <i class="bi bi-three-dots-vertical ms-auto"
-                   style="color: var(--htt-text-muted); font-size:0.875rem;"></i>
+    <HTTSidebar Id="sidebar" Visible="@(_sidebarState != CCollapseType.Hidden)" VisibleChanged="OnVisibleChanged"
+                Collapsed="@(_sidebarState == CCollapseType.Collapsed)" CollapsedChanged="OnCollapsedChanged"
+                Overlay="@(_isMobile && _sidebarState != CCollapseType.Hidden)">
+        <Header>
+            <!-- Brand -->
+            <a class="sidebar-brand" href="/">
+                <div class="sidebar-brand-icon">HTT</div>
+                <div class="sidebar-brand-text">HTT <span>Enterprise</span></div>
             </a>
-        </div>
+        </Header>
 
-    </aside>
+        <Body>
+            <!-- Navigation -->
+            <nav class="sidebar-nav" role="navigation" aria-label="Main navigation">
 
-    <!-- Mobile overlay -->
-    <div class="sidebar-overlay @(_sidebarState != CCollapseType.Hidden ? "visible d-lg-none" : "")"
-         @onclick="CloseSidebar" aria-hidden="true"></div>
+                <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.Workspace"]</span>
+
+                <NavLink class="sidebar-item" href="/" Match="NavLinkMatch.All">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>@L["Layout.Sidebar.Items.Dashboard"]</span>
+                </NavLink>
+
+                <NavLink class="sidebar-item" href="/analytics">
+                    <i class="bi bi-bar-chart-line-fill"></i>
+                    <span>@L["Layout.Sidebar.Items.Analytics"]</span>
+                </NavLink>
+
+                <NavLink class="sidebar-item" href="/projects">
+                    <i class="bi bi-kanban-fill"></i>
+                    <span>@L["Layout.Sidebar.Items.Projects"]</span>
+                    <span class="nav-badge">3</span>
+                </NavLink>
+
+                <NavLink class="sidebar-item" href="/reports">
+                    <i class="bi bi-file-earmark-bar-graph-fill"></i>
+                    <span>@L["Layout.Sidebar.Items.Reports"]</span>
+                </NavLink>
+
+                <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.Management"]</span>
+
+                <NavLink class="sidebar-item" href="/users">
+                    <i class="bi bi-people-fill"></i>
+                    <span>@L["Layout.Sidebar.Items.Users"]</span>
+                </NavLink>
+
+                <NavLink class="sidebar-item" href="/billing">
+                    <i class="bi bi-credit-card-fill"></i>
+                    <span>@L["Layout.Sidebar.Items.Billing"]</span>
+                </NavLink>
+
+                <NavLink class="sidebar-item" href="/integrations">
+                    <i class="bi bi-plug-fill"></i>
+                    <span>@L["Layout.Sidebar.Items.Integrations"]</span>
+                </NavLink>
+
+                <span class="sidebar-section-label">@L["Layout.Sidebar.Sections.System"]</span>
+
+                <NavLink class="sidebar-item" href="/audit">
+                    <i class="bi bi-shield-check"></i>
+                    <span>@L["Layout.Sidebar.Items.AuditLog"]</span>
+                </NavLink>
+
+                <NavLink class="sidebar-item" href="/settings">
+                    <i class="bi bi-sliders2"></i>
+                    <span>@L["Layout.Sidebar.Items.Settings"]</span>
+                </NavLink>
+
+            </nav>
+        </Body>
+        <Footer>
+            <!-- User Footer -->
+            <div class="sidebar-footer">
+                <a class="sidebar-user" href="/profile">
+                    <div class="user-avatar">AD</div>
+                    <div class="user-info">
+                        <div class="user-name">@L["Layout.Sidebar.User.Name"]</div>
+                        <div class="user-role">@L["Layout.Sidebar.User.Role"]</div>
+                    </div>
+                    <i class="bi bi-three-dots-vertical ms-auto"
+                       style="color: var(--htt-text-muted); font-size:0.875rem;"></i>
+                </a>
+            </div>
+        </Footer>
+    </HTTSidebar>
 
     <!-- ═══ Main ═══ -->
     <div class="htt-main">
@@ -98,7 +96,7 @@
             <!-- Hamburger Toggle -->
             <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn me-2"
                        OnClick="ToggleSidebar" IconOnly="true" Icon="@($"bi {GetToggleIcon()}")"
-                       aria-label="Toggle navigation" />
+                       ToolTip="@(_sidebarState.GetLocalizedName(L))" />
 
             <div class="topbar-title">
                 @PageTitle
@@ -155,94 +153,3 @@
         <HTTModalProvider />
     </div>
 </div>
-
-@code {
-    private CCollapseType _sidebarState = CCollapseType.Expanded;
-    private string _searchQuery = string.Empty;
-    private string PageTitle => GetPageTitle();
-    private DotNetObjectReference<MainLayout>? _objRef;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await L.InitializeAsync();
-        // Theme.InitializeAsync() is called in Program.cs before RunAsync()
-        // so ThemeClass is already correct on the very first render — zero FOUC.
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            _objRef = DotNetObjectReference.Create(this);
-            await JS.InvokeVoidAsync("window.httLayout.initResizeListener", _objRef);
-            var width = await JS.InvokeAsync<double>("window.httLayout.getWindowWidth");
-            UpdateStateFromWidth(width);
-
-            // Start hot-reload polling for localization files (dev only)
-            await L.StartHotReloadAsync(3000);
-
-            StateHasChanged();
-        }
-    }
-
-    [JSInvokable]
-    public void OnWindowResize(double width)
-    {
-        UpdateStateFromWidth(width);
-        StateHasChanged();
-    }
-
-    private void UpdateStateFromWidth(double width)
-    {
-        if (width < 992) _sidebarState = CCollapseType.Hidden;
-        else if (width < 1280) _sidebarState = CCollapseType.Collapsed;
-        else _sidebarState = CCollapseType.Expanded;
-    }
-
-    private void ToggleSidebar()
-    {
-        _sidebarState = _sidebarState switch
-        {
-            CCollapseType.Expanded => CCollapseType.Collapsed,
-            CCollapseType.Collapsed => CCollapseType.Hidden,
-            CCollapseType.Hidden => CCollapseType.Expanded,
-            _ => CCollapseType.Expanded
-        };
-        StateHasChanged();
-    }
-
-    private string GetToggleIcon() => _sidebarState switch
-    {
-        CCollapseType.Expanded => "bi-chevron-left",
-        CCollapseType.Collapsed => "bi-list",
-        CCollapseType.Hidden => "bi-layout-sidebar-inset",
-        _ => "bi-list"
-    };
-
-    private void CloseSidebar() => _sidebarState = CCollapseType.Hidden;
-
-    private string GetPageTitle()
-    {
-        var path = new Uri(Nav.Uri).AbsolutePath.TrimStart('/');
-        return path switch
-        {
-            "" => L["Layout.Sidebar.Items.Dashboard"],
-            "analytics" => L["Layout.Sidebar.Items.Analytics"],
-            "projects" => L["Layout.Sidebar.Items.Projects"],
-            "reports" => L["Layout.Sidebar.Items.Reports"],
-            "users" => L["Layout.Sidebar.Items.Users"],
-            "billing" => L["Layout.Sidebar.Items.Billing"],
-            "integrations" => L["Layout.Sidebar.Items.Integrations"],
-            "audit" => L["Layout.Sidebar.Items.AuditLog"],
-            "settings" => L["Layout.Sidebar.Items.Settings"],
-            "profile" => L["Layout.Topbar.Profile"],
-            _ => L["Layout.Title.Default"]
-        };
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        L.StopHotReload();
-        _objRef?.Dispose();
-    }
-}

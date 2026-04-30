@@ -1,3 +1,4 @@
+@namespace HTT.BlazorWasm.App.Components
 @typeparam TItem
 @inherits HTTComponentBase
 
@@ -68,9 +69,11 @@
         }
     </div>
 
-    @* Premium Pagination Footer *@
-    <div class="htt-grid__footer">
-        <div class="htt-grid__footer-left">
+    @if (ShowPagination)
+    {
+        @* Premium Pagination Footer *@
+        <div class="htt-grid__footer">
+            <div class="htt-grid__footer-left">
             <span class="htt-grid__total-label">
                 @L["Common.Grid.Total"] <strong>@_totalCount</strong> @L["Common.Grid.Items"]
             </span>
@@ -132,6 +135,7 @@
             </HTTToolTip>
         </div>
     </div>
+    }
 </div>
 
 @code {

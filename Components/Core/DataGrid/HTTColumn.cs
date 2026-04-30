@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace HTT.BlazorWasm.App.Components.Core.DataGrid
+namespace HTT.BlazorWasm.App.Components
 {
     public partial class HTTColumn<TItem> : ComponentBase
     {

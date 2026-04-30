@@ -86,7 +86,7 @@
 /* --- Card (Gallery) Mode --- */
 .htt-grid-container--card .htt-grid__body {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--htt-card-min-width), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(var(--htt-card-min-width), 1fr));
     gap: var(--space-6);
 }
 

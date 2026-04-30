@@ -1,0 +1,57 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<nav aria-label="breadcrumb" class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    <ol class="htt-breadcrumb__list">
+        @if (Items != null)
+        {
+            var itemsList = Items.ToList();
+            for (int i = 0; i < itemsList.Count; i++)
+            {
+                var item = itemsList[i];
+                var isLast = i == itemsList.Count - 1;
+                
+                <li class="htt-breadcrumb__item @(isLast || item.IsActive ? "htt-breadcrumb__item--active" : string.Empty)" aria-current="@(isLast || item.IsActive ? "page" : null)">
+                    @if (!string.IsNullOrEmpty(item.Href) && !isLast && !item.IsActive)
+                    {
+                        <a href="@item.Href" class="htt-breadcrumb__link">
+                            @if (!string.IsNullOrEmpty(item.Icon))
+                            {
+                                <i class="@item.Icon htt-breadcrumb__icon"></i>
+                            }
+                            @item.Text
+                        </a>
+                    }
+                    else
+                    {
+                        <span class="htt-breadcrumb__text">
+                            @if (!string.IsNullOrEmpty(item.Icon))
+                            {
+                                <i class="@item.Icon htt-breadcrumb__icon"></i>
+                            }
+                            @item.Text
+                        </span>
+                    }
+
+                    @if (!isLast)
+                    {
+                        <span class="htt-breadcrumb__separator">
+                            @if (SeparatorTemplate != null)
+                            {
+                                @SeparatorTemplate
+                            }
+                            else
+                            {
+                                <i class="@SeparatorIcon"></i>
+                            }
+                        </span>
+                    }
+                </li>
+            }
+        }
+        else
+        {
+            @ChildContent
+        }
+    </ol>
+</nav>

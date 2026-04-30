@@ -1,0 +1,74 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@CssClass" style="@CssStyle" @onclick="HandleClick" @attributes="AdditionalAttributes"
+     role="@(Clickable ? "button" : "region")" tabindex="@(Clickable ? "0" : null)"
+     aria-labelledby="@(!string.IsNullOrEmpty(Title) ? _titleId : null)">
+    @if (Loading)
+    {
+        <div class="htt-card__skeleton">
+            <div class="htt-card__skeleton-header"></div>
+            <div class="htt-card__skeleton-body">
+                <div class="htt-card__skeleton-line" style="width: 100%"></div>
+                <div class="htt-card__skeleton-line" style="width: 85%"></div>
+                <div class="htt-card__skeleton-line" style="width: 60%"></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        @if (Header != null || !string.IsNullOrEmpty(Title) || Actions != null || Collapsible)
+        {
+            <div class="htt-card__header">
+                @if (Header != null)
+                {
+                    <div class="htt-card__header-custom">
+                        @Header
+                    </div>
+                }
+                else if (!string.IsNullOrEmpty(Title))
+                {
+                    <div id="@_titleId" class="htt-card__title">@Title</div>
+                }
+
+                <div class="htt-card__header-extra">
+                    @if (Actions != null)
+                    {
+                        <div class="htt-card__actions" @onclick:stopPropagation>
+                            @Actions
+                        </div>
+                    }
+                    @if (Collapsible)
+                    {
+                        <button type="button" class="htt-card__collapse-btn" @onclick="ToggleCollapse" @onclick:stopPropagation
+                                aria-expanded="@(!Collapsed)" aria-label="Toggle card">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg"
+                                 style="transition: transform var(--transition-fast, 0.15s ease); transform: @(Collapsed ? "rotate(0deg)" : "rotate(-180deg)");">
+                                <path fill-rule="evenodd"
+                                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                            </svg>
+                        </button>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="htt-card__content-wrapper @(Collapsed ? "htt-card__content-wrapper--collapsed" : string.Empty)">
+            <div class="htt-card__content-inner">
+                @if (Body != null)
+                {
+                    <div class="htt-card__body">@Body</div>
+                }
+                else if (ChildContent != null)
+                {
+                    <div class="htt-card__body">@ChildContent</div>
+                }
+
+                @if (Footer != null)
+                {
+                    <div class="htt-card__footer">@Footer</div>
+                }
+            </div>
+        </div>
+    }
+</div>

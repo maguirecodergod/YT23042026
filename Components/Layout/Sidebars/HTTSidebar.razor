@@ -1,9 +1,9 @@
 @namespace HTT.BlazorWasm.App.Components
 @inherits HTTComponentBase
 
-@if (_hasPermission && (Visible || Overlay))
+@if (_hasPermission)
 {
-    @if (Overlay && Visible)
+    @if (Overlay)
     {
         <div class="htt-sidebar-backdrop @(Visible ? "is-visible" : "")" 
              @onclick="CloseOverlay"

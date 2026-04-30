@@ -6,166 +6,123 @@
     <div class="fade-in">
         <!-- Page Header -->
         <HTTStack Spacing="CSpacingType.XS" Class="page-header mb-4">
-            <div class="htt-breadcrumb">
-                <i class="bi bi-grid-1x2-fill"></i>
-                <i class="bi bi-chevron-right separator"></i>
-                <span class="current">Dashboard</span>
-            </div>
-            <HTTHeading Type="CHeadingType.H1" ToolTip="Welcome back, we've missed you! ✨" ToolTipShape="CToolTipShapeType.Cute">
+            <HTTBreadcrumb Items="_breadcrumbs" />
+            <HTTHeading Type="CHeadingType.H1" ToolTip="Welcome back, we've missed you! ✨"
+                        ToolTipShape="CToolTipShapeType.Cute">
                 Good morning, Admin <span class="text-gradient-gold">👋</span>
             </HTTHeading>
             <p>Here's what's happening across your enterprise platform today.</p>
         </HTTStack>
 
         <!-- KPI Stats Row -->
-        <div class="grid grid-4 gap-4 mb-4">
-            <div class="stat-card scale-in">
-                <div class="spread">
-                    <div class="stat-icon-wrap stat-icon-gold">
-                        <i class="bi bi-currency-dollar"></i>
+        <div class="mb-4">
+            <HTTGrid TItem="StatItem" Items="_stats" DisplayMode="HTTGridDisplayMode.Card" ShowPagination="false"
+                     Selectable="false" Virtualize="false" CardMinWidth="240">
+                <CardTemplate Context="stat">
+                    <div class="spread">
+                        <div class="@stat.IconWrapClass">
+                            <i class="@stat.Icon"></i>
+                        </div>
+                        <span class="@stat.ChangeClass"><i class="@stat.ChangeIcon"></i>@stat.ChangeText</span>
                     </div>
-                    <span class="stat-change up"><i class="bi bi-arrow-up-short"></i>12.4%</span>
-                </div>
-                <div class="stat-value">$2.4M</div>
-                <div class="stat-label">Total Revenue</div>
-                <div class="htt-progress mt-2">
-                    <div class="htt-progress-bar" style="width:72%"></div>
-                </div>
-            </div>
-
-            <div class="stat-card scale-in" style="animation-delay:0.05s">
-                <div class="spread">
-                    <div class="stat-icon-wrap stat-icon-blue">
-                        <i class="bi bi-people-fill"></i>
+                    <div class="stat-value">@stat.Value</div>
+                    <HTTLabel Class="stat-label">@stat.Label</HTTLabel>
+                    <div class="htt-progress mt-2">
+                        <div class="htt-progress-bar" style="@stat.ProgressStyle"></div>
                     </div>
-                    <span class="stat-change up"><i class="bi bi-arrow-up-short"></i>8.1%</span>
-                </div>
-                <div class="stat-value">14,832</div>
-                <div class="stat-label">Active Users</div>
-                <div class="htt-progress mt-2">
-                    <div class="htt-progress-bar"
-                         style="width:58%; background: linear-gradient(90deg, var(--htt-blue), var(--htt-blue-light));">
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-card scale-in" style="animation-delay:0.10s">
-                <div class="spread">
-                    <div class="stat-icon-wrap stat-icon-green">
-                        <i class="bi bi-kanban-fill"></i>
-                    </div>
-                    <span class="stat-change up"><i class="bi bi-arrow-up-short"></i>3.7%</span>
-                </div>
-                <div class="stat-value">248</div>
-                <div class="stat-label">Active Projects</div>
-                <div class="htt-progress mt-2">
-                    <div class="htt-progress-bar" style="width:85%; background: linear-gradient(90deg, #3fb950, #56d364);">
-                    </div>
-                </div>
-            </div>
-
-            <div class="stat-card scale-in" style="animation-delay:0.15s">
-                <div class="spread">
-                    <div class="stat-icon-wrap stat-icon-red">
-                        <i class="bi bi-exclamation-circle-fill"></i>
-                    </div>
-                    <span class="stat-change down"><i class="bi bi-arrow-down-short"></i>2.3%</span>
-                </div>
-                <div class="stat-value">17</div>
-                <div class="stat-label">Open Incidents</div>
-                <div class="htt-progress mt-2">
-                    <div class="htt-progress-bar" style="width:17%; background: linear-gradient(90deg, #f85149, #ff7b72);">
-                    </div>
-                </div>
-            </div>
+                </CardTemplate>
+            </HTTGrid>
         </div>
 
         <!-- Content Grid -->
         <div class="grid gap-4" style="grid-template-columns: 1fr 360px;">
 
             <!-- Recent Activity -->
-            <div class="htt-card">
-                <div class="htt-card-header">
-                    <HTTHeading Type="CHeadingType.H2" Class="htt-card-title">
+            <HTTCard Hoverable="true">
+                <Header>
+                    <HTTHeading Type="CHeadingType.H2" Class="htt-card-title m-0">
                         <i class="bi bi-clock-history me-2" style="color:var(--htt-gold)"></i>Recent Activity
                     </HTTHeading>
-                    <button class="btn btn-secondary btn-sm">View All</button>
-                </div>
-                    <table class="htt-table">
-                        <thead>
-                            <tr>
-                                <th>Event</th>
-                                <th>User</th>
-                                <th>Status</th>
-                                <th>Time</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in _activityItems)
-                            {
-                                <tr>
-                                    <td>
-                                        <div style="font-weight:500">@item.Event</div>
-                                        <div style="font-size:0.75rem;color:var(--htt-text-muted)">@item.Description</div>
-                                    </td>
-                                    <td>
-                                        <div class="cluster gap-2">
-                                            <div
-                                                style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:0.625rem;font-weight:700;color:white;flex-shrink:0">
-                                                @item.User[..2].ToUpper()
-                                            </div>
-                                            <span style="font-size:0.875rem">@item.User</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <span class="htt-badge @item.BadgeClass">@item.Status</span>
-                                    </td>
-                                    <td style="color:var(--htt-text-muted);font-size:0.8125rem">@item.Time</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                </Header>
+                <Actions>
+                    <HTTButton Variant="CButtonVariant.Secondary" Size="CButtonSize.Small" Text="View All" />
+                </Actions>
+
+                <Body>
+                    <HTTGrid TItem="ActivityItem" Items="_activityItems" Selectable="false" Virtualize="false"
+                             ShowPagination="false">
+                        <HTTColumn TItem="ActivityItem" Title="Event">
+                            <CellTemplate Context="item">
+                                <div style="font-weight:500">@item.Event</div>
+                                <div style="font-size:0.75rem;color:var(--htt-text-muted)">@item.Description</div>
+                            </CellTemplate>
+                        </HTTColumn>
+                        <HTTColumn TItem="ActivityItem" Title="User">
+                            <CellTemplate Context="item">
+                                <div class="cluster gap-2">
+                                    <div
+                                        style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:0.625rem;font-weight:700;color:white;flex-shrink:0">
+                                        @item.User[..2].ToUpper()
+                                    </div>
+                                    <span style="font-size:0.875rem">@item.User</span>
+                                </div>
+                            </CellTemplate>
+                        </HTTColumn>
+                        <HTTColumn TItem="ActivityItem" Title="Status">
+                            <CellTemplate Context="item">
+                                <span class="htt-badge @item.BadgeClass">@item.Status</span>
+                            </CellTemplate>
+                        </HTTColumn>
+                        <HTTColumn TItem="ActivityItem" Title="Time">
+                            <CellTemplate Context="item">
+                                <span style="color:var(--htt-text-muted);font-size:0.8125rem">@item.Time</span>
+                            </CellTemplate>
+                        </HTTColumn>
+                    </HTTGrid>
+                </Body>
+            </HTTCard>
 
             <!-- Quick Actions + System Status -->
             <HTTStack Spacing="CSpacingType.MD">
 
                 <!-- Quick Actions -->
-                <div class="htt-card htt-card-glow">
-                    <div class="htt-card-header">
-                        <HTTHeading Type="CHeadingType.H2" Class="htt-card-title">
+                <HTTCard Class="htt-card-glow" Hoverable="true">
+                    <Header>
+                        <HTTHeading Type="CHeadingType.H2" Class="htt-card-title m-0">
                             <i class="bi bi-lightning-charge-fill me-2" style="color:var(--htt-gold)"></i>Quick Actions
                         </HTTHeading>
-                    </div>
-                        <HTTStack Spacing="CSpacingType.SM">
-                            <HTTToolTip Content="Create a new workspace project" Position="CPositionType.Top" Shape="CToolTipShapeType.Pill" Class="w-100">
-                                <button class="btn btn-primary w-100">
-                                    <i class="bi bi-plus-circle-fill"></i> New Project
-                                </button>
-                            </HTTToolTip>
-                            <HTTToolTip Content="Add a new member to this organization" Position="CPositionType.Top" Shape="CToolTipShapeType.Cute"
-                                        Class="w-100">
-                                <button class="btn btn-secondary w-100">
-                                    <i class="bi bi-person-plus-fill"></i> Invite Member
-                                </button>
-                            </HTTToolTip>
-                            <HTTToolTip Content="Test the new enterprise modal system" Position="CPositionType.Top" Shape="CToolTipShapeType.Bubble"
-                                        Class="w-100">
-                                <button class="btn btn-outline-primary w-100" @onclick="OpenTestModal">
-                                    <i class="bi bi-window-stack"></i> Test Modal
-                                </button>
-                            </HTTToolTip>
-                        </HTTStack>
-                    </div>
+                    </Header>
 
-                    <!-- System Health -->
-                    <div class="htt-card">
-                        <div class="htt-card-header">
-                            <HTTHeading Type="CHeadingType.H2" Class="htt-card-title">
-                                <i class="bi bi-activity me-2" style="color:var(--htt-gold)"></i>System Health
-                            </HTTHeading>
-                            <span class="htt-badge htt-badge-green"><i class="bi bi-check-circle-fill"></i> Operational</span>
-                        </div>
+                    <Body>
+                        <HTTStack Spacing="CSpacingType.SM">
+                            <HTTButton Variant="CButtonVariant.Primary" Block="true" Icon="bi bi-plus-circle-fill"
+                                       Text="New Project" ToolTip="Create a new workspace project"
+                                       ToolTipPosition="CPositionType.Top" ToolTipShape="CToolTipShapeType.Pill" />
+
+                            <HTTButton Variant="CButtonVariant.Secondary" Block="true" Icon="bi bi-person-plus-fill"
+                                       Text="Invite Member" ToolTip="Add a new member to this organization"
+                                       ToolTipPosition="CPositionType.Top" ToolTipShape="CToolTipShapeType.Cute" />
+
+                            <HTTButton Variant="CButtonVariant.Outline" Block="true" Icon="bi bi-window-stack"
+                                       Text="Test Modal" OnClick="OpenTestModal" ToolTip="Test the new enterprise modal system"
+                                       ToolTipPosition="CPositionType.Top" ToolTipShape="CToolTipShapeType.Bubble" />
+                        </HTTStack>
+                    </Body>
+                </HTTCard>
+
+                <!-- System Health -->
+                <HTTCard Hoverable="true">
+                    <Header>
+                        <HTTHeading Type="CHeadingType.H2" Class="htt-card-title m-0">
+                            <i class="bi bi-activity me-2" style="color:var(--htt-gold)"></i>System Health
+                        </HTTHeading>
+                    </Header>
+                    <Actions>
+                        <span class="htt-badge htt-badge-green"><i class="bi bi-check-circle-fill"></i>
+                        Operational</span>
+                    </Actions>
+
+                        <Body>
                             <HTTStack Spacing="CSpacingType.MD">
                                 @foreach (var svc in _services)
                                 {
@@ -182,17 +139,34 @@
                                     </div>
                                 }
                             </HTTStack>
-                        </div>
-                    </HTTStack>
-                </div>
+                        </Body>
+                    </HTTCard>
+                </HTTStack>
             </div>
-</HTTContainer>
+        </div>
+    </HTTContainer>
 
 @code {
     [Inject] private IHTTModalService ModalService { get; set; } = default!;
 
     record ActivityItem(string Event, string Description, string User, string Status, string BadgeClass, string Time);
     record ServiceItem(string Name, string Uptime, int Pct, string Color, string ColorLight);
+    record StatItem(string Value, string Label, string Icon, string IconWrapClass, string ChangeClass, string ChangeIcon,
+string ChangeText, string ProgressStyle);
+
+    private List<HTTBreadcrumbItem> _breadcrumbs = new()
+    {
+        new() { Href = "/", Icon = "bi bi-grid-1x2-fill" },
+        new() { Text = "Dashboard", IsActive = true }
+    };
+
+    private List<StatItem> _stats = new()
+    {
+        new("$2.4M", "Total Revenue", "bi bi-currency-dollar", "stat-icon-wrap stat-icon-gold", "stat-change up", "bi bi-arrow-up-short", "12.4%", "width:72%"),
+        new("14,832", "Active Users", "bi bi-people-fill", "stat-icon-wrap stat-icon-blue", "stat-change up", "bi bi-arrow-up-short", "8.1%", "width:58%; background: linear-gradient(90deg, var(--htt-blue), var(--htt-blue-light));"),
+        new("248", "Active Projects", "bi bi-kanban-fill", "stat-icon-wrap stat-icon-green", "stat-change up", "bi bi-arrow-up-short", "3.7%", "width:85%; background: linear-gradient(90deg, #3fb950, #56d364);"),
+        new("17", "Open Incidents", "bi bi-exclamation-circle-fill", "stat-icon-wrap stat-icon-red", "stat-change down", "bi bi-arrow-down-short", "2.3%", "width:17%; background: linear-gradient(90deg, #f85149, #ff7b72);")
+    };
 
     private List<ActivityItem> _activityItems = new()
     {

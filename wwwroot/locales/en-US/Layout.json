@@ -17,6 +17,11 @@
         "AuditLog": "Audit Log",
         "Settings": "Settings"
       },
+      "Toggle": {
+        "Collapse": "Collapse",
+        "Expand": "Expand",
+        "Hide": "Hide"
+      },
       "User": {
         "Name": "Admin User",
         "Role": "Super Administrator"

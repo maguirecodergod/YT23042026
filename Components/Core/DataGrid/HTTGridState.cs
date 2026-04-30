@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace HTT.BlazorWasm.App.Components.Core.DataGrid
+namespace HTT.BlazorWasm.App.Components
 {
     public class HTTGridState<TItem>
     {
