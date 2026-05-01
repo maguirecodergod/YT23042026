@@ -1,0 +1,52 @@
+[
+    {
+        "Id": 10001,
+        "Name": "Nguyễn Văn A",
+        "Email": "van.a@htt.example.com",
+        "Department": "Engineering",
+        "Salary": 120000,
+        "IsActive": true,
+        "JoinDate": "2020-01-15T00:00:00",
+        "PerformanceRating": 4.5
+    },
+    {
+        "Id": 10002,
+        "Name": "Trần Thị B",
+        "Email": "thi.b@htt.example.com",
+        "Department": "Sales",
+        "Salary": 85000,
+        "IsActive": true,
+        "JoinDate": "2021-03-22T00:00:00",
+        "PerformanceRating": 4.2
+    },
+    {
+        "Id": 10003,
+        "Name": "Lê Văn C",
+        "Email": "van.c@htt.example.com",
+        "Department": "Marketing",
+        "Salary": 95000,
+        "IsActive": false,
+        "JoinDate": "2019-11-10T00:00:00",
+        "PerformanceRating": 3.8
+    },
+    {
+        "Id": 10004,
+        "Name": "Phạm Minh D",
+        "Email": "minh.d@htt.example.com",
+        "Department": "Engineering",
+        "Salary": 135000,
+        "IsActive": true,
+        "JoinDate": "2022-05-01T00:00:00",
+        "PerformanceRating": 4.9
+    },
+    {
+        "Id": 10005,
+        "Name": "Hoàng Anh E",
+        "Email": "anh.e@htt.example.com",
+        "Department": "HR",
+        "Salary": 75000,
+        "IsActive": true,
+        "JoinDate": "2023-01-10T00:00:00",
+        "PerformanceRating": 4.0
+    }
+]

@@ -1,0 +1,25 @@
+{
+    "Demo": {
+        "Title": "Enterprise Table Demonstration",
+        "Subtitle": "Showcasing high-performance virtualization, server-side pagination, sorting, filtering, and fixed columns.",
+        "AddEmployee": "Add Employee",
+        "ExportSelected": "Export {0} selected",
+        "SearchPlaceholder": "Search name or email...",
+        "AllDepartments": "All Departments",
+        "AllStatuses": "All Statuses",
+        "NoEmployeesFound": "No employees found",
+        "AdjustFilters": "Try adjusting your filters to find what you're looking for.",
+        "ClearFilters": "Clear Filters",
+        "EditEmployee": "Edit employee",
+        "DeleteEmployee": "Delete employee",
+        "Columns": {
+            "ID": "ID",
+            "Name": "Employee Name",
+            "Department": "Department",
+            "Salary": "Salary",
+            "Status": "Status",
+            "JoinDate": "Join Date",
+            "Rating": "Rating"
+        }
+    }
+}

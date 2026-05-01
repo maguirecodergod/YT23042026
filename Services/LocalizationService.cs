@@ -195,13 +195,26 @@ namespace HTT.BlazorWasm.App.Services
             }
 
             // ③ Resource not loaded yet → lazy load + notify UI
-            if (resourceName != null)
+            if (resourceName != null && !IsResourceLoadedOrLoading(culture, resourceName))
             {
                 _ = LazyLoadAndNotifyAsync(culture, resourceName);
             }
 
             // Return key as placeholder until resource loads
             return key;
+        }
+
+        private bool IsResourceLoadedOrLoading(string culture, string resourceName)
+        {
+            var taskKey = $"{culture}_{resourceName}";
+            if (_loadingTasks.ContainsKey(taskKey)) return true;
+
+            if (_loadedResources.TryGetValue(culture, out var loaded))
+            {
+                lock (loaded) { if (loaded.Contains(resourceName)) return true; }
+            }
+
+            return false;
         }
 
         public string GetString(string key, params object[] args)
@@ -391,7 +404,12 @@ namespace HTT.BlazorWasm.App.Services
                 var response = await _httpClient.GetAsync(requestUri);
 
                 if (!response.IsSuccessStatusCode)
+                {
+                    // Even if 404, mark as loaded so we don't spam requests
+                    var loaded = _loadedResources.GetOrAdd(culture, _ => []);
+                    lock (loaded) { loaded.Add(resourceName); }
                     return;
+                }
 
                 var json = await response.Content.ReadAsStringAsync();
 
@@ -417,7 +435,11 @@ namespace HTT.BlazorWasm.App.Services
             {
                 // Don't crash — cache empty dict so we don't retry endlessly
                 var cultureCache = _cache.GetOrAdd(culture, _ => new ConcurrentDictionary<string, Dictionary<string, string>>());
-                cultureCache.TryAdd(resourceName, []);
+                cultureCache[resourceName] = [];
+
+                // Track as loaded so we don't retry
+                var loaded = _loadedResources.GetOrAdd(culture, _ => []);
+                lock (loaded) { loaded.Add(resourceName); }
             }
         }
 

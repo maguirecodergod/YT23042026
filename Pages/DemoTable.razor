@@ -1,0 +1,252 @@
+@page "/table"
+@inherits HTTComponentBase
+
+<div class="demo-page-container">
+    <div class="demo-header-section">
+        <HTTHeading Type="CHeadingType.H1" Class="demo-page-title">@L["Demo.Title"]</HTTHeading>
+        <p class="demo-page-subtitle">@L["Demo.Subtitle"]</p>
+    </div>
+
+    <HTTTable TItem="DemoEmployee" @ref="_table" LoadDataAsync="LoadServerData"
+              SelectionMode="CTableSelectionMode.Multiple" EnableSidebarFilter="true" ShowPagination="true"
+              PageSizeOptions="@(new List<int> { 10, 20, 50, 100 })" KeySelector="x => x.Id"
+              OnSelectionChanged="HandleSelectionChanged" OnRowClick="HandleRowClick" Style="height: 650px;"
+              SearchText="@_searchKeyword" SearchTextChanged="@(val => _searchKeyword = val)"
+              SearchPlaceholder="@L["Demo.SearchPlaceholder"]">
+
+        <ColumnsFragment>
+            <HTTColumn TItem="DemoEmployee" Title="@L["Demo.Columns.ID"]" Field="x => x.Id" Width="100px"
+                       Fixed="CColumnFixedPosition.Left" />
+
+            <HTTColumn TItem="DemoEmployee" Title="@L["Demo.Columns.Name"]" Field="x => x.Name" Width="300px"
+                       Sortable="true">
+                <CellTemplate>
+                    <div class="user-cell-modern">
+                        <div class="user-avatar-modern">@(context.Name.Substring(0, 1))</div>
+                        <div class="user-info-modern">
+                            <div class="user-name-modern">@context.Name</div>
+                            <div class="user-email-modern">@context.Email</div>
+                        </div>
+                    </div>
+                </CellTemplate>
+            </HTTColumn>
+
+            <HTTColumn TItem="DemoEmployee" Title="@L["Demo.Columns.Department"]" Field="x => x.Department"
+                       Width="180px" Sortable="true">
+                <CellTemplate>
+                    <span class="dept-badge">@context.Department</span>
+                </CellTemplate>
+            </HTTColumn>
+
+            <HTTColumn TItem="DemoEmployee" Title="@L["Demo.Columns.Salary"]" Field="x => x.Salary" Width="150px"
+                       Align="CColumnAlign.Right" Sortable="true" Format="C0" />
+
+            <HTTColumn TItem="DemoEmployee" Title="@L["Demo.Columns.Status"]" Field="x => x.IsActive" Width="140px"
+                       Align="CColumnAlign.Center">
+                <CellTemplate>
+                    @if (context.IsActive)
+                    {
+                        <span class="badge badge-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-error">Inactive</span>
+                    }
+                </CellTemplate>
+            </HTTColumn>
+
+            <HTTColumn TItem="DemoEmployee" Title="@L["Demo.Columns.JoinDate"]" Field="x => x.JoinDate" Width="160px"
+                       Format="dd/MM/yyyy" Sortable="true" />
+
+            <HTTColumn TItem="DemoEmployee" Title="@L["Demo.Columns.Rating"]" Field="x => x.PerformanceRating"
+                       Width="120px" Fixed="CColumnFixedPosition.Right" Align="CColumnAlign.Center">
+                <CellTemplate>
+                    <div class="rating-cell">
+                        <span class="rating-value">@context.PerformanceRating.ToString("F1")</span>
+                        <i class="bi bi-star-fill text-warning"></i>
+                    </div>
+                </CellTemplate>
+            </HTTColumn>
+        </ColumnsFragment>
+
+        <ActionsTemplate>
+            <div class="demo-table-actions-modern">
+                <HTTButton Variant="CButtonVariant.Primary" Icon="bi bi-plus-lg" OnClick="() => { }">
+                    @L["Demo.AddEmployee"]</HTTButton>
+                    <HTTButton Variant="CButtonVariant.Outline" Icon="bi bi-cloud-download" Disabled="!_selectedItems.Any()"
+                               ToolTip="@L.GetString("Demo.ExportSelected", _selectedItems.Count)">
+                        @L.GetString("Demo.ExportSelected", _selectedItems.Count)
+                    </HTTButton>
+                </div>
+            </ActionsTemplate>
+
+            <RowActionsTemplate>
+                <div class="row-actions-modern">
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Icon="bi bi-pencil-square"
+                               ToolTip="@L["Demo.EditEmployee"]" />
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Icon="bi bi-trash3"
+                               ToolTip="@L["Demo.DeleteEmployee"]" Class="btn-delete-row" />
+                </div>
+            </RowActionsTemplate>
+
+            <SidebarFilterTemplate>
+                <div class="premium-filter-group">
+                    <HTTLabel>@L["Demo.Columns.Department"]</HTTLabel>
+                    <HTTSelect TItem="string" TValue="string"
+                               Items="@(new List<string> { "Engineering", "Sales", "Marketing", "HR", "Finance" })"
+                               Value="@_filterDepartment" ValueChanged="@(val => _filterDepartment = val ?? "")"
+                               Placeholder="@L["Demo.AllDepartments"]" AllowClear="true" />
+                </div>
+                <div class="premium-filter-group">
+                    <HTTLabel>@L["Demo.Columns.Status"]</HTTLabel>
+                    <HTTSelect TItem="string" TValue="string" Items="@(new List<string> { "Active", "Inactive" })"
+                               Value="@(_filterStatus == "true" ? "Active" : _filterStatus == "false" ? "Inactive" : null)"
+                               ValueChanged="@(val => _filterStatus = val == "Active" ? "true" : val == "Inactive" ? "false" : "")"
+                               Placeholder="@L["Demo.AllStatuses"]" AllowClear="true" />
+                </div>
+            </SidebarFilterTemplate>
+
+            <EmptyTemplate>
+                <div class="premium-empty-state">
+                    <div class="empty-icon-wrapper">
+                        <i class="bi bi-database-exclamation"></i>
+                    </div>
+                    <HTTHeading Type="CHeadingType.H3">@L["Demo.NoEmployeesFound"]</HTTHeading>
+                    <p>@L["Demo.AdjustFilters"]</p>
+                    <HTTButton Variant="CButtonVariant.Outline" OnClick="ClearFilters" Class="mt-3">@L["Demo.ClearFilters"]
+                    </HTTButton>
+                </div>
+            </EmptyTemplate>
+
+        </HTTTable>
+    </div>
+
+    <style>
+        .demo-page-container {
+            padding: 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .demo-header-section {
+            margin-bottom: 32px;
+        }
+
+        .demo-page-title {
+            background: var(--gradient-text-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px !important;
+        }
+
+        .demo-page-subtitle {
+            color: var(--color-text-secondary);
+            font-size: 1.1rem;
+            max-width: 800px;
+        }
+
+        .demo-table-card {
+            padding: 0 !important;
+        }
+
+        /* Modern User Cell */
+        .user-cell-modern {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar-modern {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--color-bg-inset);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--color-brand);
+            border: 1px solid var(--color-border-subtle);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .user-name-modern {
+            font-weight: 600;
+            color: var(--color-text-primary);
+        }
+
+        .user-email-modern {
+            font-size: 0.85em;
+            color: var(--color-text-tertiary);
+        }
+
+        .dept-badge {
+            font-size: 0.8em;
+            padding: 4px 10px;
+            background: var(--color-bg-subtle);
+            border-radius: 6px;
+            border: 1px solid var(--color-border-subtle);
+            color: var(--color-text-secondary);
+        }
+
+        .rating-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .rating-value {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .demo-table-actions-modern {
+            display: flex;
+            gap: 12px;
+        }
+
+        .row-actions-modern {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .btn-delete-row {
+            color: var(--color-danger) !important;
+        }
+
+        .btn-delete-row:hover {
+            background: var(--color-danger-bg) !important;
+        }
+
+        .premium-filter-group {
+            margin-bottom: 20px;
+        }
+
+        .premium-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .empty-icon-wrapper {
+            font-size: 4rem;
+            color: var(--color-text-disabled);
+            opacity: 0.5;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>

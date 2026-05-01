@@ -1,0 +1,13 @@
+{
+    "Table": {
+        "Filter": "Filter",
+        "Filters": "Filters",
+        "Columns": "Columns",
+        "Refresh": "Refresh",
+        "NoData": "No data available",
+        "PaginationInfo": "Showing {0} to {1} of {2} entries",
+        "PageSize": "Page size",
+        "Reset": "Reset",
+        "Apply": "Apply"
+    }
+}

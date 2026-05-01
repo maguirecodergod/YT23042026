@@ -1,0 +1,25 @@
+{
+    "Demo": {
+        "Title": "Demo Bảng Dữ Liệu Enterprise",
+        "Subtitle": "Trình diễn khả năng ảo hóa hiệu năng cao, phân trang server-side, sắp xếp, lọc và cố định cột.",
+        "AddEmployee": "Thêm nhân viên",
+        "ExportSelected": "Xuất {0} mục đã chọn",
+        "SearchPlaceholder": "Tìm tên hoặc email...",
+        "AllDepartments": "Tất cả phòng ban",
+        "AllStatuses": "Tất cả trạng thái",
+        "NoEmployeesFound": "Không tìm thấy nhân viên",
+        "AdjustFilters": "Hãy thử điều chỉnh bộ lọc để tìm kết quả.",
+        "ClearFilters": "Xóa bộ lọc",
+        "EditEmployee": "Sửa nhân viên",
+        "DeleteEmployee": "Xóa nhân viên",
+        "Columns": {
+            "ID": "ID",
+            "Name": "Họ và tên",
+            "Department": "Phòng ban",
+            "Salary": "Lương",
+            "Status": "Trạng thái",
+            "JoinDate": "Ngày tham gia",
+            "Rating": "Đánh giá"
+        }
+    }
+}

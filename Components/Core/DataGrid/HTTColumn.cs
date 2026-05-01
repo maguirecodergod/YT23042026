@@ -5,6 +5,7 @@ namespace HTT.BlazorWasm.App.Components
     public partial class HTTColumn<TItem> : ComponentBase
     {
         [CascadingParameter] public HTTGrid<TItem>? Grid { get; set; }
+        [CascadingParameter] public HTTTable<TItem>? Table { get; set; }
 
         [Parameter] public string? Title { get; set; }
         [Parameter] public Expression<Func<TItem, object>>? Field { get; set; }
@@ -19,11 +20,18 @@ namespace HTT.BlazorWasm.App.Components
 
         protected override void OnInitialized()
         {
-            if (Grid == null)
+            if (Grid != null)
             {
-                throw new InvalidOperationException("HTTColumn must be child of HTTGrid");
+                Grid.AddColumn(this);
             }
-            Grid.AddColumn(this);
+            else if (Table != null)
+            {
+                Table.AddColumn(this);
+            }
+            else
+            {
+                // Fallback or warning if needed, but some use cases might not need registration immediately
+            }
         }
 
         public string? GetFieldName()

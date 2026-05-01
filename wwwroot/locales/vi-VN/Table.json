@@ -1,0 +1,13 @@
+{
+    "Table": {
+        "Filter": "Bộ lọc",
+        "Filters": "Bộ lọc",
+        "Columns": "Cột hiển thị",
+        "Refresh": "Làm mới",
+        "NoData": "Không có dữ liệu",
+        "PaginationInfo": "Hiển thị từ {0} đến {1} trong tổng số {2} mục",
+        "PageSize": "Dòng mỗi trang",
+        "Reset": "Thiết lập lại",
+        "Apply": "Áp dụng"
+    }
+}

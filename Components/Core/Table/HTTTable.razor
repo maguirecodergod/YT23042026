@@ -1,0 +1,370 @@
+@namespace HTT.BlazorWasm.App.Components
+@typeparam TItem
+@inherits HTTComponentBase
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+
+<CascadingValue Value="this" IsFixed="true">
+    @if (ColumnsFragment != null)
+    {
+        @ColumnsFragment
+    }
+    
+    <div class="htt-table-wrapper @(IsLoading ? "htt-table-loading" : string.Empty) @(EnableVirtualization ? "htt-table-virtualized" : string.Empty)" style="@Style" @attributes="AdditionalAttributes" id="@Id">
+    
+    <!-- Toolbar -->
+    <div class="htt-table-toolbar">
+        <div class="htt-table-toolbar-left">
+            @if (ActionsTemplate != null)
+            {
+                @ActionsTemplate
+            }
+        </div>
+        <div class="htt-table-toolbar-right">
+            @if (ShowSearch)
+            {
+                <div class="htt-table-search">
+                    <HTTInput TValue="string" 
+                              Type="CInputType.Text" 
+                              Value="@SearchText" 
+                              ValueChanged="OnSearchChanged"
+                              Placeholder="@SearchPlaceholder"
+                              ShowClearButton="true"
+                              Icon="bi bi-search"
+                              Size="CSpacingType.SM" />
+                </div>
+            }
+
+            <div class="htt-table-toolbar-utilities">
+                @if (EnableSidebarFilter)
+                {
+                    <HTTButton Variant="CButtonVariant.Ghost" 
+                               Size="CButtonSize.Small" 
+                               OnClick="ToggleSidebar" 
+                               Icon="bi bi-funnel"
+                               ToolTip="@L["Table.Filter"]" />
+                }
+                
+                <div class="htt-table-column-selector">
+                    <HTTButton Variant="CButtonVariant.Ghost" 
+                               Size="CButtonSize.Small" 
+                               OnClick="ToggleColumnSelector" 
+                               Icon="bi bi-layout-three-columns"
+                               ToolTip="@L["Table.Columns"]" />
+                    
+                    @if (_showColumnSelector)
+                    {
+                        <div class="htt-column-dropdown">
+                            <div class="htt-column-dropdown-header">
+                                <span>@L["Table.Columns.Visibility"]</span>
+                            </div>
+                            <div class="htt-column-dropdown-body custom-scrollbar">
+                                @foreach (var col in EffectiveColumns)
+                                {
+                                    <div class="htt-column-selector-item" @onclick="() => ToggleColumnVisibility(col, !IsColumnVisible(col))">
+                                        <HTTInput TValue="bool" 
+                                                  Type="CInputType.Checkbox" 
+                                                  Value="IsColumnVisible(col)" 
+                                                  ValueChanged="e => ToggleColumnVisibility(col, e)" 
+                                                  Placeholder="@L[col.Title ?? string.Empty]"
+                                                  @onclick:stopPropagation />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <HTTButton Variant="CButtonVariant.Ghost" 
+                           Size="CButtonSize.Small" 
+                           OnClick="RefreshAsync" 
+                           Icon="bi bi-arrow-clockwise"
+                           ToolTip="@L["Table.Refresh"]" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="htt-table-container @(IsLoading ? "is-loading" : string.Empty)" @onmouseleave="StopResize">
+        <table class="htt-table">
+            <thead>
+                <tr>
+                    @if (SelectionMode != CTableSelectionMode.None)
+                    {
+                        <th class="htt-table-th htt-table-th-selection" style="width: 50px; left: 0; position: sticky; z-index: var(--z-sticky);">
+                            @if (SelectionMode == CTableSelectionMode.Multiple)
+                            {
+                                <HTTInput TValue="bool" 
+                                          Type="CInputType.Checkbox" 
+                                          Value="IsAllSelected" 
+                                          ValueChanged="val => ToggleSelectAll(new ChangeEventArgs { Value = val })" />
+                            }
+                        </th>
+                    }
+
+                    @foreach (var col in VisibleColumns)
+                    {
+                        <th class="htt-table-th @GetThClass(col)" 
+                            style="@GetThStyle(col)" 
+                            @onclick="() => SortColumn(col)">
+                            
+                            <div class="htt-table-th-content">
+                                @if (col.HeaderTemplate != null)
+                                {
+                                    @col.HeaderTemplate
+                                }
+                                else
+                                {
+                                    <span>@L[col.Title ?? string.Empty]</span>
+                                }
+
+                                @if (col.Sortable)
+                                {
+                                    <span class="htt-table-sort-indicator">
+                                        @if (GetSortDirection(col) == SortDirection.Ascending)
+                                        {
+                                            <i class="bi bi-arrow-up-short"></i>
+                                        }
+                                        else if (GetSortDirection(col) == SortDirection.Descending)
+                                        {
+                                            <i class="bi bi-arrow-down-short"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-arrow-down-up" style="opacity: 0.3"></i>
+                                        }
+                                    </span>
+                                }
+                            </div>
+                            
+                            @if (col.Resizable)
+                            {
+                                <div class="htt-table-resizer" @onmousedown="@((MouseEventArgs e) => StartResize(e, col))" @onclick:stopPropagation></div>
+                            }
+                        </th>
+                    }
+                    
+                    @if (RowActionsTemplate != null)
+                    {
+                        <th class="htt-table-th htt-table-th-actions" style="right: 0; position: sticky; z-index: var(--z-sticky);">
+                            @L["Table.Actions"]
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (IsLoading)
+                {
+                    @if (LoadingTemplate != null)
+                    {
+                        @LoadingTemplate
+                    }
+                    else
+                    {
+                        @for (int i = 0; i < PageSize; i++)
+                        {
+                            <tr class="htt-table-tr-skeleton">
+                                @if (SelectionMode != CTableSelectionMode.None)
+                                {
+                                    <td class="htt-table-td" style="left: 0; position: sticky; z-index: var(--z-raised);"><div class="htt-skeleton"></div></td>
+                                }
+                                @foreach (var col in VisibleColumns)
+                                {
+                                    <td class="htt-table-td" style="@GetTdStyle(col)"><div class="htt-skeleton"></div></td>
+                                }
+                                @if (RowActionsTemplate != null)
+                                {
+                                    <td class="htt-table-td" style="right: 0; position: sticky; z-index: var(--z-raised);"><div class="htt-skeleton"></div></td>
+                                }
+                            </tr>
+                        }
+                    }
+                }
+                else if (!CurrentItems.Any())
+                {
+                    <tr class="htt-table-empty-row">
+                        <td colspan="@GetTotalColumnCount()">
+                            @if (EmptyTemplate != null)
+                            {
+                                @EmptyTemplate
+                            }
+                            else
+                            {
+                                <div class="htt-table-empty">
+                                    <i class="bi bi-inbox" style="font-size: 2rem; color: var(--htt-text-muted);"></i>
+                                    <p>@L["Table.NoData"]</p>
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @if (EnableVirtualization)
+                    {
+                        <Virtualize Items="@CurrentItems.ToList()" Context="item">
+                            @RenderRow(item)
+                        </Virtualize>
+                    }
+                    else
+                    {
+                        @foreach (var item in CurrentItems)
+                        {
+                            @RenderRow(item)
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    @if (ShowPagination && TotalCount > 0)
+    {
+        <div class="htt-table-pagination">
+            <div class="htt-pagination-info">
+                <span class="info-full">
+                    @string.Format(L["Table.PaginationInfo"].ToString() ?? "Showing {0} to {1} of {2} entries", 
+                        ((PageIndex - 1) * PageSize) + 1, 
+                        Math.Min(PageIndex * PageSize, TotalCount), 
+                        TotalCount)
+                </span>
+                <span class="info-short">
+                    @string.Format("{0}-{1} / {2}", 
+                        ((PageIndex - 1) * PageSize) + 1, 
+                        Math.Min(PageIndex * PageSize, TotalCount), 
+                        TotalCount)
+                </span>
+            </div>
+            
+            <div class="htt-pagination-controls">
+                <div class="htt-pagination-pagesize">
+                    <span class="htt-pagesize-label">@L["Table.PageSize"]:</span>
+                    <HTTSelect TItem="int" TValue="int"
+                               Items="PageSizeOptions"
+                               Value="PageSize"
+                               ValueChanged="OnPageSizeChangeInternal"
+                               TextSelector="x => x.ToString()"
+                               ValueSelector="x => x"
+                               Size="CSpacingType.SM"
+                               Class="htt-pagesize-select" />
+                </div>
+
+                <div class="htt-pagination-buttons">
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Disabled="@(PageIndex <= 1)" OnClick="() => ChangePage(PageIndex - 1)" Icon="bi bi-chevron-left" IconOnly="true" />
+                    
+                    <div class="htt-page-numbers">
+                        @foreach (var pageNum in GetPaginationNumbers())
+                        {
+                            if (pageNum == -1)
+                            {
+                                <span class="htt-page-dots">...</span>
+                            }
+                            else
+                            {
+                                <HTTButton Variant="@(pageNum == PageIndex ? CButtonVariant.Primary : CButtonVariant.Ghost)" 
+                                           Size="CButtonSize.Small" 
+                                           Class="@(pageNum == PageIndex ? "is-active" : "")"
+                                           OnClick="() => ChangePage(pageNum)">
+                                    @pageNum.ToString()
+                                </HTTButton>
+                            }
+                        }
+                    </div>
+                    
+                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Disabled="@(PageIndex >= TotalPages)" OnClick="() => ChangePage(PageIndex + 1)" Icon="bi bi-chevron-right" IconOnly="true" />
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Sidebar Filter Overlay -->
+    @if (EnableSidebarFilter)
+    {
+        <HTTSidebar @bind-Visible="_showSidebar" 
+                    Position="CPositionType.Right" 
+                    Overlay="true" 
+                    Size="300px"
+                    Class="htt-table-sidebar-container">
+            <Header>
+                <div class="htt-sidebar-header-inner">
+                    <HTTHeading Type="CHeadingType.H5">@L["Table.Filters"]</HTTHeading>
+                    <HTTButton Variant="CButtonVariant.Ghost" 
+                               Size="CButtonSize.Small" 
+                               OnClick="ToggleSidebar" 
+                               Icon="bi bi-x-lg" 
+                               IconOnly="true" />
+                </div>
+            </Header>
+            <Body>
+                @SidebarFilterTemplate
+            </Body>
+            <Footer>
+                @if (SidebarFooterTemplate != null)
+                {
+                    @SidebarFooterTemplate
+                }
+                else
+                {
+                    <HTTButton Variant="CButtonVariant.Outline" OnClick="ResetFilters">@L["Table.Reset"]</HTTButton>
+                    <HTTButton Variant="CButtonVariant.Primary" OnClick="ApplyFilters">@L["Table.Apply"]</HTTButton>
+                }
+            </Footer>
+        </HTTSidebar>
+    }
+    </div>
+</CascadingValue>
+
+@if (_isResizing)
+{
+    <div class="htt-table-resize-overlay" @onmousemove="HandleResize" @onmouseup="StopResize" @onmouseleave="StopResize"></div>
+}
+
+@code {
+    private RenderFragment RenderRow(TItem item) => @<tr @key="GetRowKey(item)" 
+        class="htt-table-tr @(IsRowSelected(item) ? "htt-table-tr-selected" : "")"
+        @onclick="() => HandleRowClick(item)"
+        @ondblclick="() => HandleRowDoubleClick(item)">
+        
+        @if (SelectionMode != CTableSelectionMode.None)
+        {
+            <td class="htt-table-td htt-table-td-selection" style="left: 0; position: sticky; z-index: var(--z-raised);" @onclick:stopPropagation>
+                @if (SelectionMode == CTableSelectionMode.Multiple)
+                {
+                    <HTTInput TValue="bool" 
+                              Type="CInputType.Checkbox" 
+                              Value="IsRowSelected(item)" 
+                              ValueChanged="@((bool val) => ToggleRowSelection(item, val))" />
+                }
+                else
+                {
+                    <HTTInput TValue="bool" 
+                              Type="CInputType.Radio" 
+                              Value="IsRowSelected(item)" 
+                              ValueChanged="@((bool val) => ToggleRowSelection(item, val))" 
+                              AdditionalAttributes="@(new Dictionary<string, object> { { "name", _radioGroupName } })" />
+                }
+            </td>
+        }
+
+        @foreach (var col in VisibleColumns)
+        {
+            <td class="htt-table-td @GetTdClass(col)" style="@GetTdStyle(col)">
+                @if (col.Template != null)
+                {
+                    @col.Template(item)
+                }
+                else
+                {
+                    @FormatValue(col, item)
+                }
+            </td>
+        }
+        
+        @if (RowActionsTemplate != null)
+        {
+            <td class="htt-table-td htt-table-td-actions" style="right: 0; position: sticky; z-index: var(--z-raised);" @onclick:stopPropagation>
+                @RowActionsTemplate(item)
+            </td>
+        }
+    </tr>;
+}
