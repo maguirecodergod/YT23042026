@@ -12,6 +12,7 @@ builder.Services.AddScoped<ILocalizationService, LocalizationService>();
 builder.Services.AddScoped<IHTTThemeService, HTTThemeService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IHTTModalService, HTTModalService>();
+builder.Services.AddScoped<HTTToastService>();
 
 var host = builder.Build();
 

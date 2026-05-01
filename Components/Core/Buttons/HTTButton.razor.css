@@ -143,6 +143,50 @@
     background: var(--color-danger-bg);
 }
 
+/* --- Success Variant --- */
+.htt-btn--success {
+    background: var(--color-success);
+    color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+}
+.htt-btn--success:hover:not(:disabled) {
+    background: var(--color-success-hover);
+    box-shadow: var(--shadow-md);
+}
+
+/* --- Warning Variant --- */
+.htt-btn--warning {
+    background: var(--color-warning);
+    color: var(--color-black);
+    box-shadow: var(--shadow-sm);
+}
+.htt-btn--warning:hover:not(:disabled) {
+    background: var(--color-warning-hover);
+    box-shadow: var(--shadow-md);
+}
+
+/* --- Info Variant --- */
+.htt-btn--info {
+    background: var(--color-info);
+    color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+}
+.htt-btn--info:hover:not(:disabled) {
+    background: var(--color-info-hover);
+    box-shadow: var(--shadow-md);
+}
+
+/* --- Danger Variant (as standalone) --- */
+.htt-btn--danger {
+    background: var(--color-danger);
+    color: var(--color-white);
+    box-shadow: var(--shadow-sm);
+}
+.htt-btn--danger:hover:not(:disabled) {
+    background: var(--color-danger-hover);
+    box-shadow: var(--shadow-md);
+}
+
 /* --- States --- */
 .htt-btn--disabled,
 .htt-btn:disabled {

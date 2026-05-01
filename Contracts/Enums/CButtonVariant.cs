@@ -6,6 +6,10 @@ namespace HTT.BlazorWasm.App.Contracts
         Secondary,
         Ghost,
         Outline,
-        Link
+        Link,
+        Success,
+        Warning,
+        Info,
+        Danger
     }
 }

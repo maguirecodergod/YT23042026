@@ -1,0 +1,64 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTLayoutComponentBase
+@inject HTTToastService ToastService
+
+<div class="htt-toast-item @GetToastClass() @(Toast.Type.ToString().ToLower())" 
+     @onmouseenter="PauseTimer" 
+     @onmouseleave="ResumeTimer"
+     role="alert" 
+     aria-live="polite">
+    
+    <div class="htt-toast-side-bar"></div>
+
+    <div class="htt-toast-main">
+        <div class="htt-toast-header">
+            <div class="htt-toast-icon-wrap">
+                <i class="htt-toast-icon @(string.IsNullOrEmpty(Toast.Icon) ? GetDefaultIcon() : Toast.Icon)"></i>
+            </div>
+            
+            <div class="htt-toast-header-content">
+                @if (!string.IsNullOrEmpty(Toast.Title))
+                {
+                    <div class="htt-toast-title">@L[Toast.Title]</div>
+                }
+                <span class="htt-toast-time">@GetTimeAgo()</span>
+            </div>
+
+            @if (Toast.IsClosable)
+            {
+                <button class="htt-toast-close" @onclick="Close" aria-label="@L["Toast.Close"]">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            }
+        </div>
+
+        <div class="htt-toast-body">
+            <div class="htt-toast-message">@L[Toast.Message]</div>
+            
+            @if (Toast.Count > 1)
+            {
+                <span class="htt-toast-badge">@Toast.Count</span>
+            }
+        </div>
+
+        @if (Toast.OnActionClick != null || !string.IsNullOrEmpty(Toast.ActionText))
+        {
+            <div class="htt-toast-footer">
+                <button class="htt-toast-action" @onclick="HandleAction">
+                    @L[Toast.ActionText ?? "Toast.Action"]
+                </button>
+            </div>
+        }
+    </div>
+
+
+    @if (Toast.ShowProgressBar)
+    {
+        <div class="htt-toast-progress">
+            <div class="htt-toast-progress-bar" 
+                 style="animation-duration: @(Toast.Duration)ms; animation-play-state: @(_isPaused ? "paused" : "running");">
+            </div>
+        </div>
+    }
+</div>
+

@@ -1,0 +1,78 @@
+.htt-toast-container-root {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647 !important;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.htt-toast-container {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6);
+    gap: var(--space-3);
+    width: 420px;
+    max-height: 100vh;
+    overflow: visible;
+    pointer-events: none;
+    transition: all var(--transition-slow);
+}
+
+/* ═══ Positions ═══ */
+
+.htt-toast-topright {
+    top: 0;
+    right: 0;
+    align-items: flex-end;
+    padding-top: calc(var(--layout-topbar-height) + var(--space-6));
+}
+
+.htt-toast-topleft {
+    top: 0;
+    left: 0;
+    align-items: flex-start;
+    padding-top: calc(var(--layout-topbar-height) + var(--space-6));
+}
+
+.htt-toast-topcenter {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+    padding-top: calc(var(--layout-topbar-height) + var(--space-6));
+}
+
+.htt-toast-bottomright {
+    bottom: 0;
+    right: 0;
+    align-items: flex-end;
+    flex-direction: column-reverse;
+}
+
+.htt-toast-bottomleft {
+    bottom: 0;
+    left: 0;
+    align-items: flex-start;
+    flex-direction: column-reverse;
+}
+
+.htt-toast-bottomcenter {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    align-items: center;
+    flex-direction: column-reverse;
+}
+
+/* Stacking and Hover Effects for Container */
+.htt-toast-container:hover .htt-toast-item {
+    opacity: 0.8;
+}
+
+.htt-toast-container .htt-toast-item:hover {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: var(--shadow-xl);
+    z-index: 10;
+}

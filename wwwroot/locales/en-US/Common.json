@@ -316,6 +316,14 @@
             "LastPage": "Last Page",
             "Previous": "Previous",
             "Next": "Next"
+        },
+        "Toast": {
+            "Success": "Success",
+            "Error": "Error",
+            "Warning": "Warning",
+            "Info": "Information",
+            "Close": "Close",
+            "Action": "Action"
         }
     }
 }

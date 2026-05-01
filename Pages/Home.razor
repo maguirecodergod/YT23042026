@@ -110,7 +110,33 @@
                     </Body>
                 </HTTCard>
 
-                <!-- System Health -->
+                <!-- Toast Notifications -->
+                <HTTCard Hoverable="true">
+                    <Header>
+                        <HTTHeading Type="CHeadingType.H2" Class="htt-card-title m-0">
+                            <i class="bi bi-bell-fill me-2" style="color:var(--htt-gold)"></i>Notification System
+                        </HTTHeading>
+                    </Header>
+                    <Body>
+                        <div class="grid gap-2" style="grid-template-columns: 1fr 1fr;">
+                            <HTTButton Variant="CButtonVariant.Success" Size="CButtonSize.Small" Text="Success" 
+                                       Icon="bi bi-check-circle" OnClick="@(() => ShowToast(CToastType.Success))" />
+                            
+                            <HTTButton Variant="CButtonVariant.Danger" Size="CButtonSize.Small" Text="Error" 
+                                       Icon="bi bi-x-circle" OnClick="@(() => ShowToast(CToastType.Error))" />
+                            
+                            <HTTButton Variant="CButtonVariant.Warning" Size="CButtonSize.Small" Text="Warning" 
+                                       Icon="bi bi-exclamation-triangle" OnClick="@(() => ShowToast(CToastType.Warning))" />
+                            
+                            <HTTButton Variant="CButtonVariant.Info" Size="CButtonSize.Small" Text="Info" 
+                                       Icon="bi bi-info-circle" OnClick="@(() => ShowToast(CToastType.Info))" />
+                            
+                            <HTTButton Variant="CButtonVariant.Outline" Size="CButtonSize.Small" Text="Custom Toast" 
+                                       Block="true" style="grid-column: span 2"
+                                       Icon="bi bi-gear-wide-connected" OnClick="ShowCustomToast" />
+                        </div>
+                    </Body>
+                </HTTCard>
                 <HTTCard Hoverable="true">
                     <Header>
                         <HTTHeading Type="CHeadingType.H2" Class="htt-card-title m-0">
@@ -148,6 +174,7 @@
 
 @code {
     [Inject] private IHTTModalService ModalService { get; set; } = default!;
+    [Inject] private HTTToastService ToastService { get; set; } = default!;
 
     record ActivityItem(string Event, string Description, string User, string Status, string BadgeClass, string Time);
     record ServiceItem(string Name, string Uptime, int Pct, string Color, string ColorLight);
@@ -200,8 +227,45 @@ string ChangeText, string ProgressStyle);
 
         if (result.Confirmed)
         {
-            // Do something
-            Console.WriteLine("Confirmed!");
+            ToastService.ShowSuccess(L["Common.Action.SuccessMessage"], L["Common.Action.SuccessTitle"]);
         }
+    }
+
+    private int _toastCounter = 0;
+    private void ShowToast(CToastType type)
+    {
+        _toastCounter++;
+        var timestamp = DateTime.Now.ToString("HH:mm:ss");
+        
+        switch (type)
+        {
+            case CToastType.Success:
+                ToastService.ShowSuccess($"[{_toastCounter}] Operation completed at {timestamp}", "Success");
+                break;
+            case CToastType.Error:
+                ToastService.ShowError($"[{_toastCounter}] Critical failure occurred at {timestamp}", "Critical Error");
+                break;
+            case CToastType.Warning:
+                ToastService.ShowWarning($"[{_toastCounter}] System warning logged at {timestamp}", "Warning");
+                break;
+            case CToastType.Info:
+                ToastService.ShowInfo($"[{_toastCounter}] New update available at {timestamp}", "Information");
+                break;
+        }
+    }
+
+    private void ShowCustomToast()
+    {
+        ToastService.ShowCustom(new ToastModel
+        {
+            Title = "Custom Action",
+            Message = "Would you like to review the latest logs?",
+            Type = CToastType.Info,
+            Icon = "bi bi-journal-text",
+            ActionText = "Review",
+            OnActionClick = () => ToastService.ShowInfo("Opening logs..."),
+            Duration = 10000,
+            Position = CToastPosition.BottomRight
+        });
     }
 }
