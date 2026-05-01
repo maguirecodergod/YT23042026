@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 namespace HTT.BlazorWasm.App.Components
 {
-    public partial class HTTToastItem : IDisposable
+    public partial class HTTToastItem
     {
         [Parameter] public ToastModel Toast { get; set; } = default!;
 
@@ -106,10 +106,11 @@ namespace HTT.BlazorWasm.App.Components
             return $"{(int)diff.TotalMinutes}m ago";
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             _cts?.Cancel();
             _cts?.Dispose();
+            base.Dispose();
         }
     }
 }

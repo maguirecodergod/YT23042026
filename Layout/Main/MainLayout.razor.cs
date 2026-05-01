@@ -24,9 +24,6 @@ namespace HTT.BlazorWasm.App.Layout
                 var width = await JS.InvokeAsync<double>("window.httLayout.getWindowWidth");
                 UpdateStateFromWidth(width);
 
-                // Start hot-reload polling for localization files (dev only)
-                await L.StartHotReloadAsync(3000);
-
                 StateHasChanged();
             }
         }
@@ -102,7 +99,6 @@ namespace HTT.BlazorWasm.App.Layout
 
         public async ValueTask DisposeAsync()
         {
-            L.StopHotReload();
             _objRef?.Dispose();
         }
     }

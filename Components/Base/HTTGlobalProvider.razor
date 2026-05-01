@@ -1,0 +1,14 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@Theme.ThemeClass" style="display: contents;">
+    @ChildContent
+    
+    @* Global Feedback UI *@
+    <HTTModalProvider />
+    <HTTToastContainer />
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}
