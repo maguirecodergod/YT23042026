@@ -8,9 +8,11 @@
                DisabledSelector="@(e => string.IsNullOrEmpty(e.CultureCode))" Class="lang-select-topbar">
         <SelectedTemplate Context="item">
             <HTTToolTip Position="CPositionType.Top" Text="@GetTooltipText()">
-                <div class="lang-trigger-content">
-                    <i class="@item.Icon"></i>
-                </div>
+                <Trigger>
+                    <div class="lang-trigger-content">
+                        <i class="@item.Icon"></i>
+                    </div>
+                </Trigger>
             </HTTToolTip>
         </SelectedTemplate>
         <ItemTemplate Context="item">

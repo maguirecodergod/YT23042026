@@ -6,13 +6,22 @@
      @onmouseenter="Show" 
      @onmouseleave="Hide"
      @attributes="AdditionalAttributes">
-    @ChildContent
+    @Trigger
 
-    @if (!string.IsNullOrEmpty(Content) || !string.IsNullOrEmpty(Text))
+    @if (ChildContent != null || !string.IsNullOrEmpty(Text))
     {
         <div class="@ToolTipCssClass htt-tooltip-@GetPositionClass()" 
-             @ref="_tooltipRef">
-            @(string.IsNullOrEmpty(Content) ? Text : Content)
+             @ref="_tooltipRef"
+             @onmouseenter="Show"
+             @onmouseleave="Hide">
+            @if (ChildContent != null)
+            {
+                @ChildContent
+            }
+            else
+            {
+                @Text
+            }
             <div class="htt-tooltip-arrow" @ref="_arrowRef"></div>
         </div>
     }

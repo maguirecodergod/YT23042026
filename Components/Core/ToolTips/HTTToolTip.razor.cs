@@ -3,7 +3,7 @@ namespace HTT.BlazorWasm.App.Components
     public partial class HTTToolTip : HTTComponentBase
     {
         [Parameter] public RenderFragment? ChildContent { get; set; }
-        [Parameter] public string Content { get; set; } = string.Empty;
+        [Parameter] public RenderFragment? Trigger { get; set; }
         [Parameter] public string Text { get; set; } = string.Empty;
         [Parameter] public CPositionType Position { get; set; } = CPositionType.Top;
         [Parameter] public CToolTipShapeType Shape { get; set; } = CToolTipShapeType.Rounded;
@@ -28,37 +28,59 @@ namespace HTT.BlazorWasm.App.Components
         protected ElementReference _wrapperRef;
         protected ElementReference _arrowRef;
 
+        private System.Threading.Timer? _hideTimer;
+
         protected async Task Show()
         {
-            var displayContent = !string.IsNullOrEmpty(Content) ? Content : Text;
-            if (string.IsNullOrEmpty(displayContent)) return;
+            _hideTimer?.Dispose();
+            _hideTimer = null;
+
+            var hasDisplayContent = ChildContent != null || !string.IsNullOrEmpty(Text);
+            if (!hasDisplayContent) return;
             
-            _visible = true;
-            StateHasChanged();
-            await Task.Delay(10);
-            try
+            if (!_visible)
             {
-                var finalPos = await JS.InvokeAsync<string>(
-                    "httTooltip.update",
-                    _wrapperRef,
-                    _tooltipRef,
-                    _arrowRef,
-                    Position.ToString().ToLower(),
-                    Theme.IsDark
-                );
-                
-                _activePosition = finalPos;
+                _visible = true;
                 StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "Tooltip Error");
+                await Task.Delay(10);
+                try
+                {
+                    var finalPos = await JS.InvokeAsync<string>(
+                        "httTooltip.update",
+                        _wrapperRef,
+                        _tooltipRef,
+                        _arrowRef,
+                        Position.ToString().ToLower(),
+                        Theme.IsDark
+                    );
+                    
+                    _activePosition = finalPos;
+                    StateHasChanged();
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "Tooltip Error");
+                }
             }
         }
 
         protected void Hide()
         {
-            _visible = false;
+            _hideTimer?.Dispose();
+            _hideTimer = new System.Threading.Timer(_ => 
+            {
+                InvokeAsync(() => 
+                {
+                    _visible = false;
+                    StateHasChanged();
+                });
+            }, null, 150, System.Threading.Timeout.Infinite);
+        }
+
+        public override void Dispose()
+        {
+            _hideTimer?.Dispose();
+            base.Dispose();
         }
 
         protected string GetPositionClass() => _activePosition;

@@ -45,6 +45,7 @@
 .htt-tooltip.visible {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
 }
 
 .htt-tooltip-arrow {

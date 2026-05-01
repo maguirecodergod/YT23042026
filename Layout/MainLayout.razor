@@ -112,34 +112,44 @@
             <div class="topbar-actions">
                 <HTTToolTip Position="CPositionType.Top" Shape="CToolTipShapeType.Bubble"
                             Text="@L.GetString("Layout.Topbar.Theme", Theme.CurrentTheme.GetLocalizedName(L))">
-                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn me-2"
-                               OnClick="Theme.ToggleThemeAsync" IconOnly="true" Icon="@($"bi {Theme.CurrentTheme.GetIcon()}")"
-                               aria-label="Toggle Theme" />
+                    <Trigger>
+                        <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn me-2"
+                                   OnClick="Theme.ToggleThemeAsync" IconOnly="true" Icon="@($"bi {Theme.CurrentTheme.GetIcon()}")"
+                                   aria-label="Toggle Theme" />
+                    </Trigger>
                 </HTTToolTip>
 
                 <HTTLanguageSelector />
 
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Notifications"]">
-                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
-                               Icon="bi bi-bell-fill" IconOnly="true" aria-label="Notifications">
-                        <span class="topbar-notif-dot"></span>
-                    </HTTButton>
+                    <Trigger>
+                        <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                                   Icon="bi bi-bell-fill" IconOnly="true" aria-label="Notifications">
+                            <span class="topbar-notif-dot"></span>
+                        </HTTButton>
+                    </Trigger>
                 </HTTToolTip>
 
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Messages"]">
-                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
-                               IconOnly="true" Icon="bi bi-chat-dots-fill" aria-label="Messages" />
+                    <Trigger>
+                        <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                                   IconOnly="true" Icon="bi bi-chat-dots-fill" aria-label="Messages" />
+                    </Trigger>
                 </HTTToolTip>
 
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Help"]">
-                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
-                               IconOnly="true" Icon="bi bi-question-circle-fill" aria-label="Help" />
+                    <Trigger>
+                        <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                                   IconOnly="true" Icon="bi bi-question-circle-fill" aria-label="Help" />
+                    </Trigger>
                 </HTTToolTip>
 
                 <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Profile"]">
-                    <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
-                               IconOnly="true" Icon="bi bi-person-circle" OnClick="@(() => Nav.NavigateTo("/profile"))"
-                               aria-label="Profile" />
+                    <Trigger>
+                        <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
+                                   IconOnly="true" Icon="bi bi-person-circle" OnClick="@(() => Nav.NavigateTo("/profile"))"
+                                   aria-label="Profile" />
+                    </Trigger>
                 </HTTToolTip>
             </div>
         </header>

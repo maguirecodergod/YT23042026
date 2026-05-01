@@ -3,8 +3,10 @@
 
 @if (!string.IsNullOrEmpty(ToolTip))
 {
-    <HTTToolTip Content="@ToolTip" Position="ToolTipPosition" Shape="ToolTipShape" Class="@(Block ? "w-100" : "")">
-        @ButtonContent
+    <HTTToolTip Text="@ToolTip" Position="ToolTipPosition" Shape="ToolTipShape" Class="@(Block ? "w-100" : "")">
+        <Trigger>
+            @ButtonContent
+        </Trigger>
     </HTTToolTip>
 }
 else

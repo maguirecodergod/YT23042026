@@ -88,18 +88,22 @@
         </div>
 
         <div class="htt-grid__pagination">
-            <HTTToolTip Content="@L["Common.Grid.FirstPage"]">
-                <button class="htt-grid__page-btn" disabled="@(_state.PageIndex == 0)"
-                        @onclick="() => OnPageChanged(0)">
-                    <i class="bi-chevron-double-left"></i>
-                </button>
+            <HTTToolTip Text="@L["Common.Grid.FirstPage"]">
+                <Trigger>
+                    <button class="htt-grid__page-btn" disabled="@(_state.PageIndex == 0)"
+                            @onclick="() => OnPageChanged(0)">
+                        <i class="bi-chevron-double-left"></i>
+                    </button>
+                </Trigger>
             </HTTToolTip>
 
-            <HTTToolTip Content="@L["Common.Grid.Previous"]">
-                <button class="htt-grid__page-btn" disabled="@(_state.PageIndex == 0)"
-                        @onclick="() => OnPageChanged(_state.PageIndex - 1)">
-                    <i class="bi-chevron-left"></i>
-                </button>
+            <HTTToolTip Text="@L["Common.Grid.Previous"]">
+                <Trigger>
+                    <button class="htt-grid__page-btn" disabled="@(_state.PageIndex == 0)"
+                            @onclick="() => OnPageChanged(_state.PageIndex - 1)">
+                        <i class="bi-chevron-left"></i>
+                    </button>
+                </Trigger>
             </HTTToolTip>
 
             <div class="htt-grid__page-numbers">
@@ -120,18 +124,22 @@
                 }
             </div>
 
-            <HTTToolTip Content="@L["Common.Grid.Next"]">
-                <button class="htt-grid__page-btn" disabled="@((_state.PageIndex + 1) * _state.PageSize >= _totalCount)"
-                        @onclick="() => OnPageChanged(_state.PageIndex + 1)">
-                    <i class="bi-chevron-right"></i>
-                </button>
+            <HTTToolTip Text="@L["Common.Grid.Next"]">
+                <Trigger>
+                    <button class="htt-grid__page-btn" disabled="@((_state.PageIndex + 1) * _state.PageSize >= _totalCount)"
+                            @onclick="() => OnPageChanged(_state.PageIndex + 1)">
+                        <i class="bi-chevron-right"></i>
+                    </button>
+                </Trigger>
             </HTTToolTip>
 
-            <HTTToolTip Content="@L["Common.Grid.LastPage"]">
-                <button class="htt-grid__page-btn" disabled="@((_state.PageIndex + 1) * _state.PageSize >= _totalCount)"
-                        @onclick="() => OnPageChanged((int)Math.Ceiling((double)_totalCount / _state.PageSize) - 1)">
-                    <i class="bi-chevron-double-right"></i>
-                </button>
+            <HTTToolTip Text="@L["Common.Grid.LastPage"]">
+                <Trigger>
+                    <button class="htt-grid__page-btn" disabled="@((_state.PageIndex + 1) * _state.PageSize >= _totalCount)"
+                            @onclick="() => OnPageChanged((int)Math.Ceiling((double)_totalCount / _state.PageSize) - 1)">
+                        <i class="bi-chevron-double-right"></i>
+                    </button>
+                </Trigger>
             </HTTToolTip>
         </div>
     </div>

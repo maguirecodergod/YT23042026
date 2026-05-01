@@ -3,8 +3,10 @@
 
 @if (!string.IsNullOrEmpty(ToolTip))
 {
-    <HTTToolTip Content="@ToolTip" Position="ToolTipPosition" Shape="ToolTipShape">
-        @LabelContent
+    <HTTToolTip Text="@ToolTip" Position="ToolTipPosition" Shape="ToolTipShape">
+        <Trigger>
+            @LabelContent
+        </Trigger>
     </HTTToolTip>
 }
 else
@@ -39,10 +41,12 @@ else
 
             @if (!string.IsNullOrEmpty(Info))
             {
-                <HTTToolTip Content="@Info" Position="CPositionType.Top">
-                    <span class="htt-label__info-trigger">
-                        <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
-                    </span>
+                <HTTToolTip Text="@Info" Position="CPositionType.Top">
+                    <Trigger>
+                        <span class="htt-label__info-trigger">
+                            <i class="bi bi-info-circle-fill" aria-hidden="true"></i>
+                        </span>
+                    </Trigger>
                 </HTTToolTip>
             }
         </label>
