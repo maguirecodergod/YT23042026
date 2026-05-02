@@ -1,5 +1,6 @@
 @page "/"
 @inherits HTTComponentBase
+@inject HttpClient Http
 <PageTitle>Dashboard — HTT Enterprise</PageTitle>
 
 <HTTContainer Padding="CSpacingType.LG" MaxWidth="1440px">
@@ -14,24 +15,46 @@
             <p>Here's what's happening across your enterprise platform today.</p>
         </HTTStack>
 
-        <!-- KPI Stats Row -->
+        <!-- User Picker Showcase Row (New) -->
         <div class="mb-4">
-            <HTTGrid TItem="StatItem" Items="_stats" DisplayMode="HTTGridDisplayMode.Card" ShowPagination="false"
-                     Selectable="false" Virtualize="false" CardMinWidth="240">
-                <CardTemplate Context="stat">
-                    <div class="spread">
-                        <div class="@stat.IconWrapClass">
-                            <i class="@stat.Icon"></i>
+            <HTTCard>
+                <Header>
+                    <HTTHeading Type="CHeadingType.H2" Class="htt-card-title m-0">
+                        <i class="bi bi-people-fill me-2" style="color:var(--htt-gold)"></i>Enterprise User Picker
+                        Showcase
+                    </HTTHeading>
+                </Header>
+
+                <Body>
+                    <div class="grid gap-6" style="grid-template-columns: 1fr 1fr;">
+                        <div>
+                            <HTTLabel Class="mb-2 d-block">Enterprise Search (API Scroll Paging)</HTTLabel>
+                            <HTTUserPicker @bind-SelectedUsers="@_selectedSingle" Multiple="false"
+                                           EnablePagination="true" PageSize="10" LoadData="@LoadUsersApi"
+                                           Placeholder="Tìm kiếm thành viên (API)..." />
+                            @if (_selectedSingle.Any())
+                            {
+                                <div class="mt-2" style="font-size: 0.75rem; color: var(--color-text-secondary)">
+                                    Selected ID: @_selectedSingle.First().Id
+                                </div>
+                            }
                         </div>
-                        <span class="@stat.ChangeClass"><i class="@stat.ChangeIcon"></i>@stat.ChangeText</span>
+                        <div>
+                            <HTTLabel Class="mb-2 d-block">Team Selection (Client Side)</HTTLabel>
+                            <HTTUserPicker Users="@_testUsers" @bind-SelectedUsers="@_selectedTeam" Multiple="true"
+                                           MaxTagsToShow="3"
+                                           ShowSelectedPanel="true"
+                                           Placeholder="Chọn các thành viên vào team..." Loading="@_isUsersLoading" />
+                            @if (_selectedTeam.Any())
+                            {
+                                <div class="mt-2" style="font-size: 0.75rem; color: var(--color-text-secondary)">
+                                    Team size: @_selectedTeam.Count members
+                                </div>
+                            }
+                        </div>
                     </div>
-                    <div class="stat-value">@stat.Value</div>
-                    <HTTLabel Class="stat-label">@stat.Label</HTTLabel>
-                    <div class="htt-progress mt-2">
-                        <div class="htt-progress-bar" style="@stat.ProgressStyle"></div>
-                    </div>
-                </CardTemplate>
-            </HTTGrid>
+                </Body>
+            </HTTCard>
         </div>
 
         <!-- Content Grid -->
@@ -117,23 +140,24 @@
                             <i class="bi bi-bell-fill me-2" style="color:var(--htt-gold)"></i>Notification System
                         </HTTHeading>
                     </Header>
+
                     <Body>
                         <div class="grid gap-2" style="grid-template-columns: 1fr 1fr;">
-                            <HTTButton Variant="CButtonVariant.Success" Size="CButtonSize.Small" Text="Success" 
+                            <HTTButton Variant="CButtonVariant.Success" Size="CButtonSize.Small" Text="Success"
                                        Icon="bi bi-check-circle" OnClick="@(() => ShowToast(CToastType.Success))" />
-                            
-                            <HTTButton Variant="CButtonVariant.Danger" Size="CButtonSize.Small" Text="Error" 
+
+                            <HTTButton Variant="CButtonVariant.Danger" Size="CButtonSize.Small" Text="Error"
                                        Icon="bi bi-x-circle" OnClick="@(() => ShowToast(CToastType.Error))" />
-                            
-                            <HTTButton Variant="CButtonVariant.Warning" Size="CButtonSize.Small" Text="Warning" 
+
+                            <HTTButton Variant="CButtonVariant.Warning" Size="CButtonSize.Small" Text="Warning"
                                        Icon="bi bi-exclamation-triangle" OnClick="@(() => ShowToast(CToastType.Warning))" />
-                            
-                            <HTTButton Variant="CButtonVariant.Info" Size="CButtonSize.Small" Text="Info" 
+
+                            <HTTButton Variant="CButtonVariant.Info" Size="CButtonSize.Small" Text="Info"
                                        Icon="bi bi-info-circle" OnClick="@(() => ShowToast(CToastType.Info))" />
-                            
-                            <HTTButton Variant="CButtonVariant.Outline" Size="CButtonSize.Small" Text="Custom Toast" 
-                                       Block="true" style="grid-column: span 2"
-                                       Icon="bi bi-gear-wide-connected" OnClick="ShowCustomToast" />
+
+                            <HTTButton Variant="CButtonVariant.Outline" Size="CButtonSize.Small" Text="Custom Toast"
+                                       Block="true" style="grid-column: span 2" Icon="bi bi-gear-wide-connected"
+                                       OnClick="ShowCustomToast" />
                         </div>
                     </Body>
                 </HTTCard>
@@ -145,8 +169,8 @@
                     </Header>
                     <Actions>
                         <span class="htt-badge htt-badge-green"><i class="bi bi-check-circle-fill"></i>
-                        Operational</span>
-                    </Actions>
+                            Operational</span>
+                        </Actions>
 
                         <Body>
                             <HTTStack Spacing="CSpacingType.MD">
@@ -174,8 +198,6 @@
 
 @code {
     [Inject] private IHTTModalService ModalService { get; set; } = default!;
-    [Inject] private HTTToastService ToastService { get; set; } = default!;
-
     record ActivityItem(string Event, string Description, string User, string Status, string BadgeClass, string Time);
     record ServiceItem(string Name, string Uptime, int Pct, string Color, string ColorLight);
     record StatItem(string Value, string Label, string Icon, string IconWrapClass, string ChangeClass, string ChangeIcon,
@@ -213,6 +235,84 @@ string ChangeText, string ProgressStyle);
         new("Message Queue", "98.2%", 98, "#3fb950", "#56d364"),
     };
 
+    private List<UserBaseModel> _testUsers = new();
+    private List<UserBaseModel> _selectedSingle = new();
+    private List<UserBaseModel> _selectedTeam = new();
+    private bool _isUsersLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _isUsersLoading = true;
+            // Giả lập call API lấy data từ json file
+            var users = await Http.GetFromJsonAsync<List<UserBaseModel>>("sample-data/users.json");
+            if (users != null)
+            {
+                _testUsers = users;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching users: {ex.Message}");
+            Toast.ShowError("Không thể tải danh sách thành viên", "Lỗi API");
+        }
+        finally
+        {
+            _isUsersLoading = false;
+        }
+    }
+
+    private async Task<UserPickerLoadResponse> LoadUsersApi(UserPickerLoadRequest request)
+    {
+        // 1. Thực hiện Network Request thực thụ để hiển thị trong tab Network
+        // Thêm Guid để tránh Browser Cache, buộc phải gọi lên server
+        var allUsers = await Http.GetFromJsonAsync<List<UserBaseModel>>($"sample-data/users.json?t={Guid.NewGuid()}");
+
+        // 2. Giả lập độ trễ mạng
+        await Task.Delay(1000);
+
+        var query = (allUsers ?? new()).AsQueryable();
+
+        // 3. Giả lập Server-side Search
+        if (!string.IsNullOrWhiteSpace(request.SearchText))
+        {
+            query = query.Where(u =>
+                (u.FullName != null && u.FullName.Contains(request.SearchText, StringComparison.OrdinalIgnoreCase)) ||
+                (u.Email != null && u.Email.Contains(request.SearchText, StringComparison.OrdinalIgnoreCase))
+            );
+        }
+
+        var totalCount = query.Count();
+
+        // 4. Giả lập Server-side Pagination
+        var items = query.Skip((request.PageIndex - 1) * request.PageSize)
+                         .Take(request.PageSize)
+                         .ToList();
+
+        return new UserPickerLoadResponse
+        {
+            Items = items,
+            TotalCount = totalCount
+        };
+    }
+
+    // Helper classes for ReqRes API
+    public class ReqResResponse
+    {
+        public int Total { get; set; }
+        public List<ReqResUser> Data { get; set; } = new();
+    }
+
+    public class ReqResUser
+    {
+        public int Id { get; set; }
+        public string Email { get; set; } = "";
+        public string First_Name { get; set; } = "";
+        public string Last_Name { get; set; } = "";
+        public string Avatar { get; set; } = "";
+    }
+
     private async Task OpenTestModal()
     {
         var result = await ModalService.ShowAsync<HTT.BlazorWasm.App.Components.ConfirmDialog>(new ModalOptions
@@ -227,7 +327,7 @@ string ChangeText, string ProgressStyle);
 
         if (result.Confirmed)
         {
-            ToastService.ShowSuccess(L["Common.Action.SuccessMessage"], L["Common.Action.SuccessTitle"]);
+            Toast.ShowSuccess(L["Common.Action.SuccessMessage"], L["Common.Action.SuccessTitle"]);
         }
     }
 
@@ -236,34 +336,34 @@ string ChangeText, string ProgressStyle);
     {
         _toastCounter++;
         var timestamp = DateTime.Now.ToString("HH:mm:ss");
-        
+
         switch (type)
         {
             case CToastType.Success:
-                ToastService.ShowSuccess($"[{_toastCounter}] Operation completed at {timestamp}", "Success");
+                Toast.ShowSuccess($"[{_toastCounter}] Operation completed at {timestamp}", "Success");
                 break;
             case CToastType.Error:
-                ToastService.ShowError($"[{_toastCounter}] Critical failure occurred at {timestamp}", "Critical Error");
+                Toast.ShowError($"[{_toastCounter}] Critical failure occurred at {timestamp}", "Critical Error");
                 break;
             case CToastType.Warning:
-                ToastService.ShowWarning($"[{_toastCounter}] System warning logged at {timestamp}", "Warning");
+                Toast.ShowWarning($"[{_toastCounter}] System warning logged at {timestamp}", "Warning");
                 break;
             case CToastType.Info:
-                ToastService.ShowInfo($"[{_toastCounter}] New update available at {timestamp}", "Information");
+                Toast.ShowInfo($"[{_toastCounter}] New update available at {timestamp}", "Information");
                 break;
         }
     }
 
     private void ShowCustomToast()
     {
-        ToastService.ShowCustom(new ToastModel
+        Toast.ShowCustom(new ToastModel
         {
             Title = "Custom Action",
             Message = "Would you like to review the latest logs?",
             Type = CToastType.Info,
             Icon = "bi bi-journal-text",
             ActionText = "Review",
-            OnActionClick = () => ToastService.ShowInfo("Opening logs..."),
+            OnActionClick = () => Toast.ShowInfo("Opening logs..."),
             Duration = 10000,
             Position = CToastPosition.BottomRight
         });

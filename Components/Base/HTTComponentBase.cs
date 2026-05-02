@@ -6,6 +6,8 @@ namespace HTT.BlazorWasm.App.Components
         [Inject] protected ILogger<HTTComponentBase> Logger { get; set; } = default!;
         [Inject] protected IHTTThemeService Theme { get; set; } = default!;
         [Inject] protected ILocalizationService L { get; set; } = default!;
+        [Inject] protected IHTTToastService Toast { get; set; } = default!;
+        [Inject] protected NavigationManager Navigation { get; set; } = default!;
 
         protected override void OnInitialized()
         {

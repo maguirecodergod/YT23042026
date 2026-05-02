@@ -106,9 +106,13 @@
 }
 
 .htt-card__content-inner {
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     flex-direction: column;
+}
+
+.htt-card__content-wrapper--collapsed .htt-card__content-inner {
+    overflow: hidden;
 }
 
 .htt-card__body {

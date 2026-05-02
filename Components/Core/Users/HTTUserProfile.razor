@@ -1,0 +1,121 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="htt-user-profile @Class" style="@Style">
+    @if (EnableToolTip)
+    {
+        <HTTToolTip @ref="_tooltip" Position="TooltipPosition" Plain="true">
+            <Trigger>
+                @RenderTrigger
+            </Trigger>
+            <ChildContent>
+                @RenderCard
+            </ChildContent>
+        </HTTToolTip>
+    }
+    else
+    {
+        @RenderTrigger
+    }
+</div>
+
+@code {
+    private RenderFragment RenderTrigger => __builder => {
+        <div class="htt-user-profile-trigger @(IsClickable ? "clickable" : string.Empty)" @onclick="HandleClick">
+            <div class="htt-avatar">
+                @if (!string.IsNullOrEmpty(Model?.AvatarUrl))
+                {
+                    <img src="@Model.AvatarUrl" alt="@Model.FullName" />
+                }
+                else
+                {
+                    <span class="htt-avatar-text">@GetAvatarText()</span>
+                }
+            </div>
+
+            @if (ShowFullName)
+            {
+                <div class="htt-user-trigger-info">
+                    <span class="htt-user-name">@Model?.FullName</span>
+                </div>
+            }
+        </div>
+    };
+
+    private RenderFragment RenderCard => __builder => {
+        <HTTCard Class="htt-user-card" Width="240px" Style="--card-padding: var(--space-1);">
+            <Header>
+                <div class="htt-user-card-header">
+                    <div class="htt-avatar large card-avatar">
+                        @if (!string.IsNullOrEmpty(Model?.AvatarUrl))
+                        {
+                            <img src="@Model.AvatarUrl" alt="@Model.FullName" />
+                        }
+                        else
+                        {
+                            <span class="htt-avatar-text">@GetAvatarText()</span>
+                        }
+                    </div>
+                    <div class="htt-user-card-title">
+                        <h4>@Model?.FullName</h4>
+                        <span class="htt-badge htt-badge-brand">
+                            @(string.IsNullOrEmpty(Model?.Position) ? "Thành viên" : Model?.Position)
+                        </span>
+                    </div>
+                </div>
+            </Header>
+
+            <Body>
+                <div class="htt-user-card-body">
+                    @if (!string.IsNullOrEmpty(Model?.Email))
+                    {
+                        <a href="mailto:@Model.Email" class="htt-user-detail-item clickable">
+                            <div class="detail-icon"><i class="bi bi-envelope-fill"></i></div>
+                            <div class="detail-text">
+                                <span>@Model.Email</span>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="htt-user-detail-item">
+                            <div class="detail-icon"><i class="bi bi-envelope-fill"></i></div>
+                            <div class="detail-text">
+                                <span>Chưa cập nhật</span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(Model?.PhoneNumber))
+                    {
+                        <a href="tel:@Model.PhoneNumber" class="htt-user-detail-item clickable">
+                            <div class="detail-icon"><i class="bi bi-telephone-fill"></i></div>
+                            <div class="detail-text">
+                                <span>@Model.PhoneNumber</span>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <div class="htt-user-detail-item">
+                            <div class="detail-icon"><i class="bi bi-telephone-fill"></i></div>
+                            <div class="detail-text">
+                                <span>Chưa cập nhật</span>
+                            </div>
+                        </div>
+                    }
+
+                    @if (Model?.DateOfBirth != null)
+                    {
+                        <div class="htt-user-detail-item">
+                            <div class="detail-icon"><i class="bi bi-calendar-heart-fill"></i></div>
+                            <div class="detail-text">
+                                <span>@Model?.DateOfBirth?.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </Body>
+        </HTTCard>
+    };
+}

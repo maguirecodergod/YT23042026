@@ -1,3 +1,5 @@
+using HTT.BlazorWasm.App.Contracts;
+
 namespace HTT.BlazorWasm.App.Layout
 {
     public partial class MainLayout : HTTLayoutComponentBase, IAsyncDisposable
@@ -7,6 +9,16 @@ namespace HTT.BlazorWasm.App.Layout
         private string _searchQuery = string.Empty;
         private string PageTitle => GetPageTitle();
         private DotNetObjectReference<MainLayout>? _objRef;
+
+        private UserBaseModel _currentUser = new UserBaseModel
+        {
+            Id = Guid.NewGuid(),
+            FullName = "Admin User",
+            LastName = "Admin",
+            Position = "System Administrator",
+            Email = "admin@htt.com",
+            PhoneNumber = "+1 234 567 890"
+        };
 
         protected override async Task OnInitializedAsync()
         {

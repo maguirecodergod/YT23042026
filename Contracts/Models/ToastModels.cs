@@ -15,7 +15,7 @@ namespace HTT.BlazorWasm.App.Contracts
         public Action? OnActionClick { get; set; }
         public string? ActionText { get; set; }
         public CToastPosition Position { get; set; } = CToastPosition.TopRight;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public int Priority { get; set; } = 0;
         public int Count { get; set; } = 1;
         

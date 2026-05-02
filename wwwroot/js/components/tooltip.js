@@ -9,6 +9,13 @@ window.httTooltip = {
 
         // Apply theme using the value provided by C# (The Source of Truth)
         const applyTheme = () => {
+            if (floating.classList.contains('htt-tooltip--plain')) {
+                floating.style.backgroundColor = 'transparent';
+                floating.style.border = 'none';
+                floating.style.boxShadow = 'none';
+                return;
+            }
+
             if (isDark) {
                 // Dark Theme -> Light Tooltip
                 floating.style.setProperty('background-color', '#ffffff', 'important');

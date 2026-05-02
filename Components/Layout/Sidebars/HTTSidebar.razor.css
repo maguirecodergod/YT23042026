@@ -15,7 +15,7 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     transition: width var(--transition-slow), min-width var(--transition-slow);
     z-index: var(--z-sidebar);
     flex-shrink: 0;
@@ -182,7 +182,7 @@
     flex-direction: column;
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .htt-sidebar-header {
@@ -213,13 +213,15 @@
 }
 
 .htt-sidebar-footer {
-    padding: var(--space-4);
+    padding: 0;
+    min-height: 64px;
     border-top: 1px solid var(--color-border-subtle);
     background-color: color-mix(in srgb, var(--color-white) 1%, transparent);
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: var(--space-3, 12px);
+    justify-content: flex-start;
+    gap: var(--space-3);
+    overflow: visible;
 }
 
 /* --- Deep Scoped Styles for Fragments (Header, Body, Footer) --- */
@@ -394,8 +396,10 @@
 
 ::deep .sidebar-footer {
     padding: var(--space-3);
-    border-top: var(--border-1) solid var(--sidebar-border);
+    border-top: none;
+    /* Removed the inner divider */
     flex-shrink: 0;
+    overflow: visible;
 }
 
 ::deep .sidebar-user {
@@ -423,10 +427,10 @@
     transition: opacity var(--transition-moderate), visibility var(--transition-moderate);
 }
 
-::deep .user-name {
+::deep .htt-user-name {
     font-size: var(--text-md);
     font-weight: var(--font-semibold);
-    color: var(--color-text-primary);
+    color: var(--color-text-primary) !important;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -485,6 +489,7 @@
     padding: var(--space-2) 0;
     display: flex;
     justify-content: center;
+    border-top: 1px solid var(--color-border-subtle);
 }
 
 /* --- Scrollbar Styling --- */

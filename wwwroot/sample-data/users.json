@@ -1,0 +1,222 @@
+[
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754701",
+    "firstName": "Hải",
+    "lastName": "Nguyễn",
+    "fullName": "Nguyễn Thanh Hải",
+    "userName": "haint",
+    "email": "hai.nguyen@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=haint",
+    "position": "Project Manager",
+    "phoneNumber": "0912345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754702",
+    "firstName": "Linh",
+    "lastName": "Trần",
+    "fullName": "Trần Diệu Linh",
+    "userName": "linhtd",
+    "email": "linh.tran@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=linhtd",
+    "position": "UI/UX Designer",
+    "phoneNumber": "0922345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754703",
+    "firstName": "Sơn",
+    "lastName": "Phạm",
+    "fullName": "Phạm Hoàng Sơn",
+    "userName": "sonph",
+    "email": "son.pham@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=sonph",
+    "position": "Backend Developer",
+    "phoneNumber": "0932345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754704",
+    "firstName": "Hương",
+    "lastName": "Lê",
+    "fullName": "Lê Thu Hương",
+    "userName": "huonglt",
+    "email": "huong.le@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=huonglt",
+    "position": "Frontend Developer",
+    "phoneNumber": "0942345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754705",
+    "firstName": "Mai",
+    "lastName": "Vũ",
+    "fullName": "Vũ Thị Mai",
+    "userName": "maivt",
+    "email": "mai.vu@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=maivt",
+    "position": "QA Lead",
+    "phoneNumber": "0952345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754706",
+    "firstName": "Tuấn",
+    "lastName": "Hoàng",
+    "fullName": "Hoàng Minh Tuấn",
+    "userName": "tuanhm",
+    "email": "tuan.hoang@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=tuanhm",
+    "position": "DevOps Engineer",
+    "phoneNumber": "0962345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754707",
+    "firstName": "Cường",
+    "lastName": "Đặng",
+    "fullName": "Đặng Mạnh Cường",
+    "userName": "cuongdm",
+    "email": "cuong.dang@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=cuongdm",
+    "position": "Fullstack Developer",
+    "phoneNumber": "0972345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754708",
+    "firstName": "Trang",
+    "lastName": "Phan",
+    "fullName": "Phan Thùy Trang",
+    "userName": "trangpt",
+    "email": "trang.phan@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=trangpt",
+    "position": "Business Analyst",
+    "phoneNumber": "0982345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754709",
+    "firstName": "Dũng",
+    "lastName": "Bùi",
+    "fullName": "Bùi Tiến Dũng",
+    "userName": "dungbt",
+    "email": "dung.bui@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=dungbt",
+    "position": "Technical Architect",
+    "phoneNumber": "0992345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754710",
+    "firstName": "Anh",
+    "lastName": "Ngô",
+    "fullName": "Ngô Ngọc Anh",
+    "userName": "anhnn",
+    "email": "anh.ngo@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=anhnn",
+    "position": "Scrum Master",
+    "phoneNumber": "0902345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754711",
+    "firstName": "Khang",
+    "lastName": "Lâm",
+    "fullName": "Lâm Vĩnh Khang",
+    "userName": "khanglv",
+    "email": "khang.lam@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=khanglv",
+    "position": "Security Expert",
+    "phoneNumber": "0812345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754712",
+    "firstName": "Vy",
+    "lastName": "Lý",
+    "fullName": "Lý Thảo Vy",
+    "userName": "vylt",
+    "email": "vy.ly@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=vylt",
+    "position": "Product Owner",
+    "phoneNumber": "0822345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754713",
+    "firstName": "Hùng",
+    "lastName": "Tạ",
+    "fullName": "Tạ Quang Hùng",
+    "userName": "hungtq",
+    "email": "hung.ta@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=hungtq",
+    "position": "System Admin",
+    "phoneNumber": "0832345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754714",
+    "firstName": "Ngọc",
+    "lastName": "Đỗ",
+    "fullName": "Đỗ Bảo Ngọc",
+    "userName": "ngocdb",
+    "email": "ngoc.do@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=ngocdb",
+    "position": "HR Manager",
+    "phoneNumber": "0842345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754715",
+    "firstName": "Quân",
+    "lastName": "Vương",
+    "fullName": "Vương Minh Quân",
+    "userName": "quanvm",
+    "email": "quan.vuong@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=quanvm",
+    "position": "Data Scientist",
+    "phoneNumber": "0852345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754716",
+    "firstName": "Chi",
+    "lastName": "Lương",
+    "fullName": "Lương Khánh Chi",
+    "userName": "chilk",
+    "email": "chi.luong@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=chilk",
+    "position": "Content Creator",
+    "phoneNumber": "0862345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754717",
+    "firstName": "Thành",
+    "lastName": "Hồ",
+    "fullName": "Hồ Nhật Thành",
+    "userName": "thanhhn",
+    "email": "thanh.ho@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=thanhhn",
+    "position": "Mobile Developer",
+    "phoneNumber": "0872345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754718",
+    "firstName": "Yến",
+    "lastName": "Dương",
+    "fullName": "Dương Hải Yến",
+    "userName": "yenndh",
+    "email": "yen.duong@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=yenndh",
+    "position": "Marketing Specialist",
+    "phoneNumber": "0882345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754719",
+    "firstName": "Phong",
+    "lastName": "Trịnh",
+    "fullName": "Trịnh Thanh Phong",
+    "userName": "phongtt",
+    "email": "phong.trinh@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=phongtt",
+    "position": "Game Developer",
+    "phoneNumber": "0892345678"
+  },
+  {
+    "id": "e58837e4-2305-4c6c-941d-b8d904754720",
+    "firstName": "Hà",
+    "lastName": "Võ",
+    "fullName": "Võ Thu Hà",
+    "userName": "havt",
+    "email": "ha.vo@htt.com.vn",
+    "avatarUrl": "https://i.pravatar.cc/150?u=havt",
+    "position": "Accountant",
+    "phoneNumber": "0802345678"
+  }
+]

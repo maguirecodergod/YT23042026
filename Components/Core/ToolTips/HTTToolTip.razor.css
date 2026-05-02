@@ -132,3 +132,16 @@
 .htt-tooltip-arrow {
     background-color: inherit;
 }
+
+/* ═══ Plain Mode ═══ */
+.htt-tooltip--plain {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: none !important;
+}
+
+.htt-tooltip--plain .htt-tooltip-arrow {
+    display: none !important;
+}

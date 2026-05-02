@@ -73,7 +73,8 @@ else
             <i class="htt-input__icon @Icon" aria-hidden="true"></i>
         }
         
-        <input type="@HtmlType"
+        <input @ref="_inputElement"
+               type="@HtmlType"
                value="@FormattedValue"
                @onchange="HandleTextChange"
                @oninput="HandleTextInput"

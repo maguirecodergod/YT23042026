@@ -59,6 +59,20 @@ namespace HTT.BlazorWasm.App.Components
         [Parameter(CaptureUnmatchedValues = true)]
         public Dictionary<string, object>? AdditionalAttributes { get; set; }
 
+        private ElementReference _inputElement;
+
+        public async Task FocusAsync()
+        {
+            try
+            {
+                await _inputElement.FocusAsync();
+            }
+            catch
+            {
+                // Fallback for non-text inputs or if JS not ready
+            }
+        }
+
         protected bool IsCheckboxOrRadio => Type == CInputType.Checkbox || Type == CInputType.Radio;
         protected bool IsFile => Type == CInputType.File;
         protected bool IsRangeType => Type == CInputType.DateRange || Type == CInputType.DateTimeRange || Type == CInputType.TimeRange;

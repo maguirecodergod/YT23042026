@@ -1,8 +1,6 @@
 .htt-toast-item {
     position: relative;
-    z-index: 1000000 !important;
     width: 380px;
-    margin-bottom: var(--space-3);
     border-radius: var(--radius-lg);
     background: color-mix(in srgb, var(--color-bg-default) 85%, transparent);
     backdrop-filter: blur(16px) saturate(180%);

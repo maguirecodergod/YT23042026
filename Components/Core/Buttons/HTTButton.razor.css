@@ -176,17 +176,6 @@
     box-shadow: var(--shadow-md);
 }
 
-/* --- Danger Variant (as standalone) --- */
-.htt-btn--danger {
-    background: var(--color-danger);
-    color: var(--color-white);
-    box-shadow: var(--shadow-sm);
-}
-.htt-btn--danger:hover:not(:disabled) {
-    background: var(--color-danger-hover);
-    box-shadow: var(--shadow-md);
-}
-
 /* --- States --- */
 .htt-btn--disabled,
 .htt-btn:disabled {

@@ -1,6 +1,6 @@
 @namespace HTT.BlazorWasm.App.Components
 @inherits HTTLayoutComponentBase
-@inject HTTToastService ToastService
+@inject IHTTToastService ToastService
 
 <div class="htt-toast-item @GetToastClass() @(Toast.Type.ToString().ToLower())" 
      @onmouseenter="PauseTimer" 

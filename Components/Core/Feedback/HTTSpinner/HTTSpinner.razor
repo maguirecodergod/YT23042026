@@ -1,0 +1,27 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@CssClass" style="@Style" @attributes="AdditionalAttributes">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"></circle>
+        <path d="M12 2C6.47715 2 2 6.47715 2 12C2 13.5997 2.37562 15.1116 3.03906 16.4531" 
+              stroke="currentColor" stroke-width="4" stroke-linecap="round"></path>
+    </svg>
+    @if (ChildContent != null)
+    {
+        <span class="htt-spinner-text">@ChildContent</span>
+    }
+</div>
+
+@code {
+    [Parameter] public CSpacingType Size { get; set; } = CSpacingType.MD;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public string? Style { get; set; }
+    [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private string CssClass => new HTTClassBuilder("htt-spinner")
+        .AddClass($"htt-spinner--{Size.ToString().ToLower()}")
+        .AddClass(Class)
+        .Build();
+}

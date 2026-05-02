@@ -74,16 +74,13 @@
         </Body>
         <Footer>
             <!-- User Footer -->
-            <div class="sidebar-footer">
-                <a class="sidebar-user" href="/profile">
-                    <div class="user-avatar">AD</div>
-                    <div class="user-info">
-                        <div class="user-name">@L["Layout.Sidebar.User.Name"]</div>
-                        <div class="user-role">@L["Layout.Sidebar.User.Role"]</div>
-                    </div>
-                    <i class="bi bi-three-dots-vertical ms-auto"
-                       style="color: var(--htt-text-muted); font-size:0.875rem;"></i>
-                </a>
+            <div class="sidebar-footer"
+                 style="display: flex; align-items: center; width: 100%; min-height: 64px; padding: 0; overflow: visible;">
+                <HTTUserProfile Model="@_currentUser"
+                                DisplayMode="@(_sidebarState == CCollapseType.Collapsed ? CUserProfileDisplayMode.AvatarOnly : CUserProfileDisplayMode.AvatarAndFullName)"
+                                InteractionMode="CUserProfileInteractionMode.Clickable" TooltipPosition="CPositionType.Right"
+                                OnClick="@(() => Nav.NavigateTo("/profile"))" 
+                                Style="color: #e2e8f0; width: 100%; min-height: 64px; border-radius: 0; padding: 0 20px; display: flex; align-items: center;" />
             </div>
         </Footer>
     </HTTSidebar>
@@ -114,8 +111,8 @@
                             Text="@L.GetString("Layout.Topbar.Theme", Theme.CurrentTheme.GetLocalizedName(L))">
                     <Trigger>
                         <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn me-2"
-                                   OnClick="Theme.ToggleThemeAsync" IconOnly="true" Icon="@($"bi {Theme.CurrentTheme.GetIcon()}")"
-                                   aria-label="Toggle Theme" />
+                                   OnClick="Theme.ToggleThemeAsync" IconOnly="true"
+                                   Icon="@($"bi {Theme.CurrentTheme.GetIcon()}")" aria-label="Toggle Theme" />
                     </Trigger>
                 </HTTToolTip>
 
@@ -144,13 +141,11 @@
                     </Trigger>
                 </HTTToolTip>
 
-                <HTTToolTip Position="CPositionType.Top" Text="@L["Layout.Topbar.Profile"]">
-                    <Trigger>
-                        <HTTButton Variant="CButtonVariant.Ghost" Size="CButtonSize.Small" Class="topbar-btn"
-                                   IconOnly="true" Icon="bi bi-person-circle" OnClick="@(() => Nav.NavigateTo("/profile"))"
-                                   aria-label="Profile" />
-                    </Trigger>
-                </HTTToolTip>
+                <div class="ms-2">
+                    <HTTUserProfile Model="@_currentUser" DisplayMode="CUserProfileDisplayMode.AvatarOnly"
+                                    InteractionMode="CUserProfileInteractionMode.Clickable" TooltipPosition="CPositionType.Bottom"
+                                    OnClick="@(() => Nav.NavigateTo("/profile"))" />
+                </div>
             </div>
         </header>
 

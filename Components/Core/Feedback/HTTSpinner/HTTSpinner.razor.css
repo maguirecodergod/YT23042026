@@ -1,0 +1,28 @@
+.htt-spinner {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--color-brand);
+}
+
+.htt-spinner svg {
+    animation: httSpin 1s linear infinite;
+    width: 1em;
+    height: 1em;
+}
+
+.htt-spinner--xs { font-size: 0.75rem; }
+.htt-spinner--sm { font-size: 1rem; }
+.htt-spinner--md { font-size: 1.5rem; }
+.htt-spinner--lg { font-size: 2rem; }
+.htt-spinner--xl { font-size: 3rem; }
+
+.htt-spinner-text {
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+}
+
+@keyframes httSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

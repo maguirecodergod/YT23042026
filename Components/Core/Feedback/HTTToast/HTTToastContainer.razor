@@ -1,14 +1,14 @@
 @namespace HTT.BlazorWasm.App.Components
-@inject HTTToastService ToastService
+@inject IHTTToastService ToastService
 @implements IDisposable
 
-<div class="htt-toast-container-root" style="z-index: 2147483647 !important;">
+<div class="htt-toast-container-root">
     @foreach (var position in Enum.GetValues<CToastPosition>())
     {
         var toasts = ToastService.Toasts.Where(t => t.Position == position).ToList();
         if (toasts.Any())
         {
-            <div class="htt-toast-container htt-toast-@position.ToString().ToLower()" style="z-index: 2147483647 !important;">
+            <div @key="position" class="htt-toast-container htt-toast-@position.ToString().ToLower()">
                 @foreach (var toast in toasts)
                 {
                     <HTTToastItem @key="toast.Id" Toast="toast" />

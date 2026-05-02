@@ -1,0 +1,190 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="htt-user-picker-wrapper">
+    <div class="@BuildCssClass()" style="@Style" @ref="_pickerContainer" @onkeydown="HandleKeyDown" tabindex="0">
+
+        <div class="htt-user-picker__trigger" @onclick="ToggleDropdown">
+            <div class="htt-user-picker__selection">
+                @if (_selectedUsers.Any())
+                {
+                    if (Multiple)
+                    {
+                        <div class="htt-user-picker__tags">
+                            @foreach (var user in _selectedUsers.Take(MaxTagsToShow))
+                            {
+                                <div class="htt-user-picker__tag" @key="user.Id">
+                                    <div class="htt-user-picker__tag-avatar">
+                                        @if (!string.IsNullOrEmpty(user.AvatarUrl))
+                                        {
+                                            <img src="@user.AvatarUrl" alt="@user.FullName" />
+                                        }
+                                        else
+                                        {
+                                            <span>@GetAvatarText(user)</span>
+                                        }
+                                    </div>
+                                    <span class="htt-user-picker__tag-name">@user.FullName</span>
+                                    <i class="bi bi-x htt-user-picker__tag-remove" @onclick:stopPropagation
+                                       @onclick="() => RemoveUser(user)"></i>
+                                </div>
+                            }
+                            @if (_selectedUsers.Count > MaxTagsToShow)
+                            {
+                                <div class="htt-user-picker__tag-more">
+                                    +@(_selectedUsers.Count - MaxTagsToShow)
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        var user = _selectedUsers.First();
+                        <div class="htt-user-picker__selected-single">
+                            <HTTUserProfile Model="user" DisplayMode="CUserProfileDisplayMode.AvatarAndFullName"
+                                            InteractionMode="CUserProfileInteractionMode.ReadOnly" />
+                        </div>
+                    }
+                }
+                else
+                {
+                    <span class="htt-user-picker__placeholder">@(Placeholder ?? L["Common.Search"])</span>
+                }
+            </div>
+
+            <div class="htt-user-picker__suffix">
+                @if (AllowClear && _selectedUsers.Any() && !Disabled)
+                {
+                    <i class="bi bi-x-circle-fill htt-user-picker__clear" @onclick:stopPropagation
+                       @onclick="ClearSelection"></i>
+                }
+                <i class="bi bi-chevron-down htt-user-picker__arrow @(_isOpen ? "is-rotated" : "")"></i>
+            </div>
+        </div>
+
+        @if (_isOpen)
+        {
+            <div class="htt-user-picker__dropdown" @ref="_dropdownElement">
+                <div class="htt-user-picker__search-wrapper">
+                    <HTTInput TValue="string" @ref="_searchInputComponent" Placeholder="@L["Common.Search"]"
+                              Value="@_searchText" ValueChanged="HandleSearchInput" Icon="bi-search"
+                              Class="htt-user-picker__search-input-component" @onclick:stopPropagation />
+                </div>
+
+                @if (Multiple && _filteredUsers.Any())
+                {
+                    <div class="htt-user-picker__master-toggle" @onclick="ToggleAll" @onclick:stopPropagation>
+                        <div class="htt-user-picker__checkbox">
+                            <i
+                            class="bi @(IsAllSelected ? "bi-check-square-fill" : (IsSomeSelected ? "bi-dash-square-fill" : "bi-square"))"></i>
+                        </div>
+                        <span class="htt-user-picker__master-text">
+                            @(IsAllSelected ? L["Common.DeselectAll"] : L["Common.SelectAll"])
+                        </span>
+                    </div>
+                }
+
+                <div class="htt-user-picker__list" @ref="_listContainer">
+                    @if (_isLoading)
+                    {
+                        <div class="htt-user-picker__loading">
+                            <HTTSpinner Size="CSpacingType.MD">@L["Common.Loading"]</HTTSpinner>
+                        </div>
+                    }
+                    else if (!_filteredUsers.Any())
+                    {
+                        <div class="htt-user-picker__empty">
+                            <i class="bi bi-person-x"></i>
+                            <span>@L["Common.Empty"]</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="htt-user-picker__options">
+                            @for (int i = 0; i < _filteredUsers.Count; i++)
+                            {
+                                var index = i;
+                                var user = _filteredUsers[i];
+                                var isSelected = _selectedUsers.Any(u => u.Id == user.Id);
+                                var isActive = _activeIndex == index;
+
+                                <div class="htt-user-picker__option @(isSelected ? "is-selected" : "") @(isActive ? "is-active" : "")"
+                                     @key="user.Id" @onclick="() => SelectUser(user)" @onclick:stopPropagation>
+
+                                    @if (Multiple)
+                                    {
+                                        <div class="htt-user-picker__checkbox">
+                                            <i class="bi @(isSelected ? "bi-check-square-fill" : "bi-square")"></i>
+                                        </div>
+                                    }
+
+                                    <div class="htt-user-picker__option-content">
+                                        <HTTUserProfile Model="user" DisplayMode="CUserProfileDisplayMode.AvatarOnly"
+                                                        InteractionMode="CUserProfileInteractionMode.ReadOnly" />
+                                        <div class="htt-user-picker__option-info">
+                                            <div class="htt-user-picker__option-name">@user.FullName</div>
+                                            @if (!string.IsNullOrEmpty(user.Email))
+                                            {
+                                                <div class="htt-user-picker__option-email">@user.Email</div>
+                                            }
+                                        </div>
+                                    </div>
+
+                                    @if (!Multiple && isSelected)
+                                    {
+                                        <i class="bi bi-check2 htt-user-picker__selected-icon"></i>
+                                    }
+                                </div>
+                            }
+                        </div>
+
+                        @if (EnablePagination && _hasMore)
+                        {
+                            <div class="htt-user-picker__sentinel">
+                                @if (_isFetchingMore)
+                                {
+                                    <HTTSpinner Size="CSpacingType.SM">@L["Common.LoadingMore"]</HTTSpinner>
+                                }
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (Multiple && ShowSelectedPanel && _selectedUsers.Any())
+    {
+        <HTTCard Class="htt-user-picker__panel" Bordered="true">
+            <Header>
+                <div class="htt-user-picker__panel-header-content">
+                    <span class="htt-user-picker__panel-title"
+                          data-count="@_selectedUsers.Count">@L["Common.SelectedList"]</span>
+                </div>
+            </Header>
+            <Actions>
+                <HTTButton Variant="CButtonVariant.Outline" Danger="true" Size="CButtonSize.Small" Text="@L["Common.ClearAll"]"
+                           OnClick="ClearSelection" />
+            </Actions>
+
+            <Body>
+                <div class="htt-user-picker__panel-body">
+                    @foreach (var user in _selectedUsers)
+                    {
+                        <div class="htt-user-picker__panel-item" @key="user.Id">
+                            <HTTUserProfile Model="user" DisplayMode="CUserProfileDisplayMode.AvatarAndFullName"
+                                            InteractionMode="CUserProfileInteractionMode.ReadOnly" />
+                            <div class="htt-user-picker__panel-remove" @onclick="() => RemoveUser(user)">
+                                <i class="bi bi-x"></i>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </Body>
+        </HTTCard>
+    }
+</div>
+
+@code {
+    private ElementReference _dropdownElement;
+}

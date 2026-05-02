@@ -296,6 +296,14 @@
             "LastPage": "Trang cuối",
             "Previous": "Trang trước",
             "Next": "Trang sau"
-        }
+        },
+        "Search": "Tìm kiếm",
+        "SelectAll": "Chọn tất cả",
+        "DeselectAll": "Bỏ chọn tất cả",
+        "ClearAll": "Bỏ chọn hết",
+        "Empty": "Không có dữ liệu",
+        "SelectedList": "Danh sách đã chọn",
+        "Loading": "Đang tải...",
+        "LoadingMore": "Đang tải thêm..."
     }
 }

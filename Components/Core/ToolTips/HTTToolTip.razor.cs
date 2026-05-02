@@ -9,6 +9,7 @@ namespace HTT.BlazorWasm.App.Components
         [Parameter] public CToolTipShapeType Shape { get; set; } = CToolTipShapeType.Rounded;
         [Parameter] public string Class { get; set; } = string.Empty;
         [Parameter] public string Style { get; set; } = string.Empty;
+        [Parameter] public bool Plain { get; set; }
         [Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object> AdditionalAttributes { get; set; } = new();
 
         protected string ToolTipCssClass => BuildToolTipClass();
@@ -18,6 +19,7 @@ namespace HTT.BlazorWasm.App.Components
             var sb = new System.Text.StringBuilder();
             sb.Append("htt-tooltip");
             sb.Append($" htt-tooltip-{Shape.ToString().ToLower()}");
+            if (Plain) sb.Append(" htt-tooltip--plain");
             if (_visible) sb.Append(" visible");
             return sb.ToString();
         }
@@ -62,6 +64,14 @@ namespace HTT.BlazorWasm.App.Components
                     Logger.LogError(ex, "Tooltip Error");
                 }
             }
+        }
+
+        public void HideImmediate()
+        {
+            _hideTimer?.Dispose();
+            _hideTimer = null;
+            _visible = false;
+            StateHasChanged();
         }
 
         protected void Hide()
