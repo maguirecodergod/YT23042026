@@ -1,0 +1,43 @@
+@page "/file-uploader"
+@inherits HTTComponentBase
+@using HTT.BlazorWasm.App.Contracts
+
+<PageTitle>File Uploader — HTT Enterprise</PageTitle>
+
+<HTTContainer Padding="CSpacingType.LG" MaxWidth="1200px">
+    <HTTStack Spacing="CSpacingType.MD" Class="mb-5">
+        <HTTHeading Type="CHeadingType.H1">File Uploader <span class="text-gradient-gold">Showcase</span></HTTHeading>
+        <p style="color:var(--htt-color-text-tertiary)">Enterprise-grade file upload engine with multi-source support,
+            chunked streaming, and real-time progress.</p>
+        </HTTStack>
+
+        <div class="grid grid-1 gap-6">
+            <div class="htt-card p-6">
+                <HTTHeading Type="CHeadingType.H3" Class="mb-4">Standard Multi-Source Uploader</HTTHeading>
+                <HTTFileUploader MaxFileCount="10" MaxFileSizeMB="50" AutoUpload="false"
+                                 OnUploadCompleted="HandleUploadCompleted" />
+            </div>
+
+            <div class="grid grid-2 gap-6">
+                <div class="htt-card p-6">
+                    <HTTHeading Type="CHeadingType.H3" Class="mb-4">Image Gallery (Auto-upload)</HTTHeading>
+                    <HTTFileUploader AllowedExtensions="@(new() { "jpg", "jpeg", "png", "webp" })" MaxFileCount="5"
+                                     AutoUpload="true" />
+                </div>
+
+                <div class="htt-card p-6">
+                    <HTTHeading Type="CHeadingType.H3" Class="mb-4">Document Portal (Restricted)</HTTHeading>
+                    <HTTFileUploader AllowedExtensions="@(new() { "pdf", "docx", "xlsx" })" MaxFileSizeMB="5"
+                                     MaxFileCount="1" />
+                </div>
+            </div>
+        </div>
+    </HTTContainer>
+
+@code {
+    private void HandleUploadCompleted(List<UploadFileModel> files)
+    {
+        var successCount = files.Count(f => f.Status == CUploadStatus.Completed);
+        Logger.LogInformation($"Upload finished: {successCount}/{files.Count}");
+    }
+}

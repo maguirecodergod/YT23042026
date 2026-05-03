@@ -1,0 +1,290 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@RootCssClass">
+
+    <div @ref="_dropZoneRef"
+         class="@DropZoneCssClass"
+         @ondragenter="OnDragEnter"
+         @ondragleave="OnDragLeave"
+         @ondragover:preventDefault="true"
+         @ondrop:preventDefault="true">
+
+        <span @ref="_fileInputRef" class="htt-uploader__input-wrapper">
+            <InputFile id="@_inputId"
+                       class="htt-uploader__hidden-input"
+                       OnChange="OnFilesSelected"
+                       multiple
+                       accept="@AcceptAttribute" />
+        </span>
+
+        @* Drag-over overlay *@
+        <div class="htt-uploader__drag-overlay">
+            <i class="bi bi-cloud-upload htt-uploader__drag-icon"></i>
+            <span class="htt-uploader__drag-text">@L["FileUploader.DragOverlay"]</span>
+        </div>
+
+        @* Default idle state *@
+        <div class="htt-uploader__idle @(_isDragOver ? "htt-uploader__idle--hidden" : "")">
+            <div class="htt-uploader__icon-ring">
+                <i class="bi bi-cloud-arrow-up htt-uploader__upload-icon"></i>
+            </div>
+
+            <div class="htt-uploader__idle-text">
+                <span class="htt-uploader__idle-primary">@L["FileUploader.DropZone.Primary"]</span>
+                <span class="htt-uploader__idle-secondary">@L["FileUploader.DropZone.Secondary"]</span>
+            </div>
+
+            @* Source action buttons *@
+            <div class="htt-uploader__source-bar">
+
+                <HTTButton Variant="CButtonVariant.Primary"
+                           Size="CButtonSize.Small"
+                           Icon="bi bi-folder2-open"
+                           Text="@L["FileUploader.Source.LocalFile"]"
+                           OnClick="@(_ => OnDropZoneClick())"
+                           Disabled="@IsQueueFull" />
+
+                <HTTButton Variant="CButtonVariant.Ghost"
+                           Size="CButtonSize.Small"
+                           Icon="bi bi-link-45deg"
+                           Text="@L["FileUploader.Source.Url"]"
+                           OnClick="@(_ => { _showUrlInput = !_showUrlInput; StateHasChanged(); })"
+                           Disabled="@IsQueueFull" />
+
+                <HTTButton Variant="CButtonVariant.Ghost"
+                           Size="CButtonSize.Small"
+                           Icon="bi bi-google"
+                           Text="@L["FileUploader.Source.GoogleDrive"]"
+                           Disabled="true"
+                           ToolTip="@L["FileUploader.Source.ComingSoon"]" />
+
+                <HTTButton Variant="CButtonVariant.Ghost"
+                           Size="CButtonSize.Small"
+                           Icon="bi bi-microsoft"
+                           Text="@L["FileUploader.Source.OneDrive"]"
+                           Disabled="true"
+                           ToolTip="@L["FileUploader.Source.ComingSoon"]" />
+            </div>
+
+            @* Allowed file types hint *@
+            @if (AllowedExtensions.Count > 0)
+            {
+                <div class="htt-uploader__allowed-hint">
+                    <i class="bi bi-shield-check"></i>
+                    <span>@L.GetString("FileUploader.AllowedTypes", string.Join(", ", AllowedExtensions.Select(e => $".{e}")))</span>
+                    <span class="htt-uploader__allowed-separator">·</span>
+                    <span>@L.GetString("FileUploader.MaxSize", MaxFileSizeMB)</span>
+                </div>
+            }
+        </div>
+
+        @* URL input panel *@
+        @if (_showUrlInput)
+        {
+            <div class="htt-uploader__url-panel">
+                <div class="htt-uploader__url-input-row">
+                    <input type="url"
+                           class="htt-uploader__url-input"
+                           placeholder="@L["FileUploader.UrlPlaceholder"]"
+                           @bind="_urlInput"
+                           @onkeydown="@(async e => { if (e.Key == "Enter") await OnUrlImport(); })" />
+
+                    <HTTButton Variant="CButtonVariant.Primary"
+                               Size="CButtonSize.Small"
+                               Icon="bi bi-download"
+                               Loading="@_isFetchingUrl"
+                               Text="@L["FileUploader.Import"]"
+                               OnClick="@(_ => OnUrlImport())" />
+
+                    <HTTButton Variant="CButtonVariant.Ghost"
+                               Size="CButtonSize.Small"
+                               Icon="bi bi-x-lg"
+                               IconOnly="true"
+                               OnClick="@(_ => { _showUrlInput = false; _urlInput = string.Empty; StateHasChanged(); })" />
+                </div>
+            </div>
+        }
+    </div>
+
+    @* ══════════════════════════════════════════════════════════
+        QUEUE HEADER — Summary + Actions
+       ══════════════════════════════════════════════════════════ *@
+    @if (HasFiles)
+    {
+        <div class="htt-uploader__queue-header">
+            <div class="htt-uploader__queue-summary">
+                <span class="htt-uploader__queue-count">
+                    @L.GetString("FileUploader.Queue.Count", _queue.Count)
+                </span>
+
+                @if (CompletedCount > 0)
+                {
+                    <span class="htt-uploader__queue-stat htt-uploader__queue-stat--success">
+                        <i class="bi bi-check-circle-fill"></i> @CompletedCount
+                    </span>
+                }
+
+                @if (FailedCount > 0)
+                {
+                    <span class="htt-uploader__queue-stat htt-uploader__queue-stat--error">
+                        <i class="bi bi-x-circle-fill"></i> @FailedCount
+                    </span>
+                }
+            </div>
+
+            <div class="htt-uploader__queue-actions">
+                @if (HasPendingFiles && !AutoUpload)
+                {
+                    <HTTButton Variant="CButtonVariant.Primary"
+                               Size="CButtonSize.Small"
+                               Icon="bi bi-cloud-upload"
+                               Text="@L["FileUploader.UploadAll"]"
+                               OnClick="@(_ => UploadAllAsync())" />
+                }
+
+                <HTTButton Variant="CButtonVariant.Ghost"
+                           Size="CButtonSize.Small"
+                           Danger="true"
+                           Icon="bi bi-trash3"
+                           Text="@L["FileUploader.ClearAll"]"
+                           OnClick="@(_ => ClearAllAsync())" />
+            </div>
+        </div>
+
+        @* ══════════════════════════════════════════════════════════
+            FILE LIST — Per-file cards
+           ══════════════════════════════════════════════════════════ *@
+        <div class="htt-uploader__file-list" role="list">
+
+            @foreach (var file in _queue)
+            {
+                <div class="htt-uploader__file-item" @key="file.Id" role="listitem">
+
+                    @* Left: Icon or Image Preview *@
+                    <div class="htt-uploader__file-thumb">
+                        @if (HasPreview(file))
+                        {
+                            <img src="@GetPreviewUrl(file.Id)"
+                                 alt="@file.FileName"
+                                 class="htt-uploader__file-preview-img"
+                                 loading="lazy" />
+                        }
+                        else
+                        {
+                            <div class="htt-uploader__file-icon-wrap">
+                                <i class="@CFileTypeMap.GetIconClass(file.FileType, file.Extension) htt-uploader__file-icon @CFileTypeMap.GetIconColorClass(file.FileType, file.Extension)"></i>
+                            </div>
+                        }
+                    </div>
+
+                    @* Center: File info + Progress *@
+                    <div class="htt-uploader__file-body">
+
+                        <div class="htt-uploader__file-meta">
+                            <span class="htt-uploader__file-name" title="@file.FileName">@file.FileName</span>
+
+                            <div class="htt-uploader__file-details">
+                                <span class="htt-uploader__file-size">@file.FormattedSize</span>
+
+                                @if (!string.IsNullOrEmpty(file.Md5Hash))
+                                {
+                                    <span class="htt-uploader__file-hash"
+                                          title="MD5: @file.Md5Hash">
+                                        <i class="bi bi-shield-lock"></i>
+                                    </span>
+                                }
+
+                                <span class="@GetStatusBadgeClass(file.Status)">
+                                    @L[GetStatusLabelKey(file.Status)]
+                                </span>
+                            </div>
+                        </div>
+
+                        @* Progress bar — visible during upload and on completion *@
+                        @if (file.Status is CUploadStatus.Uploading or CUploadStatus.Completed)
+                        {
+                            <div class="htt-uploader__file-progress">
+                                <HTTProgressBar Value="@file.ProgressPercent"
+                                               Max="100"
+                                               ShowPercentage="true"
+                                               Variant="@GetProgressVariant(file.Status)"
+                                               Size="CButtonSize.Small"
+                                               ProgressType="@(file.Status == CUploadStatus.Uploading ? CHTTProgressType.Animated : CHTTProgressType.Line)" />
+
+                                @if (file.Status == CUploadStatus.Uploading)
+                                {
+                                    <div class="htt-uploader__file-speed">
+                                        @if (!string.IsNullOrEmpty(file.FormattedSpeed))
+                                        {
+                                            <span>@file.FormattedSpeed</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(file.FormattedEta))
+                                        {
+                                            <span class="htt-uploader__file-eta">
+                                                <i class="bi bi-clock"></i> @file.FormattedEta
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        @* Error message *@
+                        @if (file.Status == CUploadStatus.Failed && !string.IsNullOrEmpty(file.ErrorKey))
+                        {
+                            <div class="htt-uploader__file-error">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <span>@L[file.ErrorKey]</span>
+                            </div>
+                        }
+                    </div>
+
+                    @* Right: Action buttons *@
+                    <div class="htt-uploader__file-actions">
+
+                        @if (file.Status == CUploadStatus.Uploading)
+                        {
+                            <HTTButton Variant="CButtonVariant.Ghost"
+                                       Size="CButtonSize.Small"
+                                       Icon="bi bi-stop-circle"
+                                       IconOnly="true"
+                                       ToolTip="@L["FileUploader.Action.Cancel"]"
+                                       Danger="true"
+                                       OnClick="@(_ => CancelUploadAsync(file))" />
+                        }
+
+                        @if (file.Status == CUploadStatus.Failed)
+                        {
+                            <HTTButton Variant="CButtonVariant.Ghost"
+                                       Size="CButtonSize.Small"
+                                       Icon="bi bi-arrow-clockwise"
+                                       IconOnly="true"
+                                       ToolTip="@L["FileUploader.Action.Retry"]"
+                                       OnClick="@(_ => RetryUploadAsync(file))" />
+                        }
+
+                        @if (file.Status is not CUploadStatus.Uploading)
+                        {
+                            <HTTButton Variant="CButtonVariant.Ghost"
+                                       Size="CButtonSize.Small"
+                                       Icon="bi bi-x-lg"
+                                       IconOnly="true"
+                                       Danger="true"
+                                       ToolTip="@L["FileUploader.Action.Remove"]"
+                                       OnClick="@(_ => RemoveFileAsync(file))" />
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @* ══════════════════════════════════════════════════════════
+        PASTE HINT — always visible at bottom
+       ══════════════════════════════════════════════════════════ *@
+    <div class="htt-uploader__paste-hint">
+        <i class="bi bi-clipboard2-check"></i>
+        <span>@L["FileUploader.PasteHint"]</span>
+    </div>
+</div>

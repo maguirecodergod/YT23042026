@@ -39,7 +39,7 @@ namespace HTT.BlazorWasm.App.Components
 
             var hasDisplayContent = ChildContent != null || !string.IsNullOrEmpty(Text);
             if (!hasDisplayContent) return;
-            
+
             if (!_visible)
             {
                 _visible = true;
@@ -55,7 +55,7 @@ namespace HTT.BlazorWasm.App.Components
                         Position.ToString().ToLower(),
                         Theme.IsDark
                     );
-                    
+
                     _activePosition = finalPos;
                     StateHasChanged();
                 }
@@ -77,9 +77,9 @@ namespace HTT.BlazorWasm.App.Components
         protected void Hide()
         {
             _hideTimer?.Dispose();
-            _hideTimer = new System.Threading.Timer(_ => 
+            _hideTimer = new System.Threading.Timer(_ =>
             {
-                InvokeAsync(() => 
+                InvokeAsync(() =>
                 {
                     _visible = false;
                     StateHasChanged();
@@ -90,6 +90,7 @@ namespace HTT.BlazorWasm.App.Components
         public override void Dispose()
         {
             _hideTimer?.Dispose();
+            _ = JS.InvokeVoidAsync("httTooltip.hide", _tooltipRef);
             base.Dispose();
         }
 

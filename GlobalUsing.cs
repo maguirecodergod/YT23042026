@@ -6,3 +6,4 @@ global using HTT.BlazorWasm.App;
 global using HTT.BlazorWasm.App.Components;
 global using HTT.BlazorWasm.App.Services;
 global using HTT.BlazorWasm.App.Contracts;
+global using HTT.BlazorWasm.App.Services.FileSourceProviders;

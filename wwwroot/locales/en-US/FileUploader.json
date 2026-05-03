@@ -1,0 +1,47 @@
+{
+    "FileUploader": {
+        "DropZone": {
+            "Primary": "Drop files here, or choose a source below",
+            "Secondary": "Supports drag & drop, paste (Ctrl+V), URL, and cloud import"
+        },
+        "DragOverlay": "Release to upload",
+        "PasteHint": "You can also paste a copied file with Ctrl+V",
+        "AllowedTypes": "Allowed: {0}",
+        "MaxSize": "Max size: {0} MB",
+        "UrlPlaceholder": "Paste a file URL (https://...)",
+        "Import": "Import",
+        "UploadAll": "Upload All",
+        "ClearAll": "Clear All",
+        "Source": {
+            "LocalFile": "Browse Files",
+            "Url": "From URL",
+            "GoogleDrive": "Google Drive",
+            "OneDrive": "OneDrive",
+            "ComingSoon": "Coming soon"
+        },
+        "Status": {
+            "Pending": "Pending",
+            "Uploading": "Uploading",
+            "Completed": "Done",
+            "Failed": "Failed",
+            "Cancelled": "Cancelled"
+        },
+        "Action": {
+            "Cancel": "Cancel upload",
+            "Retry": "Retry",
+            "Remove": "Remove file"
+        },
+        "Queue": {
+            "Count": "{0} file(s) in queue"
+        },
+        "Error": {
+            "InvalidExtension": "File \"{0}\" has an unsupported file type.",
+            "FileTooLarge": "File \"{0}\" exceeds the maximum allowed size.",
+            "MaxFileCount": "File \"{0}\" exceeds the maximum file count limit.",
+            "UploadFailed": "Upload failed. Please try again.",
+            "InvalidUrl": "Please enter a valid URL.",
+            "TooManyFilesSelected": "Too many files selected at once. Please select fewer than 100 files.",
+            "NoStream": "Unable to read file data. Please try re-selecting the file."
+        }
+    }
+}

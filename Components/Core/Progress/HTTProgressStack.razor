@@ -1,0 +1,17 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@CssClass" style="@Style">
+    <div class="htt-progress-stack__track">
+        @foreach (var segment in Segments)
+        {
+            <div class="htt-progress-stack__segment htt-progress-stack__segment--@segment.Variant.ToString().ToLower()"
+                 style="width: @GetSegmentWidth(segment.Value)" title="@(segment.ToolTip != null ? L[segment.ToolTip] : "")">
+                @if (!string.IsNullOrEmpty(segment.Label))
+                {
+                    <span class="htt-progress-stack__label">@L[segment.Label]</span>
+                }
+            </div>
+        }
+    </div>
+</div>

@@ -170,31 +170,91 @@
                     <Actions>
                         <span class="htt-badge htt-badge-green"><i class="bi bi-check-circle-fill"></i>
                             Operational</span>
-                        </Actions>
+                    </Actions>
 
-                        <Body>
-                            <HTTStack Spacing="CSpacingType.MD">
-                                @foreach (var svc in _services)
-                                {
-                                    <div>
-                                        <div class="spread mb-1">
-                                            <span style="font-size:0.8125rem;font-weight:500">@svc.Name</span>
-                                            <span style="font-size:0.75rem;color:@svc.Color;font-weight:600">@svc.Uptime</span>
-                                        </div>
-                                        <div class="htt-progress">
-                                            <div class="htt-progress-bar"
-                                                 style="width:@(svc.Pct)%; background:linear-gradient(90deg,@svc.Color,@svc.ColorLight)">
-                                            </div>
-                                        </div>
+                    <Body>
+                        <HTTStack Spacing="CSpacingType.MD">
+                            @foreach (var svc in _services)
+                            {
+                                <div>
+                                    <div class="spread mb-1">
+                                        <span style="font-size:0.8125rem;font-weight:500">@svc.Name</span>
+                                        <span style="font-size:0.75rem;color:@svc.Color;font-weight:600">@svc.Uptime</span>
                                     </div>
-                                }
-                            </HTTStack>
-                        </Body>
-                    </HTTCard>
-                </HTTStack>
-            </div>
+                                    <HTTProgressBar Value="@svc.Pct" 
+                                                  Variant="@(svc.Pct > 99 ? CButtonVariant.Success : CButtonVariant.Warning)"
+                                                  ProgressType="CHTTProgressType.Gradient"
+                                                  Size="CButtonSize.Small" />
+                                </div>
+                            }
+                        </HTTStack>
+                    </Body>
+                </HTTCard>
+            </HTTStack>
         </div>
-    </HTTContainer>
+
+        <!-- Progress Components Showcase (New) -->
+        <div class="grid gap-4 mt-4" style="grid-template-columns: 1fr 1fr 1fr;">
+            <HTTCard>
+                <Header>
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Linear Progress</HTTHeading>
+                </Header>
+                <Body>
+                    <HTTStack Spacing="CSpacingType.MD">
+                        <div>
+                            <HTTLabel Class="mb-1 d-block">Indeterminate (Loading)</HTTLabel>
+                            <HTTProgressBar IsIndeterminate="true" ProgressType="CHTTProgressType.Animated" Variant="CButtonVariant.Primary" />
+                        </div>
+                        <div>
+                            <HTTLabel Class="mb-1 d-block">Striped & Animated</HTTLabel>
+                            <HTTProgressBar Value="75" ProgressType="CHTTProgressType.Animated" Variant="CButtonVariant.Success" ShowPercentage="true" />
+                        </div>
+                        <div>
+                            <HTTLabel Class="mb-1 d-block">Stepped Progress</HTTLabel>
+                            <HTTProgressBar Value="3" Max="5" ProgressType="CHTTProgressType.Stepped" Variant="CButtonVariant.Info" />
+                        </div>
+                    </HTTStack>
+                </Body>
+            </HTTCard>
+
+            <HTTCard>
+                <Header>
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Radial Progress</HTTHeading>
+                </Header>
+                <Body>
+                    <div class="cluster gap-6 justify-center py-4">
+                        <HTTProgressCircle Value="65" SizePx="80" Thickness="8" Variant="CButtonVariant.Primary" />
+                        <HTTProgressCircle IsIndeterminate="true" SizePx="80" Thickness="8" Variant="CButtonVariant.Warning" />
+                        <HTTProgressCircle Value="100" SizePx="80" Thickness="8" Variant="CButtonVariant.Success" />
+                    </div>
+                </Body>
+            </HTTCard>
+
+            <HTTCard>
+                <Header>
+                    <HTTHeading Type="CHeadingType.H3" Class="m-0">Stack & Storage</HTTHeading>
+                </Header>
+                <Body>
+                    <HTTStack Spacing="CSpacingType.LG">
+                        <div>
+                            <HTTLabel Class="mb-2 d-block">Storage Distribution</HTTLabel>
+                            <HTTProgressStack Segments="_storageSegments" Size="CButtonSize.Large" />
+                        </div>
+                        <div class="grid gap-2" style="grid-template-columns: repeat(2, 1fr);">
+                            @foreach (var segment in _storageSegments)
+                            {
+                                <div class="cluster gap-2">
+                                    <div style="width:12px; height:12px; border-radius:3px; background-color: var(--color-@(segment.Variant.ToString().ToLower()))"></div>
+                                    <span style="font-size:0.75rem">@segment.Label: @segment.Value%</span>
+                                </div>
+                            }
+                        </div>
+                    </HTTStack>
+                </Body>
+            </HTTCard>
+        </div>
+    </div>
+</HTTContainer>
 
 @code {
     [Inject] private IHTTModalService ModalService { get; set; } = default!;
@@ -207,6 +267,14 @@ string ChangeText, string ProgressStyle);
     {
         new() { Href = "/", Icon = "bi bi-grid-1x2-fill" },
         new() { Text = "Dashboard", IsActive = true }
+    };
+
+    private List<HTTProgressSegment> _storageSegments = new()
+    {
+        new() { Value = 45, Variant = CButtonVariant.Primary, Label = "Apps", ToolTip = "45GB of Apps" },
+        new() { Value = 25, Variant = CButtonVariant.Success, Label = "Photos", ToolTip = "25GB of Photos" },
+        new() { Value = 15, Variant = CButtonVariant.Warning, Label = "Docs", ToolTip = "15GB of Documents" },
+        new() { Value = 10, Variant = CButtonVariant.Danger, Label = "Other", ToolTip = "10GB of System files" }
     };
 
     private List<StatItem> _stats = new()

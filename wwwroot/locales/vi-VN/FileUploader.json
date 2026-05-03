@@ -1,0 +1,47 @@
+{
+    "FileUploader": {
+        "DropZone": {
+            "Primary": "Kéo thả file vào đây hoặc chọn nguồn bên dưới",
+            "Secondary": "Hỗ trợ kéo thả, dán từ clipboard (Ctrl+V), nhập URL và cloud"
+        },
+        "DragOverlay": "Thả để tải lên",
+        "PasteHint": "Bạn cũng có thể dán file đã sao chép bằng Ctrl+V",
+        "AllowedTypes": "Cho phép: {0}",
+        "MaxSize": "Dung lượng tối đa: {0} MB",
+        "UrlPlaceholder": "Dán URL file (https://...)",
+        "Import": "Nhập",
+        "UploadAll": "Tải lên tất cả",
+        "ClearAll": "Xóa tất cả",
+        "Source": {
+            "LocalFile": "Chọn từ máy",
+            "Url": "Từ URL",
+            "GoogleDrive": "Google Drive",
+            "OneDrive": "OneDrive",
+            "ComingSoon": "Sắp ra mắt"
+        },
+        "Status": {
+            "Pending": "Chờ xử lý",
+            "Uploading": "Đang tải lên",
+            "Completed": "Hoàn thành",
+            "Failed": "Thất bại",
+            "Cancelled": "Đã hủy"
+        },
+        "Action": {
+            "Cancel": "Hủy tải lên",
+            "Retry": "Thử lại",
+            "Remove": "Xóa file"
+        },
+        "Queue": {
+            "Count": "{0} file trong hàng chờ"
+        },
+        "Error": {
+            "InvalidExtension": "File \"{0}\" có định dạng không được hỗ trợ.",
+            "FileTooLarge": "File \"{0}\" vượt quá dung lượng cho phép.",
+            "MaxFileCount": "File \"{0}\" vượt quá số lượng file cho phép.",
+            "UploadFailed": "Tải lên thất bại. Vui lòng thử lại.",
+            "InvalidUrl": "Vui lòng nhập URL hợp lệ.",
+            "TooManyFilesSelected": "Chọn quá nhiều file cùng lúc. Vui lòng chọn ít hơn 100 file.",
+            "NoStream": "Không thể đọc dữ liệu file. Vui lòng chọn lại file."
+        }
+    }
+}

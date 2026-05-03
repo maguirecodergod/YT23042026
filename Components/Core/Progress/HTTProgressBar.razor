@@ -1,0 +1,43 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@CssClass" style="@Style" role="progressbar" aria-valuenow="@Value" aria-valuemin="0" aria-valuemax="@Max">
+
+    @if (!string.IsNullOrEmpty(Label))
+    {
+        <div class="htt-progress-bar__labels">
+            <span class="htt-progress-bar__label">@L[Label]</span>
+        </div>
+    }
+
+    <div class="htt-progress-bar__track">
+        @if (ProgressType == CHTTProgressType.Stepped)
+        {
+            <div class="htt-progress-bar__steps">
+                @for (int i = 1; i <= (int)Max; i++)
+                {
+                    <div class="htt-progress-bar__step @(i <= Value ? "htt-progress-bar__step--active" : "")"></div>
+                }
+            </div>
+        }
+        else
+        {
+            @if (ProgressType == CHTTProgressType.Buffered && BufferValue > Value)
+            {
+                <div class="htt-progress-bar__buffer" style="width: @BufferWidth"></div>
+            }
+
+            <div class="htt-progress-bar__fill" style="width: @ProgressWidth">
+                @if (ProgressType == CHTTProgressType.Striped || ProgressType == CHTTProgressType.Animated)
+                {
+                    <div class="htt-progress-bar__stripes"></div>
+                }
+            </div>
+
+            @if (ShowPercentage && !IsIndeterminate)
+            {
+                <span class="htt-progress-bar__percentage">@((int)CalculatePercentage(Value))%</span>
+            }
+        }
+    </div>
+</div>

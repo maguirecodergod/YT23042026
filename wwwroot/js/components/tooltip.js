@@ -80,5 +80,11 @@ window.httTooltip = {
         }
 
         return finalPosition;
+    },
+
+    hide: (floating) => {
+        if (floating && floating.parentElement === document.body) {
+            document.body.removeChild(floating);
+        }
     }
 };

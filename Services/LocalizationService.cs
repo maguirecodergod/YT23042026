@@ -586,7 +586,11 @@ namespace HTT.BlazorWasm.App.Services
                 return null;
 
             var dotIndex = key.IndexOf('.');
-            return dotIndex > 0 ? key[..dotIndex] : null;
+            if (dotIndex <= 0) return null;
+
+            var prefix = key[..dotIndex];
+
+            return prefix.All(c => char.IsLetterOrDigit(c) || c == '_') ? prefix : null;
         }
 
         private HashSet<string> GetLoadedResourceNames(string culture)

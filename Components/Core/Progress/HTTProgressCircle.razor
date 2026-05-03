@@ -1,0 +1,20 @@
+@namespace HTT.BlazorWasm.App.Components
+@inherits HTTComponentBase
+
+<div class="@CssClass" style="width: @(SizePx)px; height: @(SizePx)px; @Style">
+    <svg viewBox="0 0 @SizePx @SizePx" class="htt-progress-circle__svg">
+        <circle class="htt-progress-circle__track" cx="@(SizePx / 2)" cy="@(SizePx / 2)" r="@Radius"
+                stroke-width="@Thickness" />
+
+        <circle class="htt-progress-circle__fill" cx="@(SizePx / 2)" cy="@(SizePx / 2)" r="@Radius"
+                stroke-width="@Thickness" stroke-dasharray="@Circumference" stroke-dashoffset="@DashOffset"
+                stroke-linecap="round" />
+    </svg>
+
+    @if (!IsIndeterminate)
+    {
+        <div class="htt-progress-circle__content">
+            @((int)CalculatePercentage())%
+        </div>
+    }
+</div>

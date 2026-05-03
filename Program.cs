@@ -13,6 +13,7 @@ builder.Services.AddScoped<IHTTThemeService, HTTThemeService>();
 builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IHTTModalService, HTTModalService>();
 builder.Services.AddScoped<IHTTToastService, HTTToastService>();
+builder.Services.AddScoped<IFileUploadService, FileUploadService>();
 
 var host = builder.Build();
 

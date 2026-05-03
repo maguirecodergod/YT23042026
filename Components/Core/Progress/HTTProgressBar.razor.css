@@ -1,0 +1,187 @@
+.htt-progress-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.htt-progress-bar__labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    color: var(--color-text-secondary);
+}
+
+.htt-progress-bar__percentage {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    font-size: 9px;
+    font-weight: var(--font-black);
+    color: var(--color-white);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.htt-progress-bar__track {
+    position: relative;
+    width: 100%;
+    background-color: var(--progress-track-bg);
+    overflow: hidden;
+    border-radius: var(--radius-full);
+}
+
+.htt-progress-bar__fill {
+    height: 100%;
+    background-color: var(--color-brand);
+    transition: width var(--transition-base);
+    border-radius: var(--radius-full);
+    position: relative;
+    overflow: hidden;
+}
+
+.htt-progress-bar__buffer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: color-mix(in srgb, var(--color-brand) 20%, transparent);
+    transition: width var(--transition-base);
+    border-radius: var(--radius-full);
+}
+
+/* Sizes - Compact but enough for text */
+.htt-progress-bar--small .htt-progress-bar__track {
+    height: 6px;
+}
+
+.htt-progress-bar--medium .htt-progress-bar__track {
+    height: 10px;
+}
+
+.htt-progress-bar--large .htt-progress-bar__track {
+    height: 14px;
+}
+
+/* Variants */
+.htt-progress-bar--success .htt-progress-bar__fill {
+    background-color: var(--color-success);
+}
+
+.htt-progress-bar--warning .htt-progress-bar__fill {
+    background-color: var(--color-warning);
+}
+
+.htt-progress-bar--danger .htt-progress-bar__fill {
+    background-color: var(--color-danger);
+}
+
+.htt-progress-bar--info .htt-progress-bar__fill {
+    background-color: var(--color-info);
+}
+
+.htt-progress-bar--secondary .htt-progress-bar__fill {
+    background-color: var(--color-text-secondary);
+}
+
+/* Gradient */
+.htt-progress-bar--gradient .htt-progress-bar__fill {
+    background: var(--progress-bar-gradient);
+}
+
+/* Striped */
+.htt-progress-bar--striped .htt-progress-bar__fill,
+.htt-progress-bar--animated .htt-progress-bar__fill {
+    background-image: linear-gradient(45deg,
+            rgba(255, 255, 255, 0.15) 25%,
+            transparent 25%,
+            transparent 50%,
+            rgba(255, 255, 255, 0.15) 50%,
+            rgba(255, 255, 255, 0.15) 75%,
+            transparent 75%,
+            transparent);
+    background-size: 0.5rem 0.5rem;
+}
+
+/* Animated Striped */
+.htt-progress-bar--animated .htt-progress-bar__fill {
+    animation: htt-progress-stripes 1s linear infinite;
+}
+
+@keyframes htt-progress-stripes {
+    from {
+        background-position: 1rem 0;
+    }
+
+    to {
+        background-position: 0 0;
+    }
+}
+
+/* Indeterminate */
+.htt-progress-bar--indeterminate .htt-progress-bar__fill {
+    width: 100% !important;
+    animation: htt-progress-indeterminate 1.5s infinite var(--ease-in-out);
+    transform-origin: 0% 50%;
+}
+
+@keyframes htt-progress-indeterminate {
+    0% {
+        transform: translateX(-100%) scaleX(0.2);
+    }
+
+    50% {
+        transform: translateX(0) scaleX(0.5);
+    }
+
+    100% {
+        transform: translateX(100%) scaleX(0.2);
+    }
+}
+
+/* Stepped */
+.htt-progress-bar__steps {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    gap: var(--space-1);
+}
+
+.htt-progress-bar__step {
+    flex: 1;
+    height: 100%;
+    background-color: var(--color-bg-inset);
+    transition: background-color var(--transition-base);
+}
+
+.htt-progress-bar__step--active {
+    background-color: var(--color-brand);
+}
+
+.htt-progress-bar--success .htt-progress-bar__step--active {
+    background-color: var(--color-success);
+}
+
+.htt-progress-bar--warning .htt-progress-bar__step--active {
+    background-color: var(--color-warning);
+}
+
+.htt-progress-bar--danger .htt-progress-bar__step--active {
+    background-color: var(--color-danger);
+}
+
+.htt-progress-bar--info .htt-progress-bar__step--active {
+    background-color: var(--color-info);
+}
+
+/* Glassmorphism support if needed */
+.htt-progress-bar--glass .htt-progress-bar__track {
+    background: color-mix(in srgb, var(--color-white) 10%, transparent);
+    backdrop-filter: blur(8px);
+    border: 1px solid color-mix(in srgb, var(--color-white) 15%, transparent);
+}
